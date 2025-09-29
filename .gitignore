@@ -46,7 +46,7 @@ out/
 .com.apple.timemachine.donotpresent
 
 # ==========================
-# Logs and temp files
+# Logizz.gs and temp files
 # ==========================
 *.log
 *.tmp

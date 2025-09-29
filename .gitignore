@@ -1,37 +1,70 @@
-HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+# ==========================
+# Spring Boot / Java
+# ==========================
+/target/
+/build/
+/out/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+# Gradle
+.gradle/
+/build/
+/gradle-app.setting
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+# Maven
+/logs/
+*.mvn/
+
+# IntelliJ IDEA
+/.idea/
+/*.iml
+/*.iws
 out/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# Eclipse
+/.settings/
+/*.classpath
+/*.project
 
-### VS Code ###
+# ==========================
+# OS Specific
+# ==========================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# ==========================
+# Logs and temp files
+# ==========================
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.orig
+
+# ==========================
+# IDE / Editor
+# ==========================
+# VSCode
 .vscode/
+
+# ==========================
+# Environment / Secrets
+# ==========================
+*.env
+.env.*
+*.keystore
+*.jks

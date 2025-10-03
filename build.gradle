@@ -25,16 +25,33 @@ repositories {
 }
 
 dependencies {
+	//jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.hibernate:hibernate-spatial:6.2.7.Final'
+
+	//security
+//	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	//validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	//web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
+
+	//DB (postGIS 의존성 포함)
+	implementation 'org.hibernate:hibernate-spatial'
+	implementation 'org.locationtech.jts:jts-core:1.19.0'
 	runtimeOnly 'org.postgresql:postgresql'
+
+	//util
+	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	//test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
 }
 
 tasks.named('test') {

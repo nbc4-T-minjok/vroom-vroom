@@ -15,14 +15,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class S3UploaderV2IntegrationTest {
-
     @Autowired
     private S3Uploader s3Uploader;
 
+    private final String dirName = "test";
+
     @Test
-    @DisplayName("단일 파일 업로드 & 삭제 실제 S3 테스트")
-    void testUploadAndDelete() throws IOException {
-        // given: 가짜 MultipartFile 준비
+    @DisplayName("단일 파일 업로드 테스트 (삭제하지 않음)")
+    void testUploadFile() throws IOException {
+        // given
         MockMultipartFile file = new MockMultipartFile(
                 "file",
                 "test-image.png",
@@ -30,61 +31,83 @@ class S3UploaderV2IntegrationTest {
                 "hello-s3".getBytes()
         );
 
-        // when: 업로드
-        String uploadedUrl = s3Uploader.upload(file, "test");
-        System.out.println("Uploaded URL: " + uploadedUrl);
+        // when
+        String key = s3Uploader.upload(file, dirName);
 
-        // then: URL이 내가 지정한 버킷 주소를 포함해야 함
-        assertThat(uploadedUrl).contains("https://");
+        // then
+        System.out.println("업로드된 Key: " + key);
+        String url = s3Uploader.getFileUrl(key);
+        System.out.println("업로드된 URL: " + url);
 
-        // 삭제 테스트
-        // URL에서 key 추출 (버킷 주소 이후 부분만 key)
-        String key = uploadedUrl.substring(uploadedUrl.indexOf("test/"));
-        s3Uploader.delete(key);
-
+        assertThat(url).contains("https://");
     }
 
     @Test
-    @DisplayName("여러 파일 업로드 테스트")
-    void testMultipleUpload() throws IOException {
+    @DisplayName("다중 파일 업로드 테스트 (삭제하지 않음)")
+    void testUploadMultipleFiles() throws IOException {
         // given
         MockMultipartFile file1 = new MockMultipartFile("file1", "a.png", "image/png", "data1".getBytes());
         MockMultipartFile file2 = new MockMultipartFile("file2", "b.png", "image/png", "data2".getBytes());
 
         // when
-        List<String> urls = s3Uploader.uploadAll(List.of(file1, file2), "test");
+        List<String> keys = s3Uploader.uploadFiles(List.of(file1, file2), dirName);
 
         // then
-        assertThat(urls).hasSize(2);
-        urls.forEach(System.out::println);
+        System.out.println("업로드된 Keys: " + keys);
+        List<String> urls = s3Uploader.getFileUrls(keys);
+        urls.forEach(url -> System.out.println("업로드된 URL: " + url));
 
-        // cleanup
-        for (String url : urls) {
-            String key = url.substring(url.indexOf("test/"));
-            s3Uploader.delete(key);
-        }
+        assertThat(urls).hasSize(2);
     }
 
     @Test
-    @DisplayName("파일 업데이트 테스트")
-    void testUpdateFile() throws IOException {
-        // given
-        MockMultipartFile oldFile = new MockMultipartFile("file", "old.png", "image/png", "old".getBytes());
-        MockMultipartFile newFile = new MockMultipartFile("file", "new.png", "image/png", "new".getBytes());
+    @DisplayName("URL 조회 테스트")
+    void testGetFileUrl() {
+        // given: 업로드되어 있는 파일 key 직접 입력 (콘솔에서 확인한 key)
+        String key = "test/{S3에 업로드 된 파일명}";
 
-        // old 파일 먼저 업로드
-        String oldUrl = s3Uploader.upload(oldFile, "test");
-        String oldKey = oldUrl.substring(oldUrl.indexOf("test/"));
-
-        // when: old 삭제 + new 업로드
-        String newUrl = s3Uploader.update(newFile, oldKey, "test");
-        System.out.println("Updated URL: " + newUrl);
+        // when
+        String url = s3Uploader.getFileUrl(key);
 
         // then
-        assertThat(newUrl).contains("test/");
+        System.out.println("조회된 URL: " + url);
+        assertThat(url).contains("https://");
+    }
 
-        // cleanup
-        String newKey = newUrl.substring(newUrl.indexOf("test/"));
-        s3Uploader.delete(newKey);
+    @Test
+    @DisplayName("파일 삭제 테스트")
+    void testDeleteFile() {
+        // given: 삭제할 파일 key 직접 입력 (업로드 후 콘솔에서 확인한 key)
+        String key = "test/{S3에 업로드 된 파일명}";
+
+        // when
+        s3Uploader.delete(key);
+
+        // then
+        System.out.println("삭제 요청 완료: " + key);
+        // 삭제는 콘솔에서 직접 확인
+    }
+
+    @Test
+    @DisplayName("파일 업데이트 테스트 (기존 삭제 후 새 업로드)")
+    void testUpdateFile() throws IOException {
+        // given
+        MockMultipartFile newFile = new MockMultipartFile(
+                "file",
+                "updated.png",
+                "image/png",
+                "new-content".getBytes()
+        );
+        String oldKey = "test/{S3에 업로드 된 파일명}"; // 실제 기존 key 넣기
+
+        // when
+        String newKey = s3Uploader.update(newFile, oldKey, dirName);
+
+        // then
+        String newUrl = s3Uploader.getFileUrl(newKey);
+        System.out.println("새 파일 Key: " + newKey);
+        System.out.println("새 파일 URL: " + newUrl);
+
+        assertThat(newUrl).contains("https://");
     }
 }

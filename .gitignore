@@ -19,6 +19,7 @@
 /*.iml
 /*.iws
 out/
+src/main/resources/application.yml
 
 # Eclipse
 /.settings/

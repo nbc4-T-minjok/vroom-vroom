@@ -1,5 +1,7 @@
 package com.sparta.vroomvroom.domain.user.model.dto.request;
 
+import com.sparta.vroomvroom.global.conmon.constants.UserRole;
+import com.sparta.vroomvroom.global.conmon.constants.UserType;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,7 +36,7 @@ public class UserSignupRequest {
     @Pattern(
             regexp = "^[A-Z]{1,20}$",
             message = "영문 대문자로 최대 20자까지 가능합니다.")
-    private String type;
+    private UserType type;
 
     @NotBlank
     @Pattern(
@@ -63,6 +65,11 @@ public class UserSignupRequest {
     @Email(message = "이메일 형식이 올바르지 않습니다.")
     @Size(max = 50, message = "이메일은 최대 50자까지 가능합니다.")
     private String email;
+
+    //todo: 명세서에 role 받는거 추가하기
+    @NotBlank
+    @Size(max = 20, message = "최대 20자까지 입력 가능합니다.")
+    private UserRole role;
 
 
 }

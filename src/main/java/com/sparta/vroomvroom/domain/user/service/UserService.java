@@ -23,6 +23,6 @@ public class UserService {
                 });
 
         //회원 저장
-        userRepository.save(new User(req));
+        userRepository.save(new User(req, req.getPassword()));
     }
 }

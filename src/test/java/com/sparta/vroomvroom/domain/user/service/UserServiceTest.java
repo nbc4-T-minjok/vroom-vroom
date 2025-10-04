@@ -5,7 +5,6 @@ import com.sparta.vroomvroom.domain.user.model.entity.User;
 import com.sparta.vroomvroom.domain.user.repository.UserRepository;
 import com.sparta.vroomvroom.global.conmon.constants.UserRole;
 import com.sparta.vroomvroom.global.conmon.constants.UserType;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,7 +55,7 @@ class UserServiceTest {
     void userSignupSuccess() {
         // given
         when(userRepository.findByUserNameOrEmailOrPhoneNumber(
-                req.getUserName(), req.getPhoneNumber(), req.getEmail()))
+                req.getUserName(), req.getEmail(), req.getPhoneNumber()))
                 .thenReturn(Optional.empty());
         when(passwordEncoder.encode(req.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(new User());
@@ -75,7 +74,7 @@ class UserServiceTest {
         // given
         // 비어있지 않은 객체를 응답하도록 정의
         when(userRepository.findByUserNameOrEmailOrPhoneNumber(
-                req.getUserName(), req.getPhoneNumber(), req.getEmail())).thenReturn(Optional.of(new User()));
+                req.getUserName(), req.getEmail(), req.getPhoneNumber())).thenReturn(Optional.of(new User()));
         // when & then
         // 예외 발생하는지 검증
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> userService.signup(req));

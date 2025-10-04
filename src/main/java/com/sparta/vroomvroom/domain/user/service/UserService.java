@@ -17,7 +17,7 @@ public class UserService {
     //중복 체크 -> 회원 생성 처리 -> DB insert
     public void signup(UserSignupRequest req) {
         //중복 체크 (기존 회원 존재시 예외 발생)
-        userRepository.findByUserNameOrEmailOrPhoneNumber(req.getUserName(), req.getPhoneNumber(),req.getEmail())
+        userRepository.findByUserNameOrEmailOrPhoneNumber(req.getUserName(), req.getEmail(), req.getPhoneNumber())
                 .ifPresent(user -> {
                     throw new IllegalArgumentException("입력한 정보로 이미 가입된 회원이 존재합니다.");
                 });

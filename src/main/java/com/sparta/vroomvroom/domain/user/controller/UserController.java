@@ -16,7 +16,7 @@ public class UserController {
     public BaseResponse signup(
             @RequestBody UserSignupRequest userSignupRequest
             ) {
-        userService.signup();
+        userService.signup(userSignupRequest);
         return new BaseResponse();
     }
 }

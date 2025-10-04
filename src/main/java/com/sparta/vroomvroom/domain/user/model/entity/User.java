@@ -1,7 +1,9 @@
 package com.sparta.vroomvroom.domain.user.model.entity;
 
+import com.sparta.vroomvroom.domain.user.model.dto.request.UserSignupRequest;
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import com.sparta.vroomvroom.global.conmon.constants.UserRole;
+import com.sparta.vroomvroom.global.conmon.constants.UserType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +29,8 @@ public class User extends BaseEntity {
     private String password;
 
     @Column(name = "type", nullable = false, length = 20)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private UserType type;
 
     @Column(name = "nick_name",nullable = false, length = 20)
     private String nickName;
@@ -52,4 +55,16 @@ public class User extends BaseEntity {
     private UserRole role;
 
 
+    public User(UserSignupRequest req, String encodedPassword) {
+        this.userName = req.getUserName();
+        this.password = encodedPassword;
+        this.type = req.getType();
+        this.nickName = req.getNickName();
+        this.name = req.getName();
+        this.birthDate = req.getBirthDate();
+        this.gender = req.getGender();
+        this.phoneNumber = req.getPhoneNumber();
+        this.email = req.getEmail();
+        this.role = req.getRole();
+    }
 }

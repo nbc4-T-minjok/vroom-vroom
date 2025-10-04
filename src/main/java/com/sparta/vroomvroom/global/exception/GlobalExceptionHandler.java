@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.global.exception;
 
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -11,6 +12,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({IllegalArgumentException.class})
     public BaseResponse handleException(IllegalArgumentException ex) {
         return new BaseResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public BaseResponse handleValidationExceptions(MethodArgumentNotValidException e) {
+        String errorMessage = e.getBindingResult()
+                .getAllErrors()
+                .get(0)
+                .getDefaultMessage(); // 첫 번째 에러 메시지 추출
+        return new BaseResponse(errorMessage);
     }
 
     // 나머지 예외

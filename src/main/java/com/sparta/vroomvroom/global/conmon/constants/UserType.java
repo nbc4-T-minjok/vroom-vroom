@@ -7,8 +7,7 @@ public enum UserType {
     INAPP("INAPP"),
     KAKAO("KAKAO"),
     GOOGLE("GOOGLE"),
-    NAVER("NAVER"),
-    GITHUB("GITHUB"),;
+    NAVER("NAVER");
 
     private final String type;
 

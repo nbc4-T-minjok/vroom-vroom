@@ -1,9 +1,14 @@
 package com.sparta.vroomvroom.domain.review.controller;
 
+import com.sparta.vroomvroom.domain.review.model.dto.request.OwnerReviewRequsetDto;
+import com.sparta.vroomvroom.domain.review.model.dto.request.ReviewRequestDto;
 import com.sparta.vroomvroom.domain.review.model.dto.response.ReviewResponseDto;
 import com.sparta.vroomvroom.domain.review.model.entity.Review;
+import com.sparta.vroomvroom.domain.review.repository.OwnerReviewRepository;
 import com.sparta.vroomvroom.domain.review.repository.ReviewRepository;
 import com.sparta.vroomvroom.domain.review.service.ReviewService;
+import com.sparta.vroomvroom.global.conmon.BaseResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +21,25 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     // 리뷰작성
-//    @PostMapping("/{orderId}/reviews")
-//    public ReviewResponseDto createReview(@PathVariable UUID id, @RequestBody ReviewRequestDto reviewRequestDto ){
-//        return  reviewService.createReview(id, requestDto);
-//    }
+    @PostMapping("/{orderId}/reviews")
+    public BaseResponse createReview(
+            @Valid @RequestBody ReviewRequestDto requestDto,
+            @PathVariable UUID orderId,
+            @CookieValue("userId") Long userId){
+        reviewService.createReview(orderId, userId, requestDto);
+        return new BaseResponse();
+    }
 
     // 리뷰작성_업체
-//    @PostMapping("/review/{compId}/ownerReviews")
+    @PostMapping("/review/{compId}/ownerReviews")
+    public BaseResponse createReviewCompany(
+            @Valid @RequestBody OwnerReviewRequsetDto requestDto,
+            @PathVariable UUID reviewId,
+            @CookieValue("userId") Long userId){
+        reviewService.createReviewCompany(reviewId, requestDto);
+        return new BaseResponse();
+    }
+
 
     // 리뷰 목록 조회_고객
 //    @GetMapping("/reviews/{userId}")

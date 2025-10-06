@@ -2,10 +2,14 @@ package com.sparta.vroomvroom.domain.review.model.entity;
 
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "owner_reviews")
 public class OwnerReview extends BaseEntity {
     @Id

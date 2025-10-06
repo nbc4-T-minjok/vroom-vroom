@@ -6,7 +6,6 @@ import com.sparta.vroomvroom.domain.user.model.entity.User;
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.UUID;

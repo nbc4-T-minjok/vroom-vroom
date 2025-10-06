@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -18,8 +19,6 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private static final String AUTHORIZATION_KEY = "role";
-    private static final String USER_ID_KEY = "userId";
     private static final String COOKIE_NAME = "AToken";
 
     @Value("${jwt.access-expiration}")
@@ -32,8 +31,8 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
-        byte[] bytes = Base64.getDecoder().decode(secretKey);
-        key = Keys.hmacShaKeyFor(bytes);
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        key = Keys.hmacShaKeyFor(keyBytes);
     }
 
     public Cookie createToken(String username, UserRole role) {
@@ -41,7 +40,6 @@ public class JwtUtil {
 
         String token = Jwts.builder()
                 .setSubject(username)
-                .claim(AUTHORIZATION_KEY, role.name())
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + TOKEN_TIME))
                 .signWith(key, signatureAlgorithm)

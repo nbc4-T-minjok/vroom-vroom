@@ -86,10 +86,4 @@ public class JwtUtil {
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
-
-    //userId 바로 추출
-    public Long getUserIdFromToken(String token) {
-        Claims claims = getUserInfoFromToken(token);
-        return claims.get(USER_ID_KEY, Long.class);
-    }
 }

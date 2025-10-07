@@ -44,4 +44,15 @@ public class Address extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public Address(String addressName, String address, String detailAddress, String zipCode,
+                   boolean isDefault, Point location, User user) {
+        this.addressName = addressName;
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.zipCode = zipCode;
+        this.isDefault = isDefault;
+        this.location = location;
+        this.user = user;
+    }
 }

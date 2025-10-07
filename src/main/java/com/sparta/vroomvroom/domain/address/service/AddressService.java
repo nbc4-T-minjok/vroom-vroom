@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -96,7 +97,25 @@ public class AddressService {
 
     // 배송지 수정
 
+
     // 기본배송지 변경
 
+
     // 배송지 삭제
+    public void deleteAddress(Long userId, UUID userAddressId) {
+        // 배송지아이디 검증
+        Address address = addressRepository.findById(userAddressId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 배송지아이디입니다."));
+
+        // 로그인 한 사용자의 주소인지 검증
+        if(!address.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("해당 배송지를 삭제할 수 있는 권한이 없습니다.");
+        }
+
+        // 기본배송지가 not null이므로 삭제 불가 처리
+        if(address.isDefault()) {
+            throw new IllegalArgumentException("기본배송지는 삭제할 수 없습니다.");
+        }
+
+        addressRepository.deleteById(userAddressId);
+    }
 }

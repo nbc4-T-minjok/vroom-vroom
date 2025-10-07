@@ -1,11 +1,9 @@
 package com.sparta.vroomvroom.domain.address.model.dto.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Point;
 
-//@AllArgsConstructor
+
 @Getter
 public class AddressReqeustDto {
     private String addressName;

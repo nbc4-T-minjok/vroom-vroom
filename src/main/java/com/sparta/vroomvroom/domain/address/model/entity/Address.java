@@ -45,6 +45,7 @@ public class Address extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    // requestDto -> entity
     public Address(String addressName, String address, String detailAddress, String zipCode,
                    boolean isDefault, Point location, User user) {
         this.addressName = addressName;

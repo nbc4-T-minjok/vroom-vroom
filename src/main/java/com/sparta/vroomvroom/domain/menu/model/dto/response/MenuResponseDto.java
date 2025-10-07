@@ -17,9 +17,6 @@ public class MenuResponseDto {
     private String menuDescription;
     private String menuStatus;
     private Boolean isVisible;
-    private Boolean isDeleted;
-    private String createdAt;
-    private String updatedAt;
 
     public MenuResponseDto(Menu menu) {
         this.menuId = menu.getMenuId();

@@ -22,6 +22,8 @@ public class JwtLogoutHandler implements LogoutHandler {
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         String token = jwtUtil.getTokenFromCookie(request);
         if(token != null && jwtUtil.validateToken(token)) {
+            //Todo: 블랙리스트 조회로 DB I/O가 과도하게 발생중 개선 필요
+
             // 블랙리스트에 없는 경우에만 등록
             if (!blackListRepository.findByToken(token).isPresent()) {
                 BlackList blackList = new BlackList(token);

@@ -4,7 +4,7 @@ import com.sparta.vroomvroom.domain.company.model.entity.Company;
 import com.sparta.vroomvroom.domain.company.repository.CompanyRepository;
 import com.sparta.vroomvroom.domain.order.model.entity.Order;
 import com.sparta.vroomvroom.domain.order.repository.OrderRepository;
-import com.sparta.vroomvroom.domain.review.model.dto.request.OwnerReviewRequsetDto;
+import com.sparta.vroomvroom.domain.review.model.dto.request.OwnerReviewRequestDto;
 import com.sparta.vroomvroom.domain.review.model.dto.request.ReviewRequestDto;
 import com.sparta.vroomvroom.domain.review.model.dto.response.ReviewResponseDto;
 import com.sparta.vroomvroom.domain.review.model.entity.OwnerReview;
@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -61,14 +62,14 @@ public class ReviewService {
 
     }
 
-    public void createReviewCompany(UUID reviewId, @Valid OwnerReviewRequsetDto requestDto) {
+    public void createReviewCompany(UUID reviewId, @Valid OwnerReviewRequestDto requestDto) {
         //review, user 엔티티 조회
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(()->new IllegalArgumentException("유효하지 않은 리뷰 ID입니다."));
 
         OwnerReview ownerReview = new OwnerReview();
         ownerReview.setReview(review);
-        ownerReview.setContents(requestDto.getOwnerReviewContents());
+        ownerReview.setContents(requestDto.getContents());
         // CreatedBy 없는동안 임시
         ownerReview.setCreatedBy("tester");
 
@@ -116,5 +117,57 @@ public class ReviewService {
         return reviewResult.stream()
                 .map(review -> new ReviewResponseDto(review))
                 .collect(Collectors.toList());
+    }
+
+    public void updateReview(UUID reviewId, Long userId, @Valid ReviewRequestDto requestDto) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리뷰입니다."));
+
+        // 권한 체크
+        if (!review.getUserId().getUserId().equals(userId)) {
+            throw new RuntimeException("리뷰 수정 권한이 없습니다.");
+        }
+
+        // 리뷰 내용 변경
+        review.setRate(requestDto.getRate());
+        review.setContents(requestDto.getReviewContents());
+    }
+
+    public void updateReviewCompany(UUID compId, UUID ownerReviewId, Long userId, @Valid OwnerReviewRequestDto requestDto) {
+        OwnerReview ownerReview = ownerReviewRepository.findById(ownerReviewId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리뷰입니다."));
+
+        //권한 체크
+
+
+        //리뷰 내용 변경
+        ownerReview.setContents(requestDto.getContents());
+    }
+
+    public void deleteReview(UUID reviewId, Long userId) {
+        // 1. 리뷰 조회 및 논리삭제
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리뷰입니다."));
+        if (review != null) {
+            review.softDelete(LocalDateTime.now(), String.valueOf(userId));
+        }
+
+        // 2. 연관된 사장님리뷰 조회 및 논리삭제 처리
+        OwnerReview ownerReview = ownerReviewRepository.findByReviewId(reviewId); // 또는 findByOrderId(...) 등 엔티티 연결고리에 따라 수정
+        if (ownerReview != null) {
+            ownerReview.softDelete(LocalDateTime.now(), String.valueOf(userId));
+        }
+    }
+
+    public void deleteReviewCompany(UUID reviewId, Long userId) {
+        // 리뷰 존재 여부 확인
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리뷰입니다."));
+
+        // 사장님 리뷰만 조회 후 삭제 처리
+        OwnerReview ownerReview = ownerReviewRepository.findByReviewId(reviewId); // 또는 findByOrderId(...) 등 엔티티 연결고리에 따라 수정
+        if (ownerReview != null) {
+            ownerReview.softDelete(LocalDateTime.now(), String.valueOf(userId));
+        }
     }
 }

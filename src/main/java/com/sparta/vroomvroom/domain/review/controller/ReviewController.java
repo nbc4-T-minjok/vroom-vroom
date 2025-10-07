@@ -1,6 +1,6 @@
 package com.sparta.vroomvroom.domain.review.controller;
 
-import com.sparta.vroomvroom.domain.review.model.dto.request.OwnerReviewRequsetDto;
+import com.sparta.vroomvroom.domain.review.model.dto.request.OwnerReviewRequestDto;
 import com.sparta.vroomvroom.domain.review.model.dto.request.ReviewRequestDto;
 import com.sparta.vroomvroom.domain.review.model.dto.response.ReviewResponseDto;
 import com.sparta.vroomvroom.domain.review.service.ReviewService;
@@ -31,7 +31,7 @@ public class ReviewController {
     // 리뷰작성_업체
     @PostMapping("/review/{reviewId}/ownerReviews")
     public BaseResponse createReviewCompany(
-            @Valid @RequestBody OwnerReviewRequsetDto requestDto,
+            @Valid @RequestBody OwnerReviewRequestDto requestDto,
             @PathVariable UUID reviewId,
             @CookieValue("userId") Long userId){
         reviewService.createReviewCompany(reviewId, requestDto);
@@ -81,21 +81,55 @@ public class ReviewController {
             @PathVariable UUID compId,
             @PathVariable UUID reviewId
     ){
-        System.out.println("상세리뷰 조회 시작");
         List<ReviewResponseDto> result = reviewService.getReviewCompany(compId, reviewId);
         return new BaseResponse(result);
     }
 
     // 리뷰 수정_고객
-//    @PatchMapping("/reviews/{reviewId}")
+    @PatchMapping("/reviews/{reviewId}")
+    public BaseResponse updateReview(
+            @PathVariable UUID reviewId,
+            @CookieValue("userId") Long userId,
+            @Valid @RequestBody ReviewRequestDto requestDto
+    ){
+        System.out.println("테스트");
+        reviewService.updateReview(reviewId, userId, requestDto);
+        return new BaseResponse();
+    }
 
     // 리뷰 수정_업체
-//    @PatchMapping("/reviews/{ownerReviewId}")
+    @PatchMapping("/{compId}/reviews/{ownerReviewId}")
+    public BaseResponse updateReviewCompany(
+            @PathVariable UUID compId,
+            @PathVariable UUID ownerReviewId,
+            @CookieValue("userId") Long userId,
+            @Valid @RequestBody OwnerReviewRequestDto requestDto
+    ){
+        reviewService.updateReviewCompany(compId, ownerReviewId, userId, requestDto);
+        return new BaseResponse();
+    }
+
+
 
     // 리뷰 삭제_고객
-//    @DeleteMapping("/reviews/{reviewId}")
+    @DeleteMapping("/reviews/{reviewId}")
+    public BaseResponse deleteReview(
+            @PathVariable UUID reviewId,
+            @CookieValue("userId") Long userId
+    ){
+        reviewService.deleteReview(reviewId, userId);
+        return new BaseResponse();
+    }
 
     // 리뷰 삭제_업체
-//    @DeleteMapping("/reviews/{ownerReviewId}")
+    @DeleteMapping("/reviews/{reviewId}/ownerReviews")
+    public BaseResponse deleteReviewCompany(
+            @PathVariable UUID reviewId,
+            @CookieValue("userId") Long userId
+    ){
+        System.out.println("리뷰 삭제 시작");
+        reviewService.deleteReviewCompany(reviewId, userId);
+        return new BaseResponse();
+    }
 
 }

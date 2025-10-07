@@ -11,7 +11,6 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 public class ReviewRequestDto {
-    @NotNull(message = "업체 아이디는 필수 입니다.")
     private UUID compId;
 
     @Min(1)

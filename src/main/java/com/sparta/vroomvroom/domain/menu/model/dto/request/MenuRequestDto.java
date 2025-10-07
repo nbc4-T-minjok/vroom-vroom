@@ -11,9 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MenuRequestDto {
 
-    @NotNull(message = "업체 ID는 필수입니다.")
-    private String companyId;
-
     @NotBlank(message = "메뉴 이름은 필수입니다.")
     private String menuName;
 
@@ -34,11 +31,10 @@ public class MenuRequestDto {
     @NotNull(message = "노출 여부는 필수입니다.")
     private Boolean isVisible;
 
-    // 편의 생성자 (Dto -> Entity 변환 시 활용)
-    public MenuRequestDto(String companyId, String menuName, String menuGroup,
+
+    public MenuRequestDto(String menuName, String menuGroup,
                        Integer menuPrice, String menuImage, String menuDescription,
                        String menuStatus, Boolean isVisible) {
-//        this.companyId = companyId;
         this.menuName = menuName;
         this.menuGroup = menuGroup;
         this.menuPrice = menuPrice;

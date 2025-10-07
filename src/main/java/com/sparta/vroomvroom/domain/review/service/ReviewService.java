@@ -6,6 +6,7 @@ import com.sparta.vroomvroom.domain.order.model.entity.Order;
 import com.sparta.vroomvroom.domain.order.repository.OrderRepository;
 import com.sparta.vroomvroom.domain.review.model.dto.request.OwnerReviewRequsetDto;
 import com.sparta.vroomvroom.domain.review.model.dto.request.ReviewRequestDto;
+import com.sparta.vroomvroom.domain.review.model.dto.response.ReviewResponseDto;
 import com.sparta.vroomvroom.domain.review.model.entity.OwnerReview;
 import com.sparta.vroomvroom.domain.review.model.entity.Review;
 import com.sparta.vroomvroom.domain.review.repository.OwnerReviewRepository;
@@ -14,10 +15,16 @@ import com.sparta.vroomvroom.domain.user.model.entity.User;
 import com.sparta.vroomvroom.domain.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +51,7 @@ public class ReviewService {
 
         Review review = new Review();
         review.setOrder(order);
-        review.setUser(user);
+        review.setUserId(user);
         review.setCompany(company);
         review.setRate(requestDto.getRate());
         review.setContents(requestDto.getReviewContents());
@@ -62,9 +69,52 @@ public class ReviewService {
         OwnerReview ownerReview = new OwnerReview();
         ownerReview.setReview(review);
         ownerReview.setContents(requestDto.getOwnerReviewContents());
+        // CreatedBy 없는동안 임시
+        ownerReview.setCreatedBy("tester");
 
         // 리뷰 저장_업체
         ownerReviewRepository.save(ownerReview);
 
+    }
+
+    public List<ReviewResponseDto> getReviewList(Long userId, int page, int size, String sort) {
+        // 1. Pageabel 객체 생성 (정렬 기준 : sort)
+        Pageable pageable = PageRequest.of(page,size, Sort.by(sort).descending());
+
+        // 2. Repository에서 userId로 페이징&정렬하여 리뷰 목록 조회
+        Page<Review> reviewPage = reviewRepository.findByUserId_UserId(userId, pageable);
+
+        // 3. Entity -> DTO 반환
+        return reviewPage.stream()
+                .map(review -> new ReviewResponseDto(review))
+                .collect(Collectors.toList());
+    }
+
+    public List<ReviewResponseDto> getReviewListCompany(UUID compId, int page, int size, String sort) {
+        // 1. Pageabel 객체 생성 (정렬 기준 : sort)
+        Pageable pageable = PageRequest.of(page,size, Sort.by(sort).descending());
+
+        // 2. Repository에서 userId로 페이징&정렬하여 리뷰 목록 조회
+        Page<Review> reviewPage = reviewRepository.findByCompany_CompanyId(compId, pageable);
+
+        // 3. Entity -> DTO 반환
+        return reviewPage.stream()
+                .map(review -> new ReviewResponseDto(review))
+                .collect(Collectors.toList());
+
+    }
+
+    public List<ReviewResponseDto> getReview(Long userId, UUID reviewId) {
+        List<Review> reviewResult = reviewRepository.findByUserId_UserIdAndId(userId,reviewId);
+        return reviewResult.stream()
+                .map(review -> new ReviewResponseDto(review))
+                .collect(Collectors.toList());
+    }
+
+    public List<ReviewResponseDto> getReviewCompany(UUID compId, UUID reviewId) {
+        List<Review> reviewResult = reviewRepository.findByCompany_CompanyIdAndId(compId,reviewId);
+        return reviewResult.stream()
+                .map(review -> new ReviewResponseDto(review))
+                .collect(Collectors.toList());
     }
 }

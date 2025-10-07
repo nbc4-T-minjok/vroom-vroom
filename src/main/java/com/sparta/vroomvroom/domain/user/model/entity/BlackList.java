@@ -32,4 +32,8 @@ public class BlackList {
     @CreatedBy
     @Column(name = "created_by",updatable = false, nullable = false, length = 20)
     private String createdBy;
+
+    public BlackList(String token) {
+        this.token = token;
+    }
 }

@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.global.security.filter;
 
-import com.sparta.vroomvroom.domain.user.repository.UserRepository;
+import com.sparta.vroomvroom.domain.user.repository.BlackListRepository;
+import com.sparta.vroomvroom.global.security.UserDetailsServiceImpl;
 import com.sparta.vroomvroom.global.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -14,20 +15,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Slf4j(topic = "JWT Filter")
-@Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final UserRepository userRepository;
-    private final UserDetailsService userDetailsService;
+    private final BlackListRepository blackListRepository;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -41,9 +39,17 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
+        //블랙리스트 확인
+        if (blackListRepository.findByToken(token).isPresent()) {
+            log.warn("만료된 JWT 토큰입니다.");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         //토큰에서 값 추출
         Claims claims = jwtUtil.getUserInfoFromToken(token);
-        String userName = claims.get("userName", String.class);
+        String userName = claims.getSubject();
 
         //인증 시도
         try {

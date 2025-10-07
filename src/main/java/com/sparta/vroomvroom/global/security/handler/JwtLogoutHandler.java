@@ -21,25 +21,27 @@ public class JwtLogoutHandler implements LogoutHandler {
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         String token = jwtUtil.getTokenFromCookie(request);
-        if(token != null && jwtUtil.validateToken(token)) {
-            //Todo: 블랙리스트 조회로 DB I/O가 과도하게 발생중 개선 필요
-
-            // 블랙리스트에 없는 경우에만 등록
-            if (!blackListRepository.findByToken(token).isPresent()) {
-                BlackList blackList = new BlackList(token);
-                blackListRepository.save(blackList);
-            }
-
-            // 쿠키 삭제
-            Cookie cookie = new Cookie("AToken", null);
-            cookie.setPath("/");
-            cookie.setHttpOnly(true);
-            cookie.setMaxAge(0);
-            response.addCookie(cookie);
-        }else{
-            //로그아웃은 예외 발생이 아니면 무조건 성공 핸들러 요청
-            //응답 구분은 성공 핸들러에서 처리
-            request.setAttribute("logoutError", "잘못된 접근입니다. 로그인 되어 있지 않습니다.");
+        //토큰 유무
+        if (token == null) {
+            request.setAttribute("logoutError", "요청이 실패했습니다. 로그인이 되어있지 않습니다.");
+            return;
         }
+        //토큰 만료 여부
+        if (!jwtUtil.validateToken(token)) {
+            request.setAttribute("logoutError", "요청이 실패했습니다. 만료된 토큰입니다.");
+        }
+
+        //비정상 토큰 & 정상 토큰 전부 블랙리스트 등록
+        //Todo: 블랙리스트 조회로 DB I/O가 과도하게 발생중 개선 필요
+        if (!blackListRepository.findByToken(token).isPresent()) {
+            blackListRepository.save(new BlackList(token));
+        }
+
+        // 쿠키 삭제
+        Cookie cookie = new Cookie("AToken", null);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
     }
 }

@@ -4,10 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum UserRole {
-    ROLE_CUSTOMER("CUSTOMER"),
-    ROLE_OWNER("OWNER"),
-    ROLE_MANAGER("MANAGER"),
-    ROLE_MASTER("MASTER");
+    ROLE_CUSTOMER("ROLE_CUSTOMER"),
+    ROLE_OWNER("ROLE_OWNER"),
+    ROLE_MANAGER("ROLE_MANAGER"),
+    ROLE_MASTER("ROLE_MASTER");
 
     private final String role;
 

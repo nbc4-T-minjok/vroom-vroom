@@ -1,4 +1,4 @@
-package com.sparta.vroomvroom.global.security.filter;
+package com.sparta.vroomvroom.global.security.handler;
 
 import com.sparta.vroomvroom.domain.user.model.entity.BlackList;
 import com.sparta.vroomvroom.domain.user.repository.BlackListRepository;
@@ -36,6 +36,10 @@ public class JwtLogoutHandler implements LogoutHandler {
             cookie.setHttpOnly(true);
             cookie.setMaxAge(0);
             response.addCookie(cookie);
+        }else{
+            //로그아웃은 예외 발생이 아니면 무조건 성공 핸들러 요청
+            //응답 구분은 성공 핸들러에서 처리
+            request.setAttribute("logoutError", "잘못된 접근입니다. 로그인 되어 있지 않습니다.");
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.sparta.vroomvroom.global.security.filter;
 
+import com.sparta.vroomvroom.domain.user.model.entity.BlackList;
 import com.sparta.vroomvroom.domain.user.repository.BlackListRepository;
 import com.sparta.vroomvroom.global.security.UserDetailsServiceImpl;
 import com.sparta.vroomvroom.global.utils.JwtUtil;
@@ -33,33 +34,34 @@ public class JwtFilter extends OncePerRequestFilter {
         //토큰 추출
         String token = jwtUtil.getTokenFromCookie(request);
 
-        //토큰 검증
-        if(token == null || !jwtUtil.validateToken(token)) {
-            log.warn("JWT 토큰이 존재하지 않거나 유효하지 않습니다.");
+        //토큰 유무 판단
+        if(token == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        //블랙리스트 확인
-        if (blackListRepository.findByToken(token).isPresent()) {
-            log.warn("만료된 JWT 토큰입니다.");
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        //토큰에서 값 추출
-        Claims claims = jwtUtil.getUserInfoFromToken(token);
-        String userName = claims.getSubject();
-
-        //인증 시도
         try {
-            //성공시 인증객체 생성
+            //블랙리스트 조회
+            if (blackListRepository.findByToken(token).isPresent()) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            //유효하지 않은 토큰은 블랙리스트 저장
+            if(!jwtUtil.validateToken(token)) {
+                blackListRepository.save(new BlackList(token));
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            Claims claims = jwtUtil.getUserInfoFromToken(token);
+            String userName = claims.getSubject();
+
             setAuthentication(userName);
         } catch (Exception e) {
-            //실패시 로그
-            log.error("JWT 토큰을 통한 인증이 실패했습니다.");
+            // 토큰 파싱 실패 등 모든 예외도 블랙리스트에 등록
+            blackListRepository.save(new BlackList(token));
             filterChain.doFilter(request, response);
-            return;
         }
 
         //정상 인증이 끝나면 다음 필터 진행

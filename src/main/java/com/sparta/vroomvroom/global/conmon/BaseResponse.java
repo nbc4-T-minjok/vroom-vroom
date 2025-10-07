@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import static com.sparta.vroomvroom.global.conmon.constants.BaseResponseStatus.FAIL;
 import static com.sparta.vroomvroom.global.conmon.constants.BaseResponseStatus.SUCCESS;
 
-import com.sparta.vroomvroom.global.conmon.constants.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

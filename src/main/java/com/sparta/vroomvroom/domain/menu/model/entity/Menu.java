@@ -1,14 +1,17 @@
 package com.sparta.vroomvroom.domain.menu.model.entity;
 
 import com.sparta.vroomvroom.domain.cart.model.entity.CartMenu;
+import com.sparta.vroomvroom.domain.company.model.entity.Company;
 import com.sparta.vroomvroom.domain.order.model.entity.OrderMenu;
+import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import com.sparta.vroomvroom.global.conmon.constants.MenuStatus;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +21,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Menu {
+public class Menu extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "menu_id", columnDefinition = "uuid", updatable = false, nullable = false)
@@ -28,10 +31,10 @@ public class Menu {
     private UUID companyId;
 
     @Column(name = "name", nullable = false, length = 50)
-    private String name;
+    private String menuName;
 
     @Column(name = "price", nullable = false)
-    private Integer price;
+    private Integer menuPrice;
 
     @Column(name = "menu_group", nullable = false, length = 20)
     private String menuGroup;
@@ -50,21 +53,21 @@ public class Menu {
     private Boolean isVisible;
 
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt = Instant.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "created_by", nullable = false, length = 20)
     private String createdBy;
 
     @Column(name = "updated_at")
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
 
     @Column(name = "deleted_at")
-    private Instant deletedAt;
+    private LocalDateTime deletedAt;
 
-    @Column(name = "delete_by", length = 20)
+    @Column(name = "deleted_by", length = 20)
     private String deletedBy;
 
 
@@ -75,4 +78,28 @@ public class Menu {
     private List<OrderMenu> orderMenus = new ArrayList<>();
 
 
+    @Builder
+    public Menu(Company company, String menuName, String menuGroup, Integer menuPrice,
+                String menuImage, String menuDescription, MenuStatus menuStatus, Boolean isVisible) {
+        this.companyId = company.getCompanyId();
+        this.menuName = menuName;
+        this.menuGroup = menuGroup;
+        this.menuPrice = menuPrice;
+        this.menuImage = menuImage;
+        this.menuDescription = menuDescription;
+        this.menuStatus = menuStatus;
+        this.isVisible = isVisible;
+    }
+
+    public void updateMenu(String menuName, String menuGroup, Integer menuPrice,
+                           String menuImage, String menuDescription,
+                           MenuStatus menuStatus, Boolean isVisible) {
+        this.menuName = menuName;
+        this.menuGroup = menuGroup;
+        this.menuPrice = menuPrice;
+        this.menuImage = menuImage;
+        this.menuDescription = menuDescription;
+        this.menuStatus = menuStatus;
+        this.isVisible = isVisible;
+    }
 }

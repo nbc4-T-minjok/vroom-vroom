@@ -53,6 +53,7 @@ public abstract class BaseEntity {
 
     public void create(String userName){
         this.createdBy = userName;
+        this.updatedBy = userName;
     }
 
 }

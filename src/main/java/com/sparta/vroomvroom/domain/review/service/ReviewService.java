@@ -76,7 +76,7 @@ public class ReviewService {
         ownerReview.setReview(review);
         ownerReview.setContents(requestDto.getContents());
         // CreatedBy 없는동안 임시
-        ownerReview.setCreatedBy("tester");
+//        ownerReview.setCreatedBy("tester");
 
         // 리뷰 저장_업체
         ownerReviewRepository.save(ownerReview);

@@ -1,5 +1,6 @@
 package com.sparta.vroomvroom.domain.user.service;
 
+import com.sparta.vroomvroom.domain.user.model.dto.request.UserChangePasswordRequest;
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserSignupRequest;
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserUpdatedRequest;
 import com.sparta.vroomvroom.domain.user.model.dto.response.UserDetailResponse;
@@ -87,7 +88,18 @@ public class UserService {
         user.softDelete(LocalDateTime.now(),user.getUserName());
         //삭제 처리 되면 현재 요청에서 사용한 토큰 무효화 (블랙리스트 처리)
         blackListRepository.save(new BlackList(token));
+    }
 
+    //비밀번호 변경
+    @Transactional
+    public void changePassword(String userName, UserChangePasswordRequest req) {
+        User user = findUser(userName);
+        if(passwordEncoder.matches(req.getNewPassword(),user.getPassword())){
+            throw new IllegalArgumentException("새로운 비밀번호는 기존 비밀번호와 같을 수 없습니다.");
+        }else if(!passwordEncoder.matches(req.getCurrentPassword(),user.getPassword())){
+            throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
+        }
+        user.setPassword(passwordEncoder.encode(req.getNewPassword()));
     }
 
     //---- 유틸 및 재사용 함수

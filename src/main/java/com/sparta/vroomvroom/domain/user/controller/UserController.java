@@ -1,5 +1,6 @@
 package com.sparta.vroomvroom.domain.user.controller;
 
+import com.sparta.vroomvroom.domain.user.model.dto.request.UserChangePasswordRequest;
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserSignupRequest;
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserUpdatedRequest;
 import com.sparta.vroomvroom.domain.user.model.dto.response.UserDetailResponse;
@@ -57,6 +58,16 @@ public class UserController {
     ){
         String token = jwtUtil.getTokenFromCookie(req);
         userService.deleteUser(userDetails.getUser().getUserName(),token);
+        return new BaseResponse();
+    }
+
+    //비밀번호 변경
+    @PatchMapping("/users/password")
+    public BaseResponse changePassword(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody UserChangePasswordRequest req
+    ){
+        userService.changePassword(userDetails.getUser().getUserName(),req);
         return new BaseResponse();
     }
 

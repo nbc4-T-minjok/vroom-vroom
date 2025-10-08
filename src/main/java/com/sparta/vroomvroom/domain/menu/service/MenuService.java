@@ -13,72 +13,53 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class MenuService {
 
     private final MenuRepository menuRepository;
     private final CompanyRepository companyRepository;
 
-
-    public MenuResponseDto createMenu(UUID companyId, MenuRequestDto requestDto) {
+    @Transactional
+    public void createMenu(UUID companyId, MenuRequestDto requestDto) {
         Company company = findCompany(companyId);
 
-        Menu menu = Menu.builder()
-                .company(company)
-                .menuName(requestDto.getMenuName())
-                .menuGroup(requestDto.getMenuGroup())
-                .menuPrice(requestDto.getMenuPrice())
-                .menuImage(requestDto.getMenuImage())
-                .menuDescription(requestDto.getMenuDescription())
-                .menuStatus(requestDto.toMenuStatus())
-                .isVisible(requestDto.getIsVisible())
-                .build();
-
-        menuRepository.save(menu);
-        return new MenuResponseDto(menu);
+        menuRepository.save(new Menu(company.getCompanyId(), requestDto));
     }
 
     @Transactional(readOnly = true)
-    public MenuResponseDto getMenu(UUID companyId, UUID menuId) {
-        Company company = findCompany(companyId);
+    public MenuResponseDto getMenu(UUID menuId) {
         Menu menu = findMenu(menuId);
 
         return new MenuResponseDto(menu);
     }
 
     @Transactional(readOnly = true)
-    public List<MenuResponseDto> getMenus(UUID companyId) {
-        List<Menu> menuList = menuRepository.findAllByCompanyIdAndIsDeletedFalse(companyId);
-        return menuList.stream()
+    public List<MenuResponseDto> getMenus(UUID companyId, boolean includeHidden) {
+        List<Menu> menu = includeHidden
+                ? menuRepository.findAllByCompanyIdAndIsDeletedFalse(companyId)
+                : menuRepository.findAllByCompanyIdAndIsDeletedFalseAndIsVisibleTrue(companyId);
+
+        return menu.stream()
                 .map(MenuResponseDto::new)
-                .toList();
+                .collect(Collectors.toList());
     }
 
-    public MenuResponseDto updateMenu(UUID companyId, UUID menuId, MenuRequestDto requestDto) {
-        Company company = findCompany(companyId);
+    @Transactional
+    public MenuResponseDto updateMenu(UUID menuId, MenuRequestDto requestDto) {
         Menu menu = findMenu(menuId);
 
-        menu.updateMenu(
-                requestDto.getMenuName(),
-                requestDto.getMenuGroup(),
-                requestDto.getMenuPrice(),
-                requestDto.getMenuImage(),
-                requestDto.getMenuDescription(),
-                requestDto.toMenuStatus(),
-                requestDto.getIsVisible()
-        );
+        menu.updateMenu(requestDto);
         return new MenuResponseDto(menu);
     }
 
-    public MenuResponseDto deleteMenu(UUID companyId, UUID menuId, String deletedBy) {
-        Company company = findCompany(companyId);
+    @Transactional
+    public void deleteMenu(UUID menuId, String deletedBy) {
         Menu menu = findMenu(menuId);
 
         menu.softDelete(LocalDateTime.now(), deletedBy != null ? deletedBy : "SYSTEM");
-        return new MenuResponseDto(menu);
     }
 
     //예외처리

@@ -2,6 +2,7 @@ package com.sparta.vroomvroom.domain.menu.model.entity;
 
 import com.sparta.vroomvroom.domain.cart.model.entity.CartMenu;
 import com.sparta.vroomvroom.domain.company.model.entity.Company;
+import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuRequestDto;
 import com.sparta.vroomvroom.domain.order.model.entity.OrderMenu;
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import com.sparta.vroomvroom.global.conmon.constants.MenuStatus;
@@ -22,18 +23,20 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class Menu extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "menu_id", columnDefinition = "uuid", updatable = false, nullable = false)
+    @Column(name = "menu_id", columnDefinition = "uuid")
     private UUID menuId;
 
+    // TODO: 업체 도메인 개발 완료후 Company 연관관계로 변경
     @Column(name = "company_id", nullable = false, columnDefinition = "uuid")
     private UUID companyId;
 
-    @Column(name = "name", nullable = false, length = 50)
+    @Column(name = "menu_name", nullable = false, length = 50)
     private String menuName;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "menu_price", nullable = false)
     private Integer menuPrice;
 
     @Column(name = "menu_group", nullable = false, length = 20)
@@ -56,7 +59,7 @@ public class Menu extends BaseEntity {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "created_by", nullable = false, length = 20)
-    private String createdBy;
+    private String createdBy = "test";
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
@@ -71,35 +74,26 @@ public class Menu extends BaseEntity {
     private String deletedBy;
 
 
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartMenu> cartMenus = new ArrayList<>();
-
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderMenu> orderMenus = new ArrayList<>();
-
 
     @Builder
-    public Menu(Company company, String menuName, String menuGroup, Integer menuPrice,
-                String menuImage, String menuDescription, MenuStatus menuStatus, Boolean isVisible) {
-        this.companyId = company.getCompanyId();
-        this.menuName = menuName;
-        this.menuGroup = menuGroup;
-        this.menuPrice = menuPrice;
-        this.menuImage = menuImage;
-        this.menuDescription = menuDescription;
-        this.menuStatus = menuStatus;
-        this.isVisible = isVisible;
+    public Menu(UUID companyId, MenuRequestDto dto) {
+        this.companyId = companyId;
+        this.menuName = dto.getMenuName();
+        this.menuGroup = dto.getMenuGroup();
+        this.menuPrice = dto.getMenuPrice();
+        this.menuImage = dto.getMenuImage();
+        this.menuDescription = dto.getMenuDescription();
+        this.menuStatus = dto.getMenuStatus();
+        this.isVisible = dto.getIsVisible();
     }
 
-    public void updateMenu(String menuName, String menuGroup, Integer menuPrice,
-                           String menuImage, String menuDescription,
-                           MenuStatus menuStatus, Boolean isVisible) {
-        this.menuName = menuName;
-        this.menuGroup = menuGroup;
-        this.menuPrice = menuPrice;
-        this.menuImage = menuImage;
-        this.menuDescription = menuDescription;
-        this.menuStatus = menuStatus;
-        this.isVisible = isVisible;
+    public void updateMenu(MenuRequestDto dto) {
+        this.menuName = dto.getMenuName();
+        this.menuGroup = dto.getMenuGroup();
+        this.menuPrice = dto.getMenuPrice();
+        this.menuImage = dto.getMenuImage();
+        this.menuDescription = dto.getMenuDescription();
+        this.menuStatus = dto.getMenuStatus();
+        this.isVisible = dto.getIsVisible();
     }
 }

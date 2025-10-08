@@ -110,7 +110,7 @@ public class AddressService {
             throw new IllegalArgumentException("본인 소유의 배송지만 수정할 수 있습니다.");
         }
 
-        //배송지 수정
+        // 변경 내용 반영
         if(requestDto.getAddressName() != null) address.setAddressName(requestDto.getAddressName());
         if(requestDto.getAddress() != null) address.setAddress(requestDto.getAddress());
         if(requestDto.getDetailAddress() != null) address.setDetailAddress(requestDto.getDetailAddress());

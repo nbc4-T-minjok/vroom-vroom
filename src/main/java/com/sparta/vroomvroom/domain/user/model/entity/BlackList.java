@@ -31,8 +31,6 @@ public class BlackList {
     @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
-    //Todo: ERD, 설계문서에서 CreatedBy 삭제 - 로직상 존재 불가능
-
 
     public BlackList(String token) {
         this.token = token;

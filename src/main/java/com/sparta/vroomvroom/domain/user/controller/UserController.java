@@ -3,12 +3,8 @@ package com.sparta.vroomvroom.domain.user.controller;
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserSignupRequest;
 import com.sparta.vroomvroom.domain.user.service.UserService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
-import com.sparta.vroomvroom.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,15 +18,6 @@ public class UserController {
             @Valid @RequestBody UserSignupRequest userSignupRequest
             ) {
         userService.signup(userSignupRequest);
-        return new BaseResponse();
-    }
-
-    //Todo: PR 병합시 삭제
-    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER"})
-    @GetMapping("/users/login/test")
-    public BaseResponse testLogin(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        System.out.println(userDetails.getUser().getUserName());
-        System.out.println(userDetails.getUser().getUserId());
         return new BaseResponse();
     }
 }

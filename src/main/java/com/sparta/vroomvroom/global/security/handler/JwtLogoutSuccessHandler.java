@@ -1,7 +1,5 @@
 package com.sparta.vroomvroom.global.security.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import com.sparta.vroomvroom.global.utils.ResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

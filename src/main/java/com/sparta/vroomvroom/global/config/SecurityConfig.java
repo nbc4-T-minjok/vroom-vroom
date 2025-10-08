@@ -75,8 +75,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/users/login","/api/v1/users/signup").permitAll()
                         .requestMatchers("/api/v1/users/logout").authenticated()
-                        //Todo: PR 병합시 삭제
-                        .requestMatchers("/api/v1/users/login/test").authenticated()
                         .anyRequest().permitAll()
                 )
 

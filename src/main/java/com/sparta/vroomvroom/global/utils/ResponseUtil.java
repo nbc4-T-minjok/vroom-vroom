@@ -13,7 +13,6 @@ import java.io.IOException;
 public class ResponseUtil {
 
     public void sendErrorResponse(HttpServletResponse response, String message, int responseStatus) {
-        //호출시 넘겨준 응답코드가 200이 아니면 에러 메시지 응답, 200이면 성공 메시지 응답
         try {
             response.setStatus(responseStatus);
             response.setContentType("application/json;charset=UTF-8");
@@ -31,7 +30,6 @@ public class ResponseUtil {
     }
 
     public void sendSuccessResponse(HttpServletResponse response) {
-        //호출시 넘겨준 응답코드가 200이 아니면 에러 메시지 응답, 200이면 성공 메시지 응답
         try {
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json;charset=UTF-8");

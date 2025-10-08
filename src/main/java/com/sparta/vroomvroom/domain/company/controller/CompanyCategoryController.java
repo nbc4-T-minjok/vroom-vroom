@@ -1,15 +1,16 @@
 package com.sparta.vroomvroom.domain.company.controller;
 
 import com.sparta.vroomvroom.domain.company.model.dto.CompanyCategoryRequestDto;
+import com.sparta.vroomvroom.domain.company.model.dto.CompanyCategoryResponseDto;
 import com.sparta.vroomvroom.domain.company.service.CompanyCategoryService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import com.sparta.vroomvroom.global.conmon.constants.BaseResponseStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -22,4 +23,13 @@ public class CompanyCategoryController {
         companyCategoryService.createCompanyCategories(requestDto);
         return new BaseResponse();
     }
+
+    @GetMapping("/company-categories")
+    public BaseResponse getCompanyCategories(@RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "10") int size) {
+        Page<CompanyCategoryResponseDto> companyCategories = companyCategoryService.getCompanyCategories(page, size);
+        return new BaseResponse(companyCategories);
+    }
+
+
 }

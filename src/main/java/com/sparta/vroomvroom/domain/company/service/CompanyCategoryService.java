@@ -1,10 +1,16 @@
 package com.sparta.vroomvroom.domain.company.service;
 
 import com.sparta.vroomvroom.domain.company.model.dto.CompanyCategoryRequestDto;
+import com.sparta.vroomvroom.domain.company.model.dto.CompanyCategoryResponseDto;
 import com.sparta.vroomvroom.domain.company.model.entity.CompanyCategory;
 import com.sparta.vroomvroom.domain.company.repository.CompanyCategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,5 +34,11 @@ public class CompanyCategoryService {
         companyCategory.create("test userName");
 
         companyCategoryRepository.save(companyCategory);
+    }
+
+    public Page<CompanyCategoryResponseDto> getCompanyCategories(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CompanyCategory> categoryPage = companyCategoryRepository.findAll(pageable);
+        return categoryPage.map(CompanyCategoryResponseDto::of);
     }
 }

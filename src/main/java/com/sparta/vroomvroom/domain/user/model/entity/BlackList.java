@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @Table(name = "black_lists")
+@EntityListeners(AuditingEntityListener.class)
 public class BlackList {
     @Id
     @GeneratedValue(strategy=GenerationType.UUID)
@@ -29,7 +31,8 @@ public class BlackList {
     @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
-    @CreatedBy
-    @Column(name = "created_by",updatable = false, nullable = false, length = 20)
-    private String createdBy;
+
+    public BlackList(String token) {
+        this.token = token;
+    }
 }

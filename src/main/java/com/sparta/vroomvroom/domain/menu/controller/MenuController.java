@@ -18,39 +18,40 @@ public class MenuController {
     private final MenuService menuservice;
 
     @PostMapping("/companies/{companyId}/menus")
-    public ResponseEntity<BaseResponse<MenuResponseDto>> createMenu(@PathVariable UUID companyId,
-                                                                    @RequestBody MenuRequestDto requestDto) {
-        MenuResponseDto responseDto = menuservice.createMenu(companyId, requestDto);
-        return ResponseEntity.ok(new BaseResponse<>(responseDto));
+    public BaseResponse<Void> createMenu(@PathVariable UUID companyId,
+                                         @RequestBody MenuRequestDto requestDto) {
+
+        menuservice.createMenu(companyId, requestDto);
+        return new BaseResponse<>("메뉴 등록 완료");
     }
 
     @GetMapping("/companies/{companyId}/menus/{menuId}")
-    public ResponseEntity<BaseResponse<MenuResponseDto>> getMenu(@PathVariable UUID companyId,
-                                                                 @PathVariable UUID menuId) {
-        MenuResponseDto responseDto = menuservice.getMenu(companyId, menuId);
-        return ResponseEntity.ok(new BaseResponse<>(responseDto));
+    public BaseResponse<Void> getMenu(@PathVariable UUID menuId) {
+
+        return new BaseResponse(menuservice.getMenu(menuId));
     }
 
     @GetMapping("/companies/{companyId}/menus")
-    public ResponseEntity<BaseResponse<List<MenuResponseDto>>> getMenus(@PathVariable UUID companyId) {
-        List<MenuResponseDto> responseDto = menuservice.getMenus(companyId);
-        return ResponseEntity.ok(new BaseResponse<>(responseDto));
+    public BaseResponse<List<MenuResponseDto>> getMenus(@PathVariable UUID companyId,
+                                                        @RequestParam(defaultValue = "false") boolean includeHidden) {
+
+        return new BaseResponse<>(menuservice.getMenus(companyId, includeHidden));
     }
 
     @PatchMapping("/companies/{companyId}/menus/{menuId}")
-    public ResponseEntity<BaseResponse<MenuResponseDto>> updateMenu(@PathVariable UUID companyId,
-                                                                    @PathVariable UUID menuId,
-                                                                    @RequestBody MenuRequestDto requestDto) {
-        MenuResponseDto responseDto = menuservice.updateMenu(companyId, menuId, requestDto);
-        return ResponseEntity.ok(new BaseResponse<>(responseDto));
+    public BaseResponse<MenuResponseDto> updateMenu(@PathVariable UUID companyId,
+                                                    @PathVariable UUID menuId,
+                                                    @RequestBody MenuRequestDto requestDto) {
+
+        return new BaseResponse<>(menuservice.updateMenu(menuId, requestDto));
     }
 
     @DeleteMapping("/companies/{companyId}/menus/{menuId}")
-    public ResponseEntity<BaseResponse<MenuResponseDto>> deleteMenu(@PathVariable UUID companyId,
+    public BaseResponse<Void> deleteMenu(@PathVariable UUID companyId,
                                                                     @PathVariable UUID menuId,
                                                                     @RequestParam(defaultValue = "SYSTEM") String deletedBy) {
-        MenuResponseDto responseDto = menuservice.deleteMenu(companyId, menuId, deletedBy);
-        return ResponseEntity.ok(new BaseResponse<>(responseDto));
+        menuservice.deleteMenu(menuId, deletedBy);
+        return new BaseResponse<>("메뉴 삭제 완료");
     }
 
 }

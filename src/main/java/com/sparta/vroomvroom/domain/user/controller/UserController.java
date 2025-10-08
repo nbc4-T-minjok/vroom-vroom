@@ -20,6 +20,8 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
+
+    //회원 가입
     @PostMapping("/users/signup")
     public BaseResponse signup(
             @Valid @RequestBody UserSignupRequest userSignupRequest
@@ -28,6 +30,7 @@ public class UserController {
         return new BaseResponse();
     }
 
+    //회원 정보 조회
     @GetMapping("/users")
     public BaseResponse<UserDetailResponse> getUser(
             @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -36,6 +39,7 @@ public class UserController {
         return new BaseResponse(res);
     }
 
+    //회원 정보 수정
     @PatchMapping("/users")
     public BaseResponse updateUser(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -45,6 +49,7 @@ public class UserController {
         return new BaseResponse();
     }
 
+    //회원 탈퇴
     @DeleteMapping("/users")
     public BaseResponse deleteUser(
             HttpServletRequest req,
@@ -54,4 +59,5 @@ public class UserController {
         userService.deleteUser(userDetails.getUser().getUserName(),token);
         return new BaseResponse();
     }
+
 }

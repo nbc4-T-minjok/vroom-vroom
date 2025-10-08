@@ -57,7 +57,7 @@ public class ReviewService {
         review.setRate(requestDto.getRate());
         review.setContents(requestDto.getReviewContents());
         // CreatedBy 없는동안 임시
-        review.setCreatedBy(userId.toString());
+//        review.setCreatedBy(userId.toString());
 
         //리뷰 저장
         reviewRepository.save(review);

@@ -22,7 +22,7 @@ public class Address extends BaseEntity {
     @Column(name = "addresses_id", columnDefinition = "uuid")
     private UUID addressesId;
 
-    @Column(name = "address_name", nullable = false, length = 20)
+    @Column(name = "address_name", unique = true, nullable = false, length = 20)
     private String addressName;
 
     @Column(nullable = false, length = 50)

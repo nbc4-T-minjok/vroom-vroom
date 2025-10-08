@@ -14,6 +14,10 @@ public class AddressReqeustDto {
 
     private LocationDto location;       // 중첩 객체로 받기
 
+//    public boolean getIsDefault() {
+//        return this.isDefault;
+//    }
+
     @Getter
     @NoArgsConstructor
     public static class LocationDto {

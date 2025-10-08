@@ -32,8 +32,8 @@ public class AddressController {
     // 배송지 등록
     @PostMapping("addresses")
     //public BaseResponse createAddress(@AuthenticationPrincipal UserDetailsImpl userDetails)
-    public BaseResponse createAddress(@RequestBody AddressReqeustDto req){
-        addressService.createAddress(Long userId, req);
+    public BaseResponse createAddress(@RequestBody AddressReqeustDto reqeustDto){
+        addressService.createAddress(Long userId, reqeustDto);
         return new BaseResponse();
     }
 
@@ -46,12 +46,24 @@ public class AddressController {
     }
 
     // 배송지 정보 수정
+    @PatchMapping("addresses/{userAddressId}")
+    public BaseResponse patchAddress(Long userId, @RequestParam UUID userAddressId, @RequestBody AddressReqeustDto reqeustDto) {
+        addressService.patchAddress(userId, userAddressId, reqeustDto);
+        return new BaseResponse<>();
+    }
+
 
     // 기본배송지 변경
+    @PatchMapping("addresses/default/{userAddressId}")
+    //public BaseResponse changeDefaultAddress(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam UUID userAddressId))
+    public BaseResponse changeDefaultAddress(Long userId, @RequestParam UUID userAddressId) {
+        addressService.changeDefaultAddress(userId, userAddressId);
+        return new BaseResponse();
+    }
 
     // 배송지 삭제
     @DeleteMapping("addresses/{userAddressId}")
-    //public BaseResponse deleteAddress(@AuthenticationPrincipal UserDetailsImpl userDetails))
+    //public BaseResponse deleteAddress(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam UUID userAddressId))
     public BaseResponse deleteAddress(Long userId, @RequestParam UUID userAddressId) {
         addressService.deleteAddress(userId, userAddressId);
         return new BaseResponse();

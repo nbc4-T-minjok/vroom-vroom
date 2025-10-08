@@ -13,6 +13,7 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AddressService {
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
@@ -96,19 +98,63 @@ public class AddressService {
     }
 
     // 배송지 수정
+    public void patchAddress(Long userId, UUID userAddressId, AddressReqeustDto requestDto) {
+        // 사용자 검증
+        User user = userRepository.findById((userId)).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-
-    // 기본배송지 변경
-
-
-    // 배송지 삭제
-    public void deleteAddress(Long userId, UUID userAddressId) {
         // 배송지아이디 검증
         Address address = addressRepository.findById(userAddressId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 배송지아이디입니다."));
 
-        // 로그인 한 사용자의 주소인지 검증
+        // 배송지 소유자 검증 (로그인 한 사용자의 주소인지)
+        if (!address.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("본인 소유의 배송지만 수정할 수 있습니다.");
+        }
+
+        //배송지 수정
+        if(requestDto.getAddressName() != null) address.setAddressName(requestDto.getAddressName());
+        if(requestDto.getAddress() != null) address.setAddress(requestDto.getAddress());
+        if(requestDto.getDetailAddress() != null) address.setDetailAddress(requestDto.getDetailAddress());
+        if(requestDto.getZipCode() != null) address.setZipCode(requestDto.getZipCode());
+        if (requestDto.isDefault()) {
+            addressRepository.updateIsDefaultToFalse(userId);
+            address.setDefault(true);
+        }
+
+        addressRepository.save(address);
+    }
+
+    // 기본배송지 변경
+    public void changeDefaultAddress(Long userId, UUID userAddressId) {
+        // 사용자 검증
+        User user = userRepository.findById((userId)).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        // 배송지아이디 검증
+        Address address = addressRepository.findById(userAddressId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 배송지아이디입니다."));
+
+        // 배송지 소유자 검증 (로그인 한 사용자의 주소인지)
+        if (!address.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("본인 소유의 배송지만 수정할 수 있습니다.");
+        }
+
+        // 기존 기본배송지 제거
+        addressRepository.updateIsDefaultToFalse(userId);
+
+        // 기본배송지 새로 등록
+        address.setDefault(true);
+        addressRepository.save(address);
+    }
+
+    // 배송지 삭제
+    public void deleteAddress(Long userId, UUID userAddressId) {
+        // 사용자 검증
+        User user = userRepository.findById((userId)).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        // 배송지아이디 검증
+        Address address = addressRepository.findById(userAddressId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 배송지아이디입니다."));
+
+        //  배송지 소유자 검증 (로그인 한 사용자의 주소인지)
         if(!address.getUser().getUserId().equals(userId)) {
-            throw new IllegalArgumentException("해당 배송지를 삭제할 수 있는 권한이 없습니다.");
+            throw new IllegalArgumentException("본인 소유의 배송지만 삭제할 수 있습니다.");
         }
 
         // 기본배송지가 not null이므로 삭제 불가 처리

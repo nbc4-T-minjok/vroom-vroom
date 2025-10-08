@@ -26,25 +26,9 @@ public class MenuRequestDto {
     private String menuDescription;
 
     @NotBlank(message = "메뉴 상태는 필수입니다.")
-    private String menuStatus;  // "판매중", "품절"
+    private MenuStatus menuStatus;  // "판매중", "품절"
 
     @NotNull(message = "노출 여부는 필수입니다.")
     private Boolean isVisible;
 
-
-    public MenuRequestDto(String menuName, String menuGroup,
-                       Integer menuPrice, String menuImage, String menuDescription,
-                       String menuStatus, Boolean isVisible) {
-        this.menuName = menuName;
-        this.menuGroup = menuGroup;
-        this.menuPrice = menuPrice;
-        this.menuImage = menuImage;
-        this.menuDescription = menuDescription;
-        this.menuStatus = menuStatus;
-        this.isVisible = isVisible;
-    }
-    // 변환 메서드 추가
-    public MenuStatus toMenuStatus() {
-        return MenuStatus.valueOf(menuStatus.toUpperCase());
-    }
 }

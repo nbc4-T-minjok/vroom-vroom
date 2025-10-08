@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.domain.menu.model.dto.response;
 
 import com.sparta.vroomvroom.domain.menu.model.entity.Menu;
+import com.sparta.vroomvroom.global.conmon.constants.MenuStatus;
 import lombok.Getter;
 
 import java.util.UUID;
@@ -15,7 +16,7 @@ public class MenuResponseDto {
     private Integer menuPrice;
     private String menuImage;
     private String menuDescription;
-    private String menuStatus;
+    private MenuStatus menuStatus;
     private Boolean isVisible;
 
     public MenuResponseDto(Menu menu) {
@@ -25,7 +26,7 @@ public class MenuResponseDto {
         this.menuPrice = menu.getMenuPrice();
         this.menuImage = menu.getMenuImage();
         this.menuDescription = menu.getMenuDescription();
-        this.menuStatus = menu.getMenuStatus().getStatus();
+        this.menuStatus = menu.getMenuStatus();
         this.isVisible = menu.getIsVisible();
     }
 }

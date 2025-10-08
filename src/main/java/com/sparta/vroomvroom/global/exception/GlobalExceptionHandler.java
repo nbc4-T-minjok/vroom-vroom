@@ -5,6 +5,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -21,6 +23,12 @@ public class GlobalExceptionHandler {
                 .get(0)
                 .getDefaultMessage(); // 첫 번째 에러 메시지 추출
         return new BaseResponse(errorMessage);
+    }
+
+    //권한 없음 예외
+    @ExceptionHandler(AccessDeniedException.class)
+    public BaseResponse handleAllExceptions(AccessDeniedException ex) {
+        return new BaseResponse("요청이 실패했습니다. 권한이 없습니다.");
     }
 
     // 나머지 예외

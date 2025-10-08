@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.global.exception;
 
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -13,7 +14,7 @@ public class GlobalExceptionHandler {
     //Illegal (직접 던진 예외)
     @ExceptionHandler({IllegalArgumentException.class})
     public BaseResponse handleException(IllegalArgumentException ex) {
-        return new BaseResponse(ex.getMessage());
+        return new BaseResponse("요청이 실패했습니다. " + ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -23,6 +24,12 @@ public class GlobalExceptionHandler {
                 .get(0)
                 .getDefaultMessage(); // 첫 번째 에러 메시지 추출
         return new BaseResponse(errorMessage);
+    }
+
+    //권한 없음 예외
+    @ExceptionHandler(EntityNotFoundException.class)
+    public BaseResponse handleAllExceptions(EntityNotFoundException ex) {
+        return new BaseResponse("요청이 실패했습니다. " + ex.getMessage());
     }
 
     //권한 없음 예외

@@ -1,8 +1,10 @@
 package com.sparta.vroomvroom.domain.user.service;
 
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserSignupRequest;
+import com.sparta.vroomvroom.domain.user.model.dto.response.UserDetailResponse;
 import com.sparta.vroomvroom.domain.user.model.entity.User;
 import com.sparta.vroomvroom.domain.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,5 +28,13 @@ public class UserService {
         User user = new User(req, passwordEncoder.encode(req.getPassword()));
         user.create(req.getUserName());
         userRepository.save(user);
+    }
+
+    //회원 정보 조회
+    public UserDetailResponse getUser(Long userId) {
+        User user = userRepository.findByUserId(userId).orElseThrow(
+                () -> new EntityNotFoundException("일치하는 회원이 존재하지 않습니다.")
+        );
+        return new UserDetailResponse(user);
     }
 }

@@ -18,8 +18,8 @@ import java.util.UUID;
 public class ReviewController {
     private final ReviewService reviewService;
 
-    // 리뷰작성
-    @PostMapping("/{orderId}/reviews")
+    // 리뷰작성_주문
+    @PostMapping("/order/{orderId}/reviews")
     public BaseResponse createReview(
             @Valid @RequestBody ReviewRequestDto requestDto,
             @PathVariable UUID orderId,
@@ -28,18 +28,30 @@ public class ReviewController {
         return new BaseResponse();
     }
 
+    // 리뷰작성_고객
+    @PostMapping("/users/{userId}/reviews")
+    public BaseResponse createReviewUser(
+            @Valid @RequestBody ReviewRequestDto requestDto,
+            @PathVariable Long userId){
+        UUID orderId = requestDto.getOrderId();
+
+        reviewService.createReview(orderId, userId, requestDto);
+        return new BaseResponse();
+    }
+
     // 리뷰작성_업체
-    @PostMapping("/review/{reviewId}/ownerReviews")
+    @PostMapping("/companies/{compId}/reviews")
     public BaseResponse createReviewCompany(
             @Valid @RequestBody OwnerReviewRequestDto requestDto,
-            @PathVariable UUID reviewId,
+            @PathVariable UUID compId,
             @CookieValue("userId") Long userId){
-        reviewService.createReviewCompany(reviewId, requestDto);
+        UUID reviewId = requestDto.getReviewId();
+        reviewService.createReviewCompany(compId, reviewId, requestDto);
         return new BaseResponse();
     }
 
     // 리뷰 목록 조회_고객
-    @GetMapping("/reviews/{userId}")
+    @GetMapping("/users/{userId}/reviews")
     public  BaseResponse getReviewsList(
             @PathVariable Long userId,
             @RequestParam(value = "page", defaultValue = "0") int page,         // 페이지 번호
@@ -51,7 +63,7 @@ public class ReviewController {
     }
 
     // 리뷰 목록 조회_업체
-    @GetMapping("/{compId}/reviews")
+    @GetMapping("/companies/{compId}/reviews")
     public  BaseResponse getReviewListCompany(
             @PathVariable UUID compId,
             @CookieValue("userId") Long userId,
@@ -65,7 +77,7 @@ public class ReviewController {
     }
 
     // 리뷰 상세 조회_고객
-    @GetMapping("/reviews/{userId}/{reviewId}")
+    @GetMapping("/users/{userId}/reviews/{reviewId}")
     public BaseResponse getReview(
             @PathVariable Long userId,
             @PathVariable UUID reviewId
@@ -76,7 +88,7 @@ public class ReviewController {
 
 
     // 리뷰 상세 조회_업체
-    @GetMapping("/{compId}/reviews/{reviewId}")
+    @GetMapping("/companies/{compId}/reviews/{reviewId}")
     public BaseResponse getReviewCompany(
             @PathVariable UUID compId,
             @PathVariable UUID reviewId
@@ -86,33 +98,30 @@ public class ReviewController {
     }
 
     // 리뷰 수정_고객
-    @PatchMapping("/reviews/{reviewId}")
+    @PatchMapping("/users/{userId}/reviews/{reviewId}")
     public BaseResponse updateReview(
             @PathVariable UUID reviewId,
             @CookieValue("userId") Long userId,
             @Valid @RequestBody ReviewRequestDto requestDto
     ){
-        System.out.println("테스트");
         reviewService.updateReview(reviewId, userId, requestDto);
         return new BaseResponse();
     }
 
     // 리뷰 수정_업체
-    @PatchMapping("/{compId}/reviews/{ownerReviewId}")
+    @PatchMapping("/companies/{compId}/reviews/{reviewId}")
     public BaseResponse updateReviewCompany(
             @PathVariable UUID compId,
-            @PathVariable UUID ownerReviewId,
+            @PathVariable UUID reviewId,
             @CookieValue("userId") Long userId,
             @Valid @RequestBody OwnerReviewRequestDto requestDto
     ){
-        reviewService.updateReviewCompany(compId, ownerReviewId, userId, requestDto);
+        reviewService.updateReviewCompany(compId, reviewId, userId, requestDto);
         return new BaseResponse();
     }
 
-
-
     // 리뷰 삭제_고객
-    @DeleteMapping("/reviews/{reviewId}")
+    @DeleteMapping("/users/{userId}/reviews/{reviewId}")
     public BaseResponse deleteReview(
             @PathVariable UUID reviewId,
             @CookieValue("userId") Long userId
@@ -122,12 +131,11 @@ public class ReviewController {
     }
 
     // 리뷰 삭제_업체
-    @DeleteMapping("/reviews/{reviewId}/ownerReviews")
+    @DeleteMapping("/companies/{compId}/reviews/{reviewId}")
     public BaseResponse deleteReviewCompany(
             @PathVariable UUID reviewId,
             @CookieValue("userId") Long userId
     ){
-        System.out.println("리뷰 삭제 시작");
         reviewService.deleteReviewCompany(reviewId, userId);
         return new BaseResponse();
     }

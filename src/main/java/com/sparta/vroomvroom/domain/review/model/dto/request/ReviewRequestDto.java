@@ -11,6 +11,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 public class ReviewRequestDto {
+    private UUID orderId;
     private UUID compId;
 
     @Min(1)

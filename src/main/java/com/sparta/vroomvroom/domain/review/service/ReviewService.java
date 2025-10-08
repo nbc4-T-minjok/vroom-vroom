@@ -56,16 +56,21 @@ public class ReviewService {
         review.setCompany(company);
         review.setRate(requestDto.getRate());
         review.setContents(requestDto.getReviewContents());
+        // CreatedBy 없는동안 임시
+        review.setCreatedBy(userId.toString());
 
         //리뷰 저장
         reviewRepository.save(review);
 
     }
 
-    public void createReviewCompany(UUID reviewId, @Valid OwnerReviewRequestDto requestDto) {
+    public void createReviewCompany(UUID compId, UUID reviewId, @Valid OwnerReviewRequestDto requestDto) {
         //review, user 엔티티 조회
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(()->new IllegalArgumentException("유효하지 않은 리뷰 ID입니다."));
+
+        Company company = companyRepository.findById(compId)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 회사 ID입니다."));
 
         OwnerReview ownerReview = new OwnerReview();
         ownerReview.setReview(review);
@@ -133,8 +138,11 @@ public class ReviewService {
         review.setContents(requestDto.getReviewContents());
     }
 
-    public void updateReviewCompany(UUID compId, UUID ownerReviewId, Long userId, @Valid OwnerReviewRequestDto requestDto) {
-        OwnerReview ownerReview = ownerReviewRepository.findById(ownerReviewId)
+    public void updateReviewCompany(UUID compId, UUID reviewId, Long userId, @Valid OwnerReviewRequestDto requestDto) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리뷰입니다."));
+
+        OwnerReview ownerReview = ownerReviewRepository.findByReview(review)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리뷰입니다."));
 
         //권한 체크

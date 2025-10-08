@@ -25,4 +25,12 @@ public class UserUpdatedRequest {
     @Email(message = "이메일 형식이 올바르지 않습니다.")
     @Size(max = 50, message = "이메일은 최대 50자까지 가능합니다.")
     private String email;
+
+    //정보 수정시 최소 1개 이상의 수정항목이 전달됐는지 판단
+    public boolean isEmpty() {
+        return (nickName == null || nickName.isBlank())
+                && (phoneNumber == null || phoneNumber.isBlank())
+                && (email == null || email.isBlank());
+    }
+
 }

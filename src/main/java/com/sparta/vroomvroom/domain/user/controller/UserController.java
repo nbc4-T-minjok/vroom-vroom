@@ -25,9 +25,9 @@ public class UserController {
     //회원 가입
     @PostMapping("/users/signup")
     public BaseResponse signup(
-            @Valid @RequestBody UserSignupRequest userSignupRequest
+            @Valid @RequestBody UserSignupRequest req
             ) {
-        userService.signup(userSignupRequest);
+        userService.signup(req);
         return new BaseResponse();
     }
 
@@ -46,7 +46,10 @@ public class UserController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody UserUpdatedRequest userUpdatedRequest
     ){
-        userService.updateUser(userDetails.getUser().getUserName(),userUpdatedRequest);
+        //1개 이상의 수정할 필드값이 전달 되었을 때만 비즈니스 로직 호출
+        if (!userUpdatedRequest.isEmpty()){
+            userService.updateUser(userDetails.getUser().getUserName(),userUpdatedRequest);
+        }
         return new BaseResponse();
     }
 

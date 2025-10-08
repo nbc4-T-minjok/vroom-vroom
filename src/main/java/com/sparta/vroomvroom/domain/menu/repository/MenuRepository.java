@@ -7,5 +7,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface MenuRepository extends JpaRepository<Menu, UUID> {
+
     List<Menu> findAllByCompanyIdAndIsDeletedFalse(UUID companyId);
+
+    List<Menu> findAllByCompanyIdAndIsDeletedFalseAndIsVisibleTrue(UUID companyId);
+
 }

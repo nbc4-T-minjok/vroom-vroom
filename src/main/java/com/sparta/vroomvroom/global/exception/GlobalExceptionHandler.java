@@ -2,6 +2,7 @@ package com.sparta.vroomvroom.global.exception;
 
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -41,6 +42,6 @@ public class GlobalExceptionHandler {
     // 나머지 예외
     @ExceptionHandler(Exception.class)
     public BaseResponse handleAllExceptions(Exception ex) {
-        return new BaseResponse("요청이 실패했습니다. 서버 에러가 발생했습니다.");
+        return new BaseResponse("요청이 실패했습니다. 잠시 후 다시 실행해주세요");
     }
 }

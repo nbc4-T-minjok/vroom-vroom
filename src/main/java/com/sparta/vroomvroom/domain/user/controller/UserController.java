@@ -6,6 +6,8 @@ import com.sparta.vroomvroom.domain.user.model.dto.response.UserDetailResponse;
 import com.sparta.vroomvroom.domain.user.service.UserService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import com.sparta.vroomvroom.global.security.UserDetailsImpl;
+import com.sparta.vroomvroom.global.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/users/signup")
     public BaseResponse signup(
@@ -39,6 +42,16 @@ public class UserController {
             @RequestBody UserUpdatedRequest userUpdatedRequest
     ){
         userService.updateUser(userDetails.getUser().getUserName(),userUpdatedRequest);
+        return new BaseResponse();
+    }
+
+    @DeleteMapping("/users")
+    public BaseResponse deleteUser(
+            HttpServletRequest req,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        String token = jwtUtil.getTokenFromCookie(req);
+        userService.deleteUser(userDetails.getUser().getUserName(),token);
         return new BaseResponse();
     }
 }

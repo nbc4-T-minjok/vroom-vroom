@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.domain.user.model.entity;
 
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserSignupRequest;
+import com.sparta.vroomvroom.domain.user.model.dto.request.UserUpdatedRequest;
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import com.sparta.vroomvroom.global.conmon.constants.UserRole;
 import com.sparta.vroomvroom.global.conmon.constants.UserType;

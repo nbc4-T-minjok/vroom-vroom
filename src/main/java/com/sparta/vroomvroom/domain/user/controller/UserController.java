@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.domain.user.controller;
 
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserSignupRequest;
+import com.sparta.vroomvroom.domain.user.model.dto.request.UserUpdatedRequest;
 import com.sparta.vroomvroom.domain.user.model.dto.response.UserDetailResponse;
 import com.sparta.vroomvroom.domain.user.service.UserService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
@@ -28,7 +29,16 @@ public class UserController {
     public BaseResponse<UserDetailResponse> getUser(
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        UserDetailResponse res = userService.getUser(userDetails.getUser().getUserId());
+        UserDetailResponse res = userService.getUser(userDetails.getUser().getUserName());
         return new BaseResponse(res);
+    }
+
+    @PatchMapping("/users")
+    public BaseResponse updateUser(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody UserUpdatedRequest userUpdatedRequest
+    ){
+        userService.updateUser(userDetails.getUser().getUserName(),userUpdatedRequest);
+        return new BaseResponse();
     }
 }

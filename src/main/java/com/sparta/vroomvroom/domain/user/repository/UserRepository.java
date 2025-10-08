@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.domain.user.repository;
 
 import com.sparta.vroomvroom.domain.user.model.entity.User;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -10,5 +11,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUserName(String userName);
 
-    Optional<User> findByUserId(Long userId);
+    boolean existsByPhoneNumber(String phoneNumber);
+    boolean existsByEmail(String email);
 }

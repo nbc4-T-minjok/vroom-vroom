@@ -31,6 +31,16 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+//        String uri = request.getRequestURI();
+//
+//        // 로그인, 회원가입, 로그아웃, 혹은 공용 요청은 필터 통과
+//        if (uri.startsWith("/api/v1/users/login") ||
+//                uri.startsWith("/api/v1/users/signup") ||
+//                uri.startsWith("/api/v1/users/logout")) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+
         //토큰 추출
         String token = jwtUtil.getTokenFromCookie(request);
 
@@ -59,11 +69,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
             setAuthentication(userName);
         } catch (Exception e) {
+            //추가
+            log.error("JWT 필터 예외 발생: {}", e.getMessage());
             // 토큰 파싱 실패 등 모든 예외도 블랙리스트에 등록
             blackListRepository.save(new BlackList(token));
             filterChain.doFilter(request, response);
         }
-
         //정상 인증이 끝나면 다음 필터 진행
         filterChain.doFilter(request, response);
     }

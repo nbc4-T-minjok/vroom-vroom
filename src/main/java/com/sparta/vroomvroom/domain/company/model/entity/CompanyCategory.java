@@ -29,4 +29,8 @@ public class CompanyCategory extends BaseEntity {
     public CompanyCategory(CompanyCategoryRequestDto requestDto) {
         this.companyCategoryName = requestDto.getCompanyCategoryName();
     }
+
+    public void update(CompanyCategoryRequestDto requestDto) {
+        this.companyCategoryName = requestDto.getCompanyCategoryName();
+    }
 }

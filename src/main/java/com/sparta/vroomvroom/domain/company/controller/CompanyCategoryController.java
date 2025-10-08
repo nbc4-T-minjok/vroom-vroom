@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -31,5 +32,16 @@ public class CompanyCategoryController {
         return new BaseResponse(companyCategories);
     }
 
+    @PatchMapping("/company-categories/{companyCategoryId}")
+    public BaseResponse updateCompanyCategories(@PathVariable UUID companyCategoryId,
+                                                @Valid @RequestBody CompanyCategoryRequestDto requestDto) {
+        CompanyCategoryResponseDto responseDto = companyCategoryService.updateCompanyCategories(companyCategoryId, requestDto);
+        return new BaseResponse(responseDto);
+    }
 
+    @DeleteMapping("/company-categories/{companyCategoryId}")
+    public BaseResponse deleteCompanyCategories(@PathVariable UUID companyCategoryId) {
+        companyCategoryService.deleteCompanyCategories(companyCategoryId);
+        return new BaseResponse();
+    }
 }

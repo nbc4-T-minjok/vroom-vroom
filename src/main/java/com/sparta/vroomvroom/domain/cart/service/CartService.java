@@ -64,18 +64,12 @@ public class CartService {
             cartMenu.increaseAmount(request.getMenuAmount());
             cartMenuRepository.save(cartMenu);
         } else {
-            CartMenu newCartMenu = CartMenu.createCartMenu(
-                    cart,
-                    menu,
-                    request.getMenuAmount(),
-                    cart.getUser().getUserName()
-            );
+            CartMenu newCartMenu = CartMenu.createCartMenu(cart, menu, request.getMenuAmount(), cart.getUser().getUserName());
             cartMenuRepository.save(newCartMenu);
         }
 
         // 장바구니 상태 업데이트
         cart.markAsNotEmpty();
-        cartRepository.save(cart);
     }
 
     @Transactional
@@ -100,7 +94,6 @@ public class CartService {
         // 장바구니 상태 업데이트
         boolean hasItems = cartMenuRepository.existsByCart_CartId(cart.getCartId());
         cart.updateEmptyStatus(hasItems);
-        cartRepository.save(cart);
     }
 
     @Transactional
@@ -119,7 +112,6 @@ public class CartService {
         // 장바구니 상태 업데이트
         boolean hasItems = cartMenuRepository.existsByCart_CartId(cart.getCartId());
         cart.updateEmptyStatus(hasItems);
-        cartRepository.save(cart);
     }
 
     @Transactional
@@ -130,7 +122,6 @@ public class CartService {
         cartMenuRepository.deleteAll(cartMenus);
 
         cart.markAsEmpty();
-        cartRepository.save(cart);
     }
 
 

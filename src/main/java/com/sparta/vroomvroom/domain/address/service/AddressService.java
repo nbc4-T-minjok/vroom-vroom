@@ -41,11 +41,12 @@ public class AddressService {
             throw new IllegalArgumentException("우편번호가 올바르지 않습니다. 우편번호는 5자리 숫자여야 합니다.");
         }
 
-        // location에서 lat, lng 꺼내기
+        // location 검증
         if (requestDto.getLocation() == null) {
             throw new IllegalArgumentException("location 필드는 필수입니다. (lat, lng 포함)");
         }
 
+        // location에서 lat, lng 꺼내기
         Double lat = requestDto.getLocation().getLat(); // 위도
         Double lng = requestDto.getLocation().getLng(); // 경도
 
@@ -70,10 +71,8 @@ public class AddressService {
 
     // 배송지 목록 조회
     public List<AddressResponseDto> getAlladdresses(Long userId) {
-        // 사용자 검증
-        User user = validateUser(userId);
 
-        // 배송지 목록 조회
+        User user = validateUser(userId);
         List<Address> addresses = addressRepository.findAllByUserId(userId);
 
         List<AddressResponseDto> responseDtos = new ArrayList<>();
@@ -87,10 +86,9 @@ public class AddressService {
 
     // 배송지 수정
     public void patchAddress(Long userId, UUID userAddressId, AddressRequestDto requestDto) {
-        // 사용자 검증
-        User user = validateUser(userId);
 
-        // 배송지아이디 검증
+        User user = validateUser(userId);
+        // 배송지 소유 검증
         Address address = validateAddressOwnership(userId, userAddressId);
 
         // 변경 내용 반영
@@ -99,14 +97,10 @@ public class AddressService {
         if(requestDto.getDetailAddress() != null) address.setDetailAddress(requestDto.getDetailAddress());
         if(requestDto.getZipCode() != null) address.setZipCode(requestDto.getZipCode());
         if(requestDto.getLocation() != null) {
-            // location에서 lat, lng 꺼내기
             Double lat = requestDto.getLocation().getLat(); // 위도
             Double lng = requestDto.getLocation().getLng(); // 경도
-
-            // 위치 정보 검증
             validateLocation(lat, lng);
 
-            // 포인트 생성
             Point location = createPoint(lat, lng);
 
             address.setLocation(location);
@@ -122,10 +116,8 @@ public class AddressService {
 
     // 기본배송지 변경
     public void changeDefaultAddress(Long userId, UUID userAddressId) {
-        // 사용자 검증
-        User user = validateUser(userId);
 
-        // 배송지아이디 검증
+        User user = validateUser(userId);
         Address address = validateAddressOwnership(userId, userAddressId);
 
         // 기존 기본배송지 제거
@@ -138,10 +130,8 @@ public class AddressService {
 
     // 배송지 삭제
     public void deleteAddress(Long userId, UUID userAddressId) {
-        // 사용자 검증
-        User user = validateUser(userId);
 
-        // 배송지아이디 검증
+        User user = validateUser(userId);
         Address address = validateAddressOwnership(userId, userAddressId);
 
         // 기본배송지가 not null이므로 삭제 불가 처리
@@ -187,7 +177,6 @@ public class AddressService {
         GeometryFactory geomFactory = new GeometryFactory(new PrecisionModel(), 4326);
         Coordinate coord = new Coordinate(lng, lat); // 경도, 위도 순서로 변경 필수
         Point location = geomFactory.createPoint(coord);
-        location.setSRID(4326); // ✅ SRID 명시
         return location;
     }
 }

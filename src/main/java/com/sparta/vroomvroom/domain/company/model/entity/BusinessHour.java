@@ -1,5 +1,6 @@
 package com.sparta.vroomvroom.domain.company.model.entity;
 
+import com.sparta.vroomvroom.domain.company.model.dto.BusinessHourRequestDto;
 import com.sparta.vroomvroom.global.conmon.constants.WeekDay;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -36,4 +37,12 @@ public class BusinessHour {
 
     @Column(name = "is_closed", nullable = false)
     private boolean isClosed;
+
+    public BusinessHour(BusinessHourRequestDto requestDto, Company company) {
+
+        this.day = requestDto.getDay();
+        this.openedAt = requestDto.getOpenedAt();
+        this.closedAt = requestDto.getClosedAt();
+        this.isClosed = false;
+    }
 }

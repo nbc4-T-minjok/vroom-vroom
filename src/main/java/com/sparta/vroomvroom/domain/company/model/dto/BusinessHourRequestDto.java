@@ -20,5 +20,5 @@ public class BusinessHourRequestDto {
     @JsonFormat(pattern = "HH:mm[:ss]")
     private LocalTime closedAt;
 
-    //private boolean isClosed;
+    private boolean isClosed;
 }

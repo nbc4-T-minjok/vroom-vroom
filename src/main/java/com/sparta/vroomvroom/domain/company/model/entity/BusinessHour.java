@@ -39,10 +39,10 @@ public class BusinessHour {
     private boolean isClosed;
 
     public BusinessHour(BusinessHourRequestDto requestDto, Company company) {
-
+        this.company = company;
         this.day = requestDto.getDay();
         this.openedAt = requestDto.getOpenedAt();
         this.closedAt = requestDto.getClosedAt();
-        this.isClosed = false;
+        this.isClosed = requestDto.isClosed();
     }
 }

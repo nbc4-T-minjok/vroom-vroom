@@ -30,7 +30,6 @@ public class UserSignupRequest {
             message = "닉네임은 영문/한글/숫자로 5~20자만 가능합니다.")
     private String nickName;
 
-    //Todo: Enum 생성
     @NotNull(message = "회원 타입은 필수 입력 항목입니다.")
     private UserType type;
 
@@ -40,7 +39,6 @@ public class UserSignupRequest {
             message = "이름은 영문과 한글만, 최대 20자까지 가능합니다.")
     private String name;
 
-    //Todo: birthDay로 변경 제안
     @NotNull(message = "생일은 필수 입력 항목입니다.")
     @Past(message = "생일은 오늘 이전 날짜여야 합니다.")
     private LocalDate birthDate;
@@ -62,9 +60,7 @@ public class UserSignupRequest {
     @Size(max = 50, message = "이메일은 최대 50자까지 가능합니다.")
     private String email;
 
-    //todo: 명세서에 role 받는거 추가하기
     @NotNull(message = "권한은 필수 입력 항목입니다.")
     private UserRole role;
-
 
 }

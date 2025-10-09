@@ -24,7 +24,6 @@ public class UserService {
 
         //회원 저장
         User user = new User(req, passwordEncoder.encode(req.getPassword()));
-        //todo: 시큐리티 도입 후 자동화 하도록 변경 (추후 삭제)
         user.create(req.getUserName());
         userRepository.save(user);
     }

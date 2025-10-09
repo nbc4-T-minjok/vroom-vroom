@@ -38,7 +38,7 @@ public class AddressController {
 
     // 배송지 목록 조회
     @GetMapping("addresses")
-    public BaseResponse createAddress(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public BaseResponse getAlladdresses(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long userId = userDetails.getUser().getUserId();
         List<AddressResponseDto> result = addressService.getAlladdresses(userId);
         return new BaseResponse(result);

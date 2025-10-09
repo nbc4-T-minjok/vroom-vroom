@@ -1,17 +1,17 @@
 package com.sparta.vroomvroom.domain.company.model.entity;
 
+import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyRequestDto;
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.locationtech.jts.geom.Point;
 
 import java.util.*;
 
 @Entity
 @Table(name = "companies")
 @Getter
-@Setter
 @NoArgsConstructor
 public class Company extends BaseEntity {
     @Id
@@ -56,6 +56,42 @@ public class Company extends BaseEntity {
     @Column(name = "zip_code", nullable = false, length = 10)
     private String zipCode;
 
-//    private Geometry location;
+    // 공간데이터 (PostGIS 매핑)
+    @Column(columnDefinition = "geometry(Point, 4326)", nullable = false)
+    private Point location;
 
+//    @OneToMany(mappedBy = "company")
+//    private List<BusinessHour> businessHours;
+//
+//    @OneToMany(mappedBy = "company")
+//    private List<SpecialBusinessHour> specialBusinessHours;
+
+    public Company(CompanyCategory companyCategory, CompanyRequestDto requestDto) {
+        this.companyCategory = companyCategory;
+        this.companyName = requestDto.getCompanyName();
+        this.companyLogoUrl = requestDto.getCompanyLogoUrl();
+        this.companyDescription = requestDto.getCompanyDescription();
+        this.phoneNumber = requestDto.getPhoneNumber();
+        this.deliveryFee = requestDto.getDeliveryFee();
+        this.deliveryRadius = requestDto.getDeliveryRadius();
+        this.ownerName = requestDto.getOwnerName();
+        this.bizRegNo = requestDto.getBizRegNo();
+        this.address = requestDto.getAddress();
+        this.detailAddress = requestDto.getDetailAddress();
+        this.zipCode = requestDto.getZipCode();
+    }
+
+    public void update(CompanyRequestDto requestDto) {
+        this.companyName = requestDto.getCompanyName();
+        this.companyLogoUrl = requestDto.getCompanyLogoUrl();
+        this.companyDescription = requestDto.getCompanyDescription();
+        this.phoneNumber = requestDto.getPhoneNumber();
+        this.deliveryFee = requestDto.getDeliveryFee();
+        this.deliveryRadius = requestDto.getDeliveryRadius();
+        this.ownerName = requestDto.getOwnerName();
+        this.bizRegNo = requestDto.getBizRegNo();
+        this.address = requestDto.getAddress();
+        this.detailAddress = requestDto.getDetailAddress();
+        this.zipCode = requestDto.getZipCode();
+    }
 }

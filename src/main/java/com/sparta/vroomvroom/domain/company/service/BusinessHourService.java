@@ -103,3 +103,66 @@ public class BusinessHourService {
         return businessHour;
     }
 }
+
+/*
+*** 임시데이터 ***
+TODO. 업체 머지 후 삭제
+INSERT INTO company_categories (
+  company_category_id,
+  company_category_name,
+  created_at,
+  created_by,
+  updated_at,
+  updated_by,
+  is_deleted
+) VALUES (
+  '11111111-1111-1111-1111-111111111111',
+  '카페',
+  NOW(),
+  'user1',
+  NOW(),
+  'user1',
+  FALSE
+);
+
+INSERT INTO companies (
+  company_id,
+  company_category_id,
+  company_name,
+  company_logo_url,
+  company_description,
+  phone_number,
+  delivery_fee,
+  delivery_radius,
+  owner_name,
+  biz_reg_no,
+  address,
+  detail_address,
+  zip_code,
+  created_at,
+  created_by,
+  updated_at,
+  updated_by,
+  is_deleted
+) VALUES (
+  '22222222-2222-2222-2222-222222222222', -- companyId
+  '11111111-1111-1111-1111-111111111111', -- companyCategoryId
+  '00커피',
+  'https://example.com/logo.png',
+  '00커피',
+  '02-123-4567',
+  2000,
+  3000,
+  'owner',
+  '123-45-67890',
+  '서울특별시 ~',
+  '1층',
+  '04536',
+  NOW(),
+  'user1',
+  NOW(),
+  'user1',
+  FALSE
+);
+
+ */

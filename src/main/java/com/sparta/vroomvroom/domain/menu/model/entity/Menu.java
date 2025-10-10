@@ -96,4 +96,17 @@ public class Menu extends BaseEntity {
         this.menuStatus = dto.getMenuStatus();
         this.isVisible = dto.getIsVisible();
     }
+
+    public Menu(UUID companyId, String menuName, String menuGroup,
+                Integer menuPrice, String menuImage, String menuDescription,
+                MenuStatus menuStatus, Boolean isVisible) {
+        this.companyId = companyId;
+        this.menuName = menuName;
+        this.menuGroup = menuGroup;
+        this.menuPrice = menuPrice;
+        this.menuImage = menuImage;
+        this.menuDescription = menuDescription;
+        this.menuStatus = menuStatus;
+        this.isVisible = isVisible;
+    }
 }

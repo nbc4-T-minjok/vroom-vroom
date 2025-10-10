@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.global.exception;
 
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
+import lombok.extern.slf4j.Slf4j;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.nio.file.AccessDeniedException;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     //Illegal (직접 던진 예외)
@@ -42,6 +44,8 @@ public class GlobalExceptionHandler {
     // 나머지 예외
     @ExceptionHandler(Exception.class)
     public BaseResponse handleAllExceptions(Exception ex) {
-        return new BaseResponse("요청이 실패했습니다. 잠시 후 다시 실행해주세요");
+
+        log.error("요청이 실패했습니다. : {}", ex.getMessage(), ex);
+        return new BaseResponse("요청이 실패했습니다. 잠시 후 다시 실행해주세요.");
     }
 }

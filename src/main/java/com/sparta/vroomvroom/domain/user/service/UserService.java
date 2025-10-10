@@ -94,10 +94,10 @@ public class UserService {
     @Transactional
     public void changePassword(String userName, UserChangePasswordRequest req) {
         User user = findUser(userName);
-        if(passwordEncoder.matches(req.getNewPassword(),user.getPassword())){
-            throw new IllegalArgumentException("새로운 비밀번호는 기존 비밀번호와 같을 수 없습니다.");
-        }else if(!passwordEncoder.matches(req.getCurrentPassword(),user.getPassword())){
+        if(!passwordEncoder.matches(req.getCurrentPassword(),user.getPassword())){
             throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
+        }else if(passwordEncoder.matches(req.getNewPassword(),user.getPassword())){
+            throw new IllegalArgumentException("새로운 비밀번호는 기존 비밀번호와 같을 수 없습니다.");
         }
         user.setPassword(passwordEncoder.encode(req.getNewPassword()));
     }

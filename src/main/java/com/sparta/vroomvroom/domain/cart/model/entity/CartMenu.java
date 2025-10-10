@@ -4,7 +4,6 @@ import com.sparta.vroomvroom.domain.menu.model.entity.Menu;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -13,7 +12,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "cart_menus")
 @Getter
-@Setter
 @NoArgsConstructor
 public class CartMenu {
 
@@ -37,11 +35,32 @@ public class CartMenu {
     @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
-    //    @CreatedBy
     @Column(name = "created_by",updatable = false, nullable = false, length = 20)
     private String createdBy;
 
-    public void create(String userName){
-        this.createdBy = userName;
+    // 생성 메서드
+    public static CartMenu createCartMenu(Cart cart, Menu menu, int menuAmount, String userName) {
+        CartMenu cartMenu = new CartMenu();
+        cartMenu.cart = cart;
+        cartMenu.menu = menu;
+        cartMenu.menuAmount = menuAmount;
+        cartMenu.createdAt = LocalDateTime.now();
+        cartMenu.createdBy = userName;
+        return cartMenu;
+    }
+
+    public void increaseAmount(int amount) {
+        this.menuAmount += amount;
+    }
+
+    public void updateAmount(int newAmount) {
+        if (newAmount < 0) {
+            throw new IllegalArgumentException("수량은 0 이상이어야 합니다.");
+        }
+        this.menuAmount = newAmount;
+    }
+
+    public boolean isSameCart(UUID cartId) {
+        return this.cart.getCartId().equals(cartId);
     }
 }

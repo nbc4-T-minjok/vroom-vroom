@@ -75,7 +75,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/users/login","/api/v1/users/signup").permitAll()
                         .requestMatchers("/api/v1/users/logout").authenticated()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()  //permitAll() -> authenticated() 수정
                 )
 
                 // 로그아웃 관련

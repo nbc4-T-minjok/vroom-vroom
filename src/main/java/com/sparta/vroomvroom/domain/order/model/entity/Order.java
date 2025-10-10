@@ -8,14 +8,12 @@ import com.sparta.vroomvroom.global.conmon.constants.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
 @Getter
-@Setter
 @NoArgsConstructor
 public class Order extends BaseEntity {
     @Id
@@ -59,4 +57,39 @@ public class Order extends BaseEntity {
 
     @Column(name = "detail_address", nullable = false, length = 50)
     private String detailAddress;
+
+    public static Order createOrder(
+            User user,
+            Address address,
+            Company company,
+            Integer orderPrice,
+            String orderRequest,
+            String createdBy
+    ) {
+        Order order = new Order();
+        order.user = user;
+        order.deliveryAddress = address;
+        order.company = company;
+        order.orderPrice = orderPrice;
+        order.orderRequest = orderRequest;
+        order.orderStatus = OrderStatus.PENDING;
+        order.zipCode = address.getZipCode();
+        order.addressName = address.getAddressName();
+        order.address = address.getAddress();
+        order.detailAddress = address.getDetailAddress();
+
+        order.create(createdBy);
+        return order;
+    }
+
+    public void cancel(String cancelReason, String updatedBy) {
+        this.orderStatus = OrderStatus.CANCELED;
+        this.cancelReason = cancelReason;
+        this.update(updatedBy);
+    }
+
+    public void updateStatus(OrderStatus newStatus, String updatedBy) {
+        this.orderStatus = newStatus;
+        this.update(updatedBy);
+    }
 }

@@ -7,7 +7,9 @@ import com.sparta.vroomvroom.domain.review.service.ReviewService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,23 +21,27 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     // 리뷰작성_주문
-    @PostMapping("/order/{orderId}/reviews")
+    @PostMapping(value = "/order/{orderId}/reviews",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse createReview(
-            @Valid @RequestBody ReviewRequestDto requestDto,
+            @RequestPart("review") @Valid ReviewRequestDto requestDto,      // JSON DTO
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,    // 이미지 파일
             @PathVariable UUID orderId,
             @CookieValue("userId") Long userId){
-        reviewService.createReview(orderId, userId, requestDto);
+        reviewService.createReview(orderId, userId, requestDto, images);
         return new BaseResponse();
     }
 
     // 리뷰작성_고객
-    @PostMapping("/users/{userId}/reviews")
+    @PostMapping(value ="/users/{userId}/reviews",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse createReviewUser(
-            @Valid @RequestBody ReviewRequestDto requestDto,
+            @RequestPart("review") @Valid ReviewRequestDto requestDto,                      // JSON DTO
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,    // 이미지 파일
             @PathVariable Long userId){
         UUID orderId = requestDto.getOrderId();
 
-        reviewService.createReview(orderId, userId, requestDto);
+        reviewService.createReview(orderId, userId, requestDto, images);
         return new BaseResponse();
     }
 
@@ -51,6 +57,7 @@ public class ReviewController {
     }
 
     // 리뷰 목록 조회_고객
+    // 고객 기준으로 작성한 모든 리뷰 검색
     @GetMapping("/users/{userId}/reviews")
     public  BaseResponse getReviewsList(
             @PathVariable Long userId,
@@ -63,6 +70,7 @@ public class ReviewController {
     }
 
     // 리뷰 목록 조회_업체
+    // 업체 기준으로 모든 리뷰 검색
     @GetMapping("/companies/{compId}/reviews")
     public  BaseResponse getReviewListCompany(
             @PathVariable UUID compId,
@@ -77,6 +85,7 @@ public class ReviewController {
     }
 
     // 리뷰 상세 조회_고객
+    // 리뷰 이미지는 상세 조회에서만 나옴
     @GetMapping("/users/{userId}/reviews/{reviewId}")
     public BaseResponse getReview(
             @PathVariable Long userId,
@@ -88,6 +97,7 @@ public class ReviewController {
 
 
     // 리뷰 상세 조회_업체
+    // 업체기준으로 리뷰 조회 후 상세 리뷰 확인할 때 사용
     @GetMapping("/companies/{compId}/reviews/{reviewId}")
     public BaseResponse getReviewCompany(
             @PathVariable UUID compId,
@@ -102,9 +112,10 @@ public class ReviewController {
     public BaseResponse updateReview(
             @PathVariable UUID reviewId,
             @CookieValue("userId") Long userId,
-            @Valid @RequestBody ReviewRequestDto requestDto
+            @RequestPart("review") @Valid ReviewRequestDto requestDto,                      // JSON DTO
+            @RequestPart(value = "images", required = false) List<MultipartFile> images     // 이미지 파일
     ){
-        reviewService.updateReview(reviewId, userId, requestDto);
+        reviewService.updateReview(reviewId, userId, requestDto, images);
         return new BaseResponse();
     }
 

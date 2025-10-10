@@ -8,7 +8,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface OwnerReviewRepository extends JpaRepository<OwnerReview, UUID> {
-    OwnerReview findByReviewId(UUID reviewId);
-
-    Optional<OwnerReview> findByReview(Review review);
+    Optional<OwnerReview> findByReviewId(UUID reviewId);
 }

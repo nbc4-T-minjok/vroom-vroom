@@ -12,8 +12,6 @@ import java.util.UUID;
 
 public interface ReviewRepository extends JpaRepository<Review, UUID> {
 
-    Optional<Review> findByOrder(Order order);
-
     Page<Review> findByCompany_CompanyId(UUID compId, Pageable pageable);
 
     Page<Review> findByUserId_UserId(Long userId, Pageable pageable);
@@ -21,4 +19,6 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
     List<Review> findByUserId_UserIdAndId(Long userId, UUID reviewId);
 
     List<Review> findByCompany_CompanyIdAndId(UUID compId, UUID reviewId);
+
+    Optional<Review> findByOrder_OrderId(UUID orderId);
 }

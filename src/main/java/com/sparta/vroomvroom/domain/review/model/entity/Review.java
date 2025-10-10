@@ -7,6 +7,7 @@ import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "reviews")
+@Where(clause = "is_deleted = false")
 public class Review extends BaseEntity {
     @Id
     @GeneratedValue(strategy=GenerationType.UUID)

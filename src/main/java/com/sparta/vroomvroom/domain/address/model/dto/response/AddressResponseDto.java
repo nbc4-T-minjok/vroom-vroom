@@ -21,7 +21,20 @@ public class AddressResponseDto {
     private boolean isDefault;
 
     private LocationDto location;  // Point 대신 DTO로 변환
+    @JsonProperty("isDeleted")
+    private boolean isDeleted;
 
+    @Getter
+    public static class LocationDto {
+        private final double lat;
+        private final double lng;
+        public LocationDto(org.locationtech.jts.geom.Point p) {
+            this.lat = p.getY(); // 위도
+            this.lng = p.getX(); // 경도
+        }
+    }
+
+    // entity -> responseDto
     public AddressResponseDto(Address a) {
         this.addressId = a.getAddressesId();
         this.addressName = a.getAddressName();
@@ -32,16 +45,7 @@ public class AddressResponseDto {
         if (a.getLocation() != null) {
             this.location = new LocationDto(a.getLocation());
         }
-    }
-
-    @Getter
-    public static class LocationDto {
-        private final double lat;
-        private final double lng;
-        public LocationDto(org.locationtech.jts.geom.Point p) {
-            this.lat = p.getY(); // 위도
-            this.lng = p.getX(); // 경도
-        }
+        this.isDeleted = a.isDeleted();
     }
 }
 

@@ -12,6 +12,7 @@ import org.locationtech.jts.geom.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -139,7 +140,9 @@ public class AddressService {
             throw new IllegalArgumentException("기본배송지는 삭제할 수 없습니다.");
         }
 
-        addressRepository.deleteById(userAddressId);
+        // soft-delete
+        address.softDelete(LocalDateTime.now(), user.getUserName());
+        addressRepository.save(address);
     }
 
     // 사용자 검증 메서드

@@ -1,7 +1,7 @@
 package com.sparta.vroomvroom.domain.ai.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sparta.vroomvroom.domain.ai.model.dto.request.GeminiRequest;
+import com.sparta.vroomvroom.domain.ai.model.entity.AiApiLog;
 import com.sparta.vroomvroom.domain.ai.repository.GeminiRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,13 +76,13 @@ public class GeminiService {
             log.info("Gemini API 응답 수신: {}", responseText);
 
             // AI 요청/응답 로그 저장
-            GeminiRequest request = GeminiRequest.builder()
+            AiApiLog requestLog = AiApiLog.builder()
                     .prompt(prompt)
                     .response(responseText)
                     .createdAt(LocalDateTime.now())
                     .build();
 
-            geminiRepository.save(request);
+            geminiRepository.save(requestLog);
             log.info("AI 요청 기록 저장 완료");
 
             return responseText;

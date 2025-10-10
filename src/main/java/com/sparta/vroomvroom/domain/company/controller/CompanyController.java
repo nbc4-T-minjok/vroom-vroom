@@ -1,9 +1,17 @@
 package com.sparta.vroomvroom.domain.company.controller;
 
+import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyRequestDto;
+import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyDetailResponseDto;
+import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyResponseDto;
 import com.sparta.vroomvroom.domain.company.service.CompanyService;
+import com.sparta.vroomvroom.global.conmon.BaseResponse;
+import com.sparta.vroomvroom.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -11,6 +19,49 @@ import org.springframework.web.bind.annotation.RestController;
 public class CompanyController {
     private final CompanyService companyService;
 
-    
+    // 업체등록
+    @PostMapping("/company-categories/{companyCategoryId}/companies")
+    public BaseResponse createCompany(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                      @PathVariable UUID companyCategoryId,
+                                      @RequestBody CompanyRequestDto requestDto) {
+        companyService.createCompany(userDetails.getUser().getUserId(), companyCategoryId, requestDto);
+        return new BaseResponse();
+    }
 
+    // 업체 상세 조회
+    @GetMapping("/companies/{companyId}")
+    public BaseResponse getCompany(@PathVariable UUID companyId) {
+        CompanyDetailResponseDto responseDto = companyService.getCompany(companyId);
+        return new BaseResponse(responseDto);
+    }
+
+//    // 업체 목록 조회
+//    @GetMapping("/companies")
+//    public BaseResponse getCompanies() {
+//        List<CompanyResponseDto> responseDtos = companyService.getCompanies();
+//        return new BaseResponse(responseDtos);
+//    }
+
+    // 업체 카테고리별 목록 조회
+    @GetMapping("/company-categories/{companyCategoryId}/companies")
+    public BaseResponse getCompaniesByCategory(@PathVariable UUID companyCategoryId) {
+        List<CompanyResponseDto> responseDtos = companyService.getCompaniesByCategory(companyCategoryId);
+        return new BaseResponse(responseDtos);
+    }
+
+    // 업체 수정
+    @PatchMapping("/companies/{companyId}")
+    public BaseResponse updateCompany(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                      @PathVariable UUID companyId,
+                                      @RequestBody CompanyRequestDto requestDto) {
+        CompanyDetailResponseDto responseDto = companyService.updateCompany(userDetails.getUser().getUserId(), companyId, requestDto);
+        return new BaseResponse(responseDto);
+    }
+
+    // 업체 삭제
+    @DeleteMapping("/companies/{companyId}")
+    public BaseResponse deleteCompany(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable UUID companyId) {
+        companyService.deleteCompany(userDetails.getUser().getUserId(), companyId);
+        return new BaseResponse();
+    }
 }

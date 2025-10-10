@@ -25,8 +25,7 @@ public class BusinessHourService {
     public void createBusinessHour(UUID companyId, BusinessHourRequestDto requestDto) {
 
         // 업체아이디 검증
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 업체아이디가 존재하지 않습니다."));
+        Company company = validateCompany(companyId);
 
         // 동일 요일 중복 등록 방지
         boolean exists = businessHourRepository.existsByCompanyAndDay(company, requestDto.getDay());
@@ -42,8 +41,7 @@ public class BusinessHourService {
     // 영업시간 조회
     public List<BusinessHourResponseDto> getBusinessHour(UUID companyId) {
         // 업체아이디 검증
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 업체아이디가 존재하지 않습니다."));
+        Company company = validateCompany(companyId);
 
         // 영업시간 조회
         List<BusinessHour> businessHours = businessHourRepository.findAllByCompanyId(companyId);
@@ -58,17 +56,10 @@ public class BusinessHourService {
 
     public void patchBusinessHour(UUID companyId, UUID businessHourId, BusinessHourRequestDto requestDto) {
         // 업체아이디 검증
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 업체아이디가 존재하지 않습니다."));
+        Company company = validateCompany(companyId);
 
         // 영업시간아이디 검증
-        BusinessHour businessHour = businessHourRepository.findById(businessHourId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 영업시간아이디가 존지하지 않습니다."));
-
-        // 권한 검증 (companyId 일치 확인)
-        if (!businessHour.getCompany().getCompanyId().equals(companyId)) {
-            throw new IllegalArgumentException("해당 업체의 영업시간이 아닙니다.");
-        }
+        BusinessHour businessHour = validateBusinessHourOwnership(businessHourId, companyId);
 
         // 영업시간 수정
         if(requestDto.getDay() != null) businessHour.setDay(requestDto.getDay());
@@ -81,9 +72,25 @@ public class BusinessHourService {
 
     public void deleteBusinessHour(UUID companyId, UUID businessHourId, String userName) {
         // 업체아이디 검증
+        Company company = validateCompany(companyId);
+
+        // 영업시간아이디 검증
+        BusinessHour businessHour = validateBusinessHourOwnership(businessHourId, companyId);
+
+        // 영업시간 삭제
+        businessHour.softDelete(LocalDateTime.now(), userName);
+        businessHourRepository.save(businessHour);
+    }
+
+    // 업체 검증 메서드
+    private Company validateCompany(UUID companyId) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 업체아이디가 존재하지 않습니다."));
+        return company;
+    }
 
+    // 영업시간 소유 검증 메서드
+    private BusinessHour validateBusinessHourOwnership(UUID businessHourId, UUID companyId) {
         // 영업시간아이디 검증
         BusinessHour businessHour = businessHourRepository.findById(businessHourId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 영업시간아이디가 존지하지 않습니다."));
@@ -92,10 +99,7 @@ public class BusinessHourService {
         if (!businessHour.getCompany().getCompanyId().equals(companyId)) {
             throw new IllegalArgumentException("해당 업체의 영업시간이 아닙니다.");
         }
-        // 영업시간 삭제
-        company.softDelete(LocalDateTime.now(), userName);
-        companyRepository.save(company);
 
-        //businessHourRepository.delete(businessHour);
+        return businessHour;
     }
 }

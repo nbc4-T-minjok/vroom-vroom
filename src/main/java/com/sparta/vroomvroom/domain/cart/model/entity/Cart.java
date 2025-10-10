@@ -5,14 +5,12 @@ import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "carts")
 @Getter
-@Setter
 @NoArgsConstructor
 public class Cart extends BaseEntity {
 
@@ -27,5 +25,27 @@ public class Cart extends BaseEntity {
 
     @Column(name = "is_empty", nullable = false)
     private boolean isEmpty = true;
+
+    // 생성 메서드
+    public static Cart createCart(User user) {
+        Cart cart = new Cart();
+        cart.user = user;
+        cart.isEmpty = true;
+        cart.create(user.getUserName());
+        return cart;
+    }
+
+    // 비즈니스 로직 메서드
+    public void markAsNotEmpty() {
+        this.isEmpty = false;
+    }
+
+    public void markAsEmpty() {
+        this.isEmpty = true;
+    }
+
+    public void updateEmptyStatus(boolean hasItems) {
+        this.isEmpty = !hasItems;
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.sparta.vroomvroom.domain.menu.service;
 
+import com.sparta.vroomvroom.domain.ai.service.GeminiService;
 import com.sparta.vroomvroom.domain.company.model.entity.Company;
 import com.sparta.vroomvroom.domain.company.repository.CompanyRepository;
 import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuRequestDto;
@@ -21,12 +22,34 @@ public class MenuService {
 
     private final MenuRepository menuRepository;
     private final CompanyRepository companyRepository;
+    private final GeminiService geminiService;
 
     @Transactional
     public void createMenu(UUID companyId, MenuRequestDto requestDto) {
         Company company = findCompany(companyId);
 
-        menuRepository.save(new Menu(company.getCompanyId(), requestDto));
+        String aiDescription = requestDto.getMenuDescription();
+
+        if (Boolean.TRUE.equals(requestDto.getAiDescription())) {
+            aiDescription = geminiService.generateMenuDescription(
+                    requestDto.getMenuName(),
+                    requestDto.getMenuPrice()
+            );
+        }
+
+        Menu menu = new Menu(
+                company.getCompanyId(),
+                requestDto.getMenuName(),
+                requestDto.getMenuGroup(),
+                requestDto.getMenuPrice(),
+                requestDto.getMenuImage(),
+                aiDescription, // AI 결과 반영
+                requestDto.getMenuStatus(),
+                requestDto.getIsVisible()
+        );
+
+
+        menuRepository.save(menu);
     }
 
     @Transactional(readOnly = true)

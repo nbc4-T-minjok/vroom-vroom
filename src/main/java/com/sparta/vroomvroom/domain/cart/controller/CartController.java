@@ -1,13 +1,72 @@
 package com.sparta.vroomvroom.domain.cart.controller;
 
+import com.sparta.vroomvroom.domain.cart.model.dto.request.AddCartMenuRequest;
+import com.sparta.vroomvroom.domain.cart.model.dto.request.UpdateCartMenuRequest;
+import com.sparta.vroomvroom.domain.cart.model.dto.response.CartResponse;
 import com.sparta.vroomvroom.domain.cart.service.CartService;
+import com.sparta.vroomvroom.global.conmon.BaseResponse;
+import com.sparta.vroomvroom.global.security.UserDetailsImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class CartController {
     private final CartService cartService;
+
+    @GetMapping("/carts")
+    public BaseResponse<CartResponse> getCart(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        CartResponse response = cartService.getCart(userDetails.getUser().getUserId());
+        return new BaseResponse<>(response);
+    }
+
+    @PostMapping("/carts")
+    public BaseResponse<Void> createCartMenu(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @Valid @RequestBody AddCartMenuRequest request
+    ) {
+        cartService.createCartMenu(userDetails.getUser().getUserId(), request);
+        return new BaseResponse<>();
+    }
+
+    @PatchMapping("/carts/{cartMenuId}")
+    public BaseResponse<Void> updateCartMenu(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable UUID cartMenuId,
+            @Valid @RequestBody UpdateCartMenuRequest request
+    ) {
+        cartService.updateCartMenu(
+                userDetails.getUser().getUserId(),
+                cartMenuId,
+                request
+        );
+        return new BaseResponse<>();
+    }
+
+    @DeleteMapping("/carts/{cartMenuId}")
+    public BaseResponse<Void> deleteCartMenu(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable UUID cartMenuId
+    ) {
+        cartService.deleteCartMenu(
+                userDetails.getUser().getUserId(),
+                cartMenuId
+        );
+        return new BaseResponse<>();
+    }
+
+    @DeleteMapping("/carts")
+    public BaseResponse<Void> clearCart(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        cartService.clearCart(userDetails.getUser().getUserId());
+        return new BaseResponse<>();
+    }
 }

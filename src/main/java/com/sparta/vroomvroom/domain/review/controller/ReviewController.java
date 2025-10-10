@@ -5,9 +5,12 @@ import com.sparta.vroomvroom.domain.review.model.dto.request.ReviewRequestDto;
 import com.sparta.vroomvroom.domain.review.model.dto.response.ReviewResponseDto;
 import com.sparta.vroomvroom.domain.review.service.ReviewService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
+import com.sparta.vroomvroom.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,8 +30,10 @@ public class ReviewController {
             @RequestPart("review") @Valid ReviewRequestDto requestDto,      // JSON DTO
             @RequestPart(value = "images", required = false) List<MultipartFile> images,    // 이미지 파일
             @PathVariable UUID orderId,
-            @CookieValue("userId") Long userId){
-        reviewService.createReview(orderId, userId, requestDto, images);
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        Long userId = userDetails.getUser().getUserId();
+        reviewService.createReview(orderId, userId , requestDto, images);
         return new BaseResponse();
     }
 
@@ -49,8 +54,8 @@ public class ReviewController {
     @PostMapping("/companies/{compId}/reviews")
     public BaseResponse createReviewCompany(
             @Valid @RequestBody OwnerReviewRequestDto requestDto,
-            @PathVariable UUID compId,
-            @CookieValue("userId") Long userId){
+            @PathVariable UUID compId
+    ){
         UUID reviewId = requestDto.getReviewId();
         reviewService.createReviewCompany(compId, reviewId, requestDto);
         return new BaseResponse();
@@ -74,7 +79,6 @@ public class ReviewController {
     @GetMapping("/companies/{compId}/reviews")
     public  BaseResponse getReviewListCompany(
             @PathVariable UUID compId,
-            @CookieValue("userId") Long userId,
             @RequestParam(value = "page", defaultValue = "0") int page,         // 페이지 번호
             @RequestParam(value = "size", defaultValue = "10") int size,         // 조회할 항목수
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort       // 정렬기준
@@ -111,10 +115,11 @@ public class ReviewController {
     @PatchMapping("/users/{userId}/reviews/{reviewId}")
     public BaseResponse updateReview(
             @PathVariable UUID reviewId,
-            @CookieValue("userId") Long userId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart("review") @Valid ReviewRequestDto requestDto,                      // JSON DTO
             @RequestPart(value = "images", required = false) List<MultipartFile> images     // 이미지 파일
     ){
+        Long userId = userDetails.getUser().getUserId();
         reviewService.updateReview(reviewId, userId, requestDto, images);
         return new BaseResponse();
     }
@@ -124,9 +129,10 @@ public class ReviewController {
     public BaseResponse updateReviewCompany(
             @PathVariable UUID compId,
             @PathVariable UUID reviewId,
-            @CookieValue("userId") Long userId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @Valid @RequestBody OwnerReviewRequestDto requestDto
     ){
+        Long userId = userDetails.getUser().getUserId();
         reviewService.updateReviewCompany(compId, reviewId, userId, requestDto);
         return new BaseResponse();
     }
@@ -135,8 +141,9 @@ public class ReviewController {
     @DeleteMapping("/users/{userId}/reviews/{reviewId}")
     public BaseResponse deleteReview(
             @PathVariable UUID reviewId,
-            @CookieValue("userId") Long userId
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
+        Long userId = userDetails.getUser().getUserId();
         reviewService.deleteReview(reviewId, userId);
         return new BaseResponse();
     }
@@ -145,8 +152,9 @@ public class ReviewController {
     @DeleteMapping("/companies/{compId}/reviews/{reviewId}")
     public BaseResponse deleteReviewCompany(
             @PathVariable UUID reviewId,
-            @CookieValue("userId") Long userId
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
+        Long userId = userDetails.getUser().getUserId();
         reviewService.deleteReviewCompany(reviewId, userId);
         return new BaseResponse();
     }

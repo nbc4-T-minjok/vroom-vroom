@@ -238,10 +238,10 @@ public class ReviewService {
 
             if (imageUrl != null && !imageUrl.isBlank()) {
                 try {
-                    // 1. S3 이미지 삭제
-                    s3Uploader.delete(imageUrl);
-                    // 2. DB 리뷰 삭제
+                    // 1. DB 리뷰 삭제
                     reviewImageRepository.deleteByUrl(imageUrl);
+                    // 2. S3 이미지 삭제
+                    s3Uploader.delete(imageUrl);
                     log.info("파일 삭제 성공, url={}", imageUrl);
                 } catch (IllegalArgumentException e) {
                     failed.add(imageUrl);

@@ -32,10 +32,10 @@ public abstract class BaseEntity {
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
 
-    @Column(name = "deleted_at", updatable = false)
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @Column(name = "deleted_by", updatable = false, length = 20)
+    @Column(name = "deleted_by", length = 20)
     private String deletedBy;
 
     @Column(name = "is_deleted")

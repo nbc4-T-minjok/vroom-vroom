@@ -1,21 +1,19 @@
-package com.sparta.vroomvroom.domain.ai.model.dto.request;
+package com.sparta.vroomvroom.domain.ai.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "gemini_request_dto")
-@Getter
+@Table(name = "ai_api_log")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GeminiRequest {
+public class AiApiLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -29,5 +27,5 @@ public class GeminiRequest {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
-
 }
+

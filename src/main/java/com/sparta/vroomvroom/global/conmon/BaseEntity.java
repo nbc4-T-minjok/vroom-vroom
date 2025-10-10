@@ -20,7 +20,7 @@ public abstract class BaseEntity {
     private LocalDateTime createdAt;
 
     //시큐리티 적용 되어있어야 동작
-//    @CreatedBy
+    @CreatedBy
     @Column(name = "created_by",updatable = false, nullable = false, length = 20)
     private String createdBy;
 
@@ -28,7 +28,7 @@ public abstract class BaseEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-//    @LastModifiedBy
+    @LastModifiedBy
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
 
@@ -53,6 +53,7 @@ public abstract class BaseEntity {
 
     public void create(String userName){
         this.createdBy = userName;
+        this.updatedBy = userName;
     }
 
 }

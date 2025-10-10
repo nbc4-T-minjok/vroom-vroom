@@ -22,6 +22,7 @@ public class BusinessHourResponseDto {
     private LocalTime closedAt;
 
     private boolean isClosed;
+    private boolean isDeleted;
 
     public BusinessHourResponseDto(BusinessHour businessHour) {
         this.businessHourId = businessHour.getBusinessHourId();
@@ -29,5 +30,6 @@ public class BusinessHourResponseDto {
         this.openedAt = businessHour.getOpenedAt();
         this.closedAt = businessHour.getClosedAt();
         this.isClosed = businessHour.isClosed();;
+        this.isDeleted = businessHour.isDeleted();
     }
 }

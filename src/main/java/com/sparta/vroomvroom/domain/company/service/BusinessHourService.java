@@ -9,6 +9,8 @@ import com.sparta.vroomvroom.domain.company.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -77,7 +79,7 @@ public class BusinessHourService {
         businessHourRepository.save(businessHour);
     }
 
-    public void deleteBusinessHour(UUID companyId, UUID businessHourId) {
+    public void deleteBusinessHour(UUID companyId, UUID businessHourId, String userName) {
         // 업체아이디 검증
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 업체아이디가 존재하지 않습니다."));
@@ -91,6 +93,9 @@ public class BusinessHourService {
             throw new IllegalArgumentException("해당 업체의 영업시간이 아닙니다.");
         }
         // 영업시간 삭제
-        businessHourRepository.delete(businessHour);
+        company.softDelete(LocalDateTime.now(), userName);
+        companyRepository.save(company);
+
+        //businessHourRepository.delete(businessHour);
     }
 }

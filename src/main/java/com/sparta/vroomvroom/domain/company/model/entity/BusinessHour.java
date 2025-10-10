@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.domain.company.model.entity;
 
 import com.sparta.vroomvroom.domain.company.model.dto.BusinessHourRequestDto;
+import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import com.sparta.vroomvroom.global.conmon.constants.WeekDay;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BusinessHour {
+public class BusinessHour extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "business_hour_id")

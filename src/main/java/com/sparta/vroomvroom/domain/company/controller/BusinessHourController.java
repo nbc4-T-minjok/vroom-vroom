@@ -5,7 +5,9 @@ import com.sparta.vroomvroom.domain.company.model.dto.BusinessHourRequestDto;
 import com.sparta.vroomvroom.domain.company.model.dto.BusinessHourResponseDto;
 import com.sparta.vroomvroom.domain.company.service.BusinessHourService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
+import com.sparta.vroomvroom.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,8 +44,9 @@ public class BusinessHourController {
 
     // 영업시간 삭제
     @DeleteMapping("/companies/{companyId}/business_hours/{businessHourId}")
-    public BaseResponse deleteBusinessHour(@PathVariable UUID companyId, @PathVariable UUID businessHourId) {
-        businessHourService.deleteBusinessHour(companyId, businessHourId);
+    public BaseResponse deleteBusinessHour(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable UUID companyId, @PathVariable UUID businessHourId) {
+        String userName = userDetails.getUser().getUserName();
+        businessHourService.deleteBusinessHour(companyId, businessHourId, userName);
         return new BaseResponse();
     }
 

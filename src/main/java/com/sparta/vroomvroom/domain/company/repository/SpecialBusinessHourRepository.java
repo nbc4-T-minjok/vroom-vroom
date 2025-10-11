@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface SpecialBusinessHourRepository extends JpaRepository<SpecialBusinessHour, UUID> {
-    List<SpecialBusinessHour> findAllByCompanyId(UUID companyId);
+    List<SpecialBusinessHour> findAllByCompany_CompanyId(UUID companyId);
 }

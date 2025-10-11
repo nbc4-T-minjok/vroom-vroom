@@ -1,5 +1,7 @@
 package com.sparta.vroomvroom.domain.company.model.entity;
 
+import com.sparta.vroomvroom.domain.company.model.dto.request.SpecialBusinessHourRequestDto;
+import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import com.sparta.vroomvroom.global.conmon.constants.BusinessStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -15,7 +17,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SpecialBusinessHour {
+public class SpecialBusinessHour extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "special_business_hour_id")
@@ -37,4 +39,20 @@ public class SpecialBusinessHour {
     @Column(name = "business_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private BusinessStatus businessStatus;
+
+    // Dto -> Entity 변환
+    public SpecialBusinessHour(Company company, SpecialBusinessHourRequestDto requestDto) {
+        this.company = company;
+        this.date = requestDto.getDate();
+        this.openedAt = requestDto.getOpenedAt();
+        this.closedAt = requestDto.getClosedAt();
+        this.businessStatus = requestDto.getBusinessStatus();
+    }
+
+    public void update(SpecialBusinessHourRequestDto requestDto) {
+        this.date = requestDto.getDate();
+        this.openedAt = requestDto.getOpenedAt();
+        this.closedAt = requestDto.getClosedAt();
+        this.businessStatus = requestDto.getBusinessStatus();
+    }
 }

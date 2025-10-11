@@ -37,19 +37,6 @@ public class ReviewController {
         return new BaseResponse();
     }
 
-    // 리뷰작성_고객
-    @PostMapping(value ="/users/{userId}/reviews",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public BaseResponse createReviewUser(
-            @RequestPart("review") @Valid ReviewRequestDto requestDto,                      // JSON DTO
-            @RequestPart(value = "images", required = false) List<MultipartFile> images,    // 이미지 파일
-            @PathVariable Long userId){
-        UUID orderId = requestDto.getOrderId();
-
-        reviewService.createReview(orderId, userId, requestDto, images);
-        return new BaseResponse();
-    }
-
     // 리뷰작성_업체
     @PostMapping("/companies/{compId}/reviews")
     public BaseResponse createReviewCompany(

@@ -173,7 +173,7 @@ public class ReviewService {
         review.setContents(requestDto.getContents());
 
         // 기존 이미지 삭제
-        if(!images.isEmpty()) {
+        if(images != null && !images.isEmpty()) {
             deleteReviewImage(reviewId);
             insertImage(review, images);
         }
@@ -204,9 +204,8 @@ public class ReviewService {
 
         // 2. 리뷰 조회 및 논리삭제
         Review review = review(reviewId);
-        if (review != null) {
-            review.softDelete(LocalDateTime.now(), String.valueOf(userId));
-        }
+        review.softDelete(LocalDateTime.now(), String.valueOf(userId));
+
 
         // 3. 연관된 사장님리뷰 조회 및 논리삭제 처리
         OwnerReview ownerReview = ownerReview(reviewId);

@@ -1,5 +1,6 @@
 package com.sparta.vroomvroom.domain.menu.service;
 
+import com.sparta.vroomvroom.domain.ai.service.GeminiService;
 import com.sparta.vroomvroom.domain.company.model.entity.Company;
 import com.sparta.vroomvroom.domain.company.repository.CompanyRepository;
 import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuRequestDto;
@@ -21,12 +22,33 @@ public class MenuService {
 
     private final MenuRepository menuRepository;
     private final CompanyRepository companyRepository;
+    private final GeminiService geminiService;
 
     @Transactional
     public void createMenu(UUID companyId, MenuRequestDto requestDto) {
         Company company = findCompany(companyId);
 
-        menuRepository.save(new Menu(company.getCompanyId(), requestDto));
+        String aiDescription = requestDto.getMenuDescription();
+
+        if (Boolean.TRUE.equals(requestDto.getAiDescription())) {
+            aiDescription = geminiService.generateMenuDescription(
+                    requestDto.getMenuName()
+            );
+        }
+
+        Menu menu = new Menu(
+                company,
+                requestDto.getMenuName(),
+                requestDto.getMenuGroup(),
+                requestDto.getMenuPrice(),
+                requestDto.getMenuImage(),
+                aiDescription,
+                requestDto.getMenuStatus(),
+                requestDto.getIsVisible()
+        );
+
+
+        menuRepository.save(menu);
     }
 
     @Transactional(readOnly = true)
@@ -39,8 +61,8 @@ public class MenuService {
     @Transactional(readOnly = true)
     public List<MenuResponseDto> getMenus(UUID companyId, boolean includeHidden) {
         List<Menu> menu = includeHidden
-                ? menuRepository.findAllByCompanyIdAndIsDeletedFalse(companyId)
-                : menuRepository.findAllByCompanyIdAndIsDeletedFalseAndIsVisibleTrue(companyId);
+                ? menuRepository.findAllByCompany_CompanyIdAndIsDeletedFalse(companyId)
+                : menuRepository.findAllByCompany_CompanyIdAndIsDeletedFalseAndIsVisibleTrue(companyId);
 
         return menu.stream()
                 .map(MenuResponseDto::new)
@@ -74,3 +96,4 @@ public class MenuService {
     }
 
 }
+//

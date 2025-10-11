@@ -61,6 +61,13 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	//HTTP 요청용
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations'
+	implementation 'com.fasterxml.jackson.core:jackson-core'
+
 }
 
 tasks.named('test') {

@@ -12,6 +12,7 @@ import org.locationtech.jts.geom.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +20,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
 public class AddressService {
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
@@ -69,7 +69,8 @@ public class AddressService {
         addressRepository.save(address);
     }
 
-    // 배송지 목록 조회
+    // 배송지 목록 조회 (삭제된 배송지 제외)
+    @Transactional(readOnly = true)
     public List<AddressResponseDto> getAlladdresses(Long userId) {
 
         User user = validateUser(userId);
@@ -77,7 +78,9 @@ public class AddressService {
 
         List<AddressResponseDto> responseDtos = new ArrayList<>();
         for (Address a : addresses) {
-            responseDtos.add(new AddressResponseDto(a));
+            if(!a.isDeleted()) {
+                responseDtos.add(new AddressResponseDto(a));
+            }
         }
 
         return responseDtos;
@@ -109,8 +112,6 @@ public class AddressService {
             addressRepository.updateIsDefaultToFalse(userId);
             address.setDefault(true);
         }
-
-        addressRepository.save(address);
     }
 
 
@@ -125,7 +126,6 @@ public class AddressService {
 
         // 기본배송지 새로 등록
         address.setDefault(true);
-        addressRepository.save(address);
     }
 
     // 배송지 삭제
@@ -139,7 +139,8 @@ public class AddressService {
             throw new IllegalArgumentException("기본배송지는 삭제할 수 없습니다.");
         }
 
-        addressRepository.deleteById(userAddressId);
+        // soft-delete
+        address.softDelete(LocalDateTime.now(), user.getUserName());
     }
 
     // 사용자 검증 메서드

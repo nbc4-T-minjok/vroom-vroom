@@ -30,13 +30,19 @@ public class SpecialBusinessHourService {
         // 업체 확인
         Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 업체입니다."));
 
+        // 중복 날짜 차단
+
+        if (specialBusinessHourRepository.existsByCompany_CompanyIdAndDate(companyId, requestDto.getDate())) {
+            throw new IllegalArgumentException("해당 날짜 특별 영업 시간은 이미 등록되어 있습니다.");
+        }
+
         // 특별영업시간 생성 후 저장
         SpecialBusinessHour specialBusinessHour = new SpecialBusinessHour(company, requestDto);
         specialBusinessHourRepository.save(specialBusinessHour);
     }
 
     public List<SpecialBusinessHourResponseDto> getSpecialBusinessHours(UUID companyId) {
-        List<SpecialBusinessHour> specialBusinessHours = specialBusinessHourRepository.findAllByCompany_CompanyId(companyId);
+        List<SpecialBusinessHour> specialBusinessHours = specialBusinessHourRepository.findAllByCompany_CompanyIdAndIsDeletedFalse(companyId);
         return specialBusinessHours.stream().map(SpecialBusinessHourResponseDto::of).toList();
     }
 
@@ -59,7 +65,7 @@ public class SpecialBusinessHourService {
         return SpecialBusinessHourResponseDto.of(specialBusinessHour);
     }
 
-
+    @Transactional
     public void deleteSpecialBusinessHour(Long userId, UUID companyId, UUID specialBusinessHourId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
         Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 업체입니다."));

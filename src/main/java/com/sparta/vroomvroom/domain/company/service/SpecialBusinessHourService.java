@@ -36,7 +36,7 @@ public class SpecialBusinessHourService {
     }
 
     public List<SpecialBusinessHourResponseDto> getSpecialBusinessHours(UUID companyId) {
-        List<SpecialBusinessHour> specialBusinessHours = specialBusinessHourRepository.findAllByCompanyId(companyId);
+        List<SpecialBusinessHour> specialBusinessHours = specialBusinessHourRepository.findAllByCompany_CompanyId(companyId);
         return specialBusinessHours.stream().map(SpecialBusinessHourResponseDto::of).toList();
     }
 
@@ -47,8 +47,12 @@ public class SpecialBusinessHourService {
         SpecialBusinessHour specialBusinessHour = specialBusinessHourRepository.findById(specialBusinessHourId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 특별영엽시간입니다."));
 
+        // 요청된 companyId와 특별 영업시간의 companyId가 일치하는지 확인
+        if (!specialBusinessHour.getCompany().getCompanyId().equals(companyId)) {
+            throw new IllegalArgumentException("해당 특별 영업시간은 업체 ID: " + companyId + "에 속하지 않습니다.");
+        }
+
         // Todo : 이 특별 영업시간을 가진 업체의 소유자인지 확인
-        // Todo : 요청된 companyId와 특별 영업시간의 companyId가 일치하는지 확인
 
         specialBusinessHour.update(requestDto);
 
@@ -62,8 +66,11 @@ public class SpecialBusinessHourService {
         SpecialBusinessHour specialBusinessHour = specialBusinessHourRepository.findById(specialBusinessHourId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 특별영엽시간입니다."));
 
+        // 요청된 companyId와 특별 영업시간의 companyId가 일치하는지 확인
+        if (!specialBusinessHour.getCompany().getCompanyId().equals(companyId)) {
+            throw new IllegalArgumentException("해당 특별 영업시간은 업체 ID: " + companyId + "에 속하지 않습니다.");
+        }
         // Todo : 이 특별 영업시간을 가진 업체의 소유자인지 확인
-        // Todo : 요청된 companyId와 특별 영업시간의 companyId가 일치하는지 확인
 
         specialBusinessHour.softDelete(LocalDateTime.now(), user.getUserName());
     }

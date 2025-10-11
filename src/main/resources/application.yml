@@ -34,4 +34,4 @@ logging:
 gemini:
   api:
     url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-robotics-er-1.5-preview:generateContent"
-    key: AIzaSyArE_FT5VLwHRXyKyh4LHA6lSYuxZDIphk
+    key: ${gemini.api.key}

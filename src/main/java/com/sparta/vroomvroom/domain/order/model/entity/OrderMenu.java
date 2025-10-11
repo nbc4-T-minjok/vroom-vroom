@@ -5,14 +5,12 @@ import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "order_menus")
 @Getter
-@Setter
 @NoArgsConstructor
 public class OrderMenu extends BaseEntity {
     @Id
@@ -33,4 +31,20 @@ public class OrderMenu extends BaseEntity {
 
     @Column(name = "menu_price", nullable = false)
     private int menuPrice;
+
+    public static OrderMenu createOrderMenu(
+            Order order,
+            Menu menu,
+            Integer menuAmount,
+            Integer menuPrice,
+            String createdBy
+    ) {
+        OrderMenu orderMenu = new OrderMenu();
+        orderMenu.order = order;
+        orderMenu.menu = menu;
+        orderMenu.menuAmount = menuAmount;
+        orderMenu.menuPrice = menuPrice;
+        orderMenu.create(createdBy);
+        return orderMenu;
+    }
 }

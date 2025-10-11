@@ -41,4 +41,25 @@ public class Payment extends BaseEntity {
 
     @Column(name = "paid_at", nullable = false)
     private LocalDateTime paidAt;
+
+    public static Payment createPayment(
+            Order order,
+            PaymentMethod paymentMethod,
+            Integer paymentPrice,
+            String createdBy
+    ) {
+        Payment payment = new Payment();
+        payment.order = order;
+        payment.paymentMethod = paymentMethod;
+        payment.paymentPrice = paymentPrice;
+        payment.paymentStatus = PaymentStatus.PAID;
+        payment.paidAt = LocalDateTime.now();
+        payment.create(createdBy);
+        return payment;
+    }
+
+    public void refund(String updatedBy) {
+        this.paymentStatus = PaymentStatus.REFUNDED;
+        this.update(updatedBy);
+    }
 }

@@ -5,6 +5,7 @@ import com.sparta.vroomvroom.domain.company.model.dto.response.SpecialBusinessHo
 import com.sparta.vroomvroom.domain.company.service.SpecialBusinessHourService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import com.sparta.vroomvroom.global.security.UserDetailsImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,7 +24,7 @@ public class SpecialBusinessHourController {
     @PostMapping("/companies/{companyId}/special_business_hours")
     public BaseResponse createSpecialBusinessHour(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                   @PathVariable UUID companyId,
-                                                  @RequestBody SpecialBusinessHourRequestDto requestDto) {
+                                                  @Valid @RequestBody SpecialBusinessHourRequestDto requestDto) {
         specialBusinessHourService.createSpecialBusinessHour(userDetails.getUser().getUserId(), companyId, requestDto);
         return new BaseResponse();
     }
@@ -37,7 +38,7 @@ public class SpecialBusinessHourController {
     @PatchMapping("/companies/{companyId}/special_business_hours/{specialBusinessHourId}")
     public BaseResponse updateSpecialBusinessHour(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                    @PathVariable UUID companyId, @PathVariable UUID specialBusinessHourId,
-                                                   @RequestBody SpecialBusinessHourRequestDto requestDto) {
+                                                   @Valid @RequestBody SpecialBusinessHourRequestDto requestDto) {
         SpecialBusinessHourResponseDto responseDto = specialBusinessHourService.updateSpecialBusinessHour(userDetails.getUser().getUserId(), companyId, specialBusinessHourId, requestDto);
         return new BaseResponse(responseDto);
     }

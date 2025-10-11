@@ -37,12 +37,12 @@ public class MenuService {
         }
 
         Menu menu = new Menu(
-                company.getCompanyId(),
+                company,
                 requestDto.getMenuName(),
                 requestDto.getMenuGroup(),
                 requestDto.getMenuPrice(),
                 requestDto.getMenuImage(),
-                aiDescription, // AI 결과 반영
+                aiDescription,
                 requestDto.getMenuStatus(),
                 requestDto.getIsVisible()
         );
@@ -61,8 +61,8 @@ public class MenuService {
     @Transactional(readOnly = true)
     public List<MenuResponseDto> getMenus(UUID companyId, boolean includeHidden) {
         List<Menu> menu = includeHidden
-                ? menuRepository.findAllByCompanyIdAndIsDeletedFalse(companyId)
-                : menuRepository.findAllByCompanyIdAndIsDeletedFalseAndIsVisibleTrue(companyId);
+                ? menuRepository.findAllByCompany_CompanyIdAndIsDeletedFalse(companyId)
+                : menuRepository.findAllByCompany_CompanyIdAndIsDeletedFalseAndIsVisibleTrue(companyId);
 
         return menu.stream()
                 .map(MenuResponseDto::new)

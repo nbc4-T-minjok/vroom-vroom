@@ -29,9 +29,15 @@ public class Menu extends BaseEntity {
     @Column(name = "menu_id", columnDefinition = "uuid")
     private UUID menuId;
 
-    // TODO: 업체 도메인 개발 완료후 Company 연관관계로 변경
-    @Column(name = "company_id", nullable = false, columnDefinition = "uuid")
-    private UUID companyId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
+
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartMenu> cartMenus = new ArrayList<>();
+
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderMenu> orderMenus = new ArrayList<>();
 
     @Column(name = "menu_name", nullable = false, length = 50)
     private String menuName;
@@ -74,19 +80,6 @@ public class Menu extends BaseEntity {
     private String deletedBy;
 
 
-
-    @Builder
-    public Menu(UUID companyId, MenuRequestDto dto) {
-        this.companyId = companyId;
-        this.menuName = dto.getMenuName();
-        this.menuGroup = dto.getMenuGroup();
-        this.menuPrice = dto.getMenuPrice();
-        this.menuImage = dto.getMenuImage();
-        this.menuDescription = dto.getMenuDescription();
-        this.menuStatus = dto.getMenuStatus();
-        this.isVisible = dto.getIsVisible();
-    }
-
     public void updateMenu(MenuRequestDto dto) {
         this.menuName = dto.getMenuName();
         this.menuGroup = dto.getMenuGroup();
@@ -97,10 +90,10 @@ public class Menu extends BaseEntity {
         this.isVisible = dto.getIsVisible();
     }
 
-    public Menu(UUID companyId, String menuName, String menuGroup,
+    public Menu(Company company, String menuName, String menuGroup,
                 Integer menuPrice, String menuImage, String menuDescription,
                 MenuStatus menuStatus, Boolean isVisible) {
-        this.companyId = companyId;
+        this.company = company;
         this.menuName = menuName;
         this.menuGroup = menuGroup;
         this.menuPrice = menuPrice;

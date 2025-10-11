@@ -36,9 +36,9 @@ public class BusinessHourController {
 
     // 영업시간 수정
     @PatchMapping("/companies/{companyId}/business_hours/{businessHourId}")
-    public BaseResponse patchBusinessHour(@PathVariable UUID companyId, @PathVariable UUID businessHourId,
+    public BaseResponse updateBusinessHour(@PathVariable UUID companyId, @PathVariable UUID businessHourId,
                                             @RequestBody BusinessHourRequestDto requestDto) {
-        businessHourService.patchBusinessHour(companyId, businessHourId, requestDto);
+        businessHourService.updateBusinessHour(companyId, businessHourId, requestDto);
         return new BaseResponse();
     }
 

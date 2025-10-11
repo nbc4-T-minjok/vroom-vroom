@@ -36,14 +36,10 @@ public class BusinessHour extends BaseEntity {
     @Column(name = "closed_at", nullable = false)
     private LocalTime closedAt;
 
-    @Column(name = "is_closed", nullable = false)
-    private boolean isClosed;
-
     public BusinessHour(BusinessHourRequestDto requestDto, Company company) {
         this.company = company;
         this.day = requestDto.getDay();
         this.openedAt = requestDto.getOpenedAt();
         this.closedAt = requestDto.getClosedAt();
-        this.isClosed = requestDto.isClosed();
     }
 }

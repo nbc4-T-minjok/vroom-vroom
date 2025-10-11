@@ -8,15 +8,16 @@ import com.sparta.vroomvroom.domain.company.repository.BusinessHourRepository;
 import com.sparta.vroomvroom.domain.company.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BusinessHourService {
     private final BusinessHourRepository businessHourRepository;
     private final CompanyRepository companyRepository;
@@ -39,6 +40,7 @@ public class BusinessHourService {
     }
 
     // 영업시간 조회
+    @Transactional(readOnly = true)
     public List<BusinessHourResponseDto> getBusinessHour(UUID companyId) {
         // 업체아이디 검증
         Company company = validateCompany(companyId);
@@ -54,7 +56,7 @@ public class BusinessHourService {
         return responseDtos;
     }
 
-    public void patchBusinessHour(UUID companyId, UUID businessHourId, BusinessHourRequestDto requestDto) {
+    public void updateBusinessHour(UUID companyId, UUID businessHourId, BusinessHourRequestDto requestDto) {
         // 업체아이디 검증
         Company company = validateCompany(companyId);
 
@@ -64,10 +66,7 @@ public class BusinessHourService {
         // 영업시간 수정
         if(requestDto.getDay() != null) businessHour.setDay(requestDto.getDay());
         if(requestDto.getOpenedAt() != null) businessHour.setOpenedAt(requestDto.getOpenedAt());
-        if(requestDto.getClosedAt() != null) businessHour.setClosedAt((requestDto.getClosedAt()));
-        businessHour.setClosed(requestDto.isClosed());    // 영업일 <--> 정기휴뮤일
-
-        businessHourRepository.save(businessHour);
+        if(requestDto.getClosedAt() != null) businessHour.setClosedAt(requestDto.getClosedAt());
     }
 
     public void deleteBusinessHour(UUID companyId, UUID businessHourId, String userName) {
@@ -79,7 +78,6 @@ public class BusinessHourService {
 
         // 영업시간 삭제
         businessHour.softDelete(LocalDateTime.now(), userName);
-        businessHourRepository.save(businessHour);
     }
 
     // 업체 검증 메서드
@@ -103,66 +101,3 @@ public class BusinessHourService {
         return businessHour;
     }
 }
-
-/*
-*** 임시데이터 ***
-TODO. 업체 머지 후 삭제
-INSERT INTO company_categories (
-  company_category_id,
-  company_category_name,
-  created_at,
-  created_by,
-  updated_at,
-  updated_by,
-  is_deleted
-) VALUES (
-  '11111111-1111-1111-1111-111111111111',
-  '카페',
-  NOW(),
-  'user1',
-  NOW(),
-  'user1',
-  FALSE
-);
-
-INSERT INTO companies (
-  company_id,
-  company_category_id,
-  company_name,
-  company_logo_url,
-  company_description,
-  phone_number,
-  delivery_fee,
-  delivery_radius,
-  owner_name,
-  biz_reg_no,
-  address,
-  detail_address,
-  zip_code,
-  created_at,
-  created_by,
-  updated_at,
-  updated_by,
-  is_deleted
-) VALUES (
-  '22222222-2222-2222-2222-222222222222', -- companyId
-  '11111111-1111-1111-1111-111111111111', -- companyCategoryId
-  '00커피',
-  'https://example.com/logo.png',
-  '00커피',
-  '02-123-4567',
-  2000,
-  3000,
-  'owner',
-  '123-45-67890',
-  '서울특별시 ~',
-  '1층',
-  '04536',
-  NOW(),
-  'user1',
-  NOW(),
-  'user1',
-  FALSE
-);
-
- */

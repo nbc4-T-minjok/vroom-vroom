@@ -5,7 +5,7 @@ import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.*;
 
 import java.util.*;
 
@@ -60,11 +60,11 @@ public class Company extends BaseEntity {
     @Column(columnDefinition = "geometry(Point, 4326)", nullable = false)
     private Point location;
 
-//    @OneToMany(mappedBy = "company")
-//    private List<BusinessHour> businessHours;
-//
-//    @OneToMany(mappedBy = "company")
-//    private List<SpecialBusinessHour> specialBusinessHours;
+    @OneToMany(mappedBy = "company")
+    private List<BusinessHour> businessHours;
+
+    @OneToMany(mappedBy = "company")
+    private List<SpecialBusinessHour> specialBusinessHours;
 
     public Company(CompanyCategory companyCategory, CompanyRequestDto requestDto) {
         this.companyCategory = companyCategory;
@@ -79,6 +79,12 @@ public class Company extends BaseEntity {
         this.address = requestDto.getAddress();
         this.detailAddress = requestDto.getDetailAddress();
         this.zipCode = requestDto.getZipCode();
+
+        GeometryFactory geomFactory = new GeometryFactory(new PrecisionModel(), 4326);
+        Coordinate coord = new Coordinate(requestDto.getLocation().getLng(), requestDto.getLocation().getLng()); // 경도, 위도 순서로 변경 필수
+        Point location = geomFactory.createPoint(coord);
+
+        this.location = location;
     }
 
     public void update(CompanyRequestDto requestDto) {

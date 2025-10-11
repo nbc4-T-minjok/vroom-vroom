@@ -1,26 +1,37 @@
 package com.sparta.vroomvroom.domain.company.service;
 
+import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyListResponseDto;
 import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyRequestDto;
 import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyDetailResponseDto;
 import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyResponseDto;
+import com.sparta.vroomvroom.domain.company.model.entity.BusinessHour;
 import com.sparta.vroomvroom.domain.company.model.entity.Company;
 import com.sparta.vroomvroom.domain.company.model.entity.CompanyCategory;
+import com.sparta.vroomvroom.domain.company.model.entity.SpecialBusinessHour;
 import com.sparta.vroomvroom.domain.company.repository.CompanyCategoryRepository;
 import com.sparta.vroomvroom.domain.company.repository.CompanyRepository;
 import com.sparta.vroomvroom.domain.user.model.entity.User;
 import com.sparta.vroomvroom.domain.user.repository.UserRepository;
+import com.sparta.vroomvroom.global.conmon.constants.BusinessStatus;
 import com.sparta.vroomvroom.global.conmon.constants.UserRole;
+import com.sparta.vroomvroom.global.conmon.constants.WeekDay;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
+import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +40,7 @@ public class CompanyService {
     private final CompanyCategoryRepository companyCategoryRepository;
     private final UserRepository userRepository;
 
+    //업체 등록
     public void createCompany(Long userId, UUID companyCategoryId, CompanyRequestDto requestDto) {
         // 유저 존재 및 권한 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
@@ -45,30 +57,6 @@ public class CompanyService {
             throw new IllegalArgumentException("이미 등록된 사업자등록번호입니다.");
         }
 
-        // 위치 정보 검증
-        // location에서 lat, lng 꺼내기
-        if (requestDto.getLocation() == null) {
-            throw new IllegalArgumentException("location 필드는 필수입니다. (lat, lng 포함)");
-        }
-
-        Double lat = requestDto.getLocation().getLat(); // 위도
-        Double lng = requestDto.getLocation().getLng(); // 경도
-
-        if (lat == null || lng == null) {
-            throw new IllegalArgumentException("위도(lat)와 경도(lng)는 모두 필수입니다.");
-        }
-        if (lat < -90 || lat > 90) {
-            throw new IllegalArgumentException("위도(lat)는 -90 ~ 90 사이의 값이어야 합니다.");
-        }
-        if (lng < -180 || lng > 180) {
-            throw new IllegalArgumentException("경도(lng)는 -180 ~ 180 사이의 값이어야 합니다.");
-        }
-
-        // 포인트 생성
-        GeometryFactory geomFactory = new GeometryFactory(new PrecisionModel(), 4326);
-        Coordinate coord = new Coordinate(lng, lat); // 경도, 위도 순서로 변경 필수
-        Point location = geomFactory.createPoint(coord);
-
         // 업체 생성 및 저장
         Company company = new Company(category, requestDto);
         companyRepository.save(company);
@@ -79,19 +67,38 @@ public class CompanyService {
         return CompanyDetailResponseDto.of(company);
     }
 
-    public List<CompanyResponseDto> getCompanies() {
-        // 삭제된 업체제외
-        // 영업중인 업체만 조회
-        // 배송지로부터 배달가능거리
-        // 기타 페이징 조회
+    //카테고리별 업체 목록 조회 (영업 중인 업체와 영업 중이 아닌 업체 별도 조회)
+    public CompanyListResponseDto getCompaniesByCategory(int page, int size, String sortBy, boolean isAsc, UUID companyCategoryId) {
 
-        List<Company> companies = companyRepository.findAllByIsDeletedFalse();
-        return companies.stream().map(CompanyResponseDto::of).toList();
-    }
+        //페이징 처리 세팅
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
 
-    public List<CompanyResponseDto> getCompaniesByCategory(UUID companyCategoryId) {
-        List<Company> companies = companyRepository.findAllByCompanyCategoryIdAndIsDeletedFalse(companyCategoryId);
-        return companies.stream().map(CompanyResponseDto::of).toList();
+        //영업 여부 판별에 필요한 날짜 값 세팅
+        LocalDateTime now = LocalDateTime.now();
+        LocalDate today = now.toLocalDate();
+        LocalTime currentTime = now.toLocalTime();
+        WeekDay todayDay = WeekDay.fromLocalDate(today);
+
+        //카테고리와 일치하고 삭제되지 않은 업체 조회
+        Page<Company> companyPage =
+                companyRepository.findAllByIsDeletedFalseAndCompanyCategory_CompanyCategoryId(
+                        companyCategoryId, pageable);
+
+        List<CompanyResponseDto> openConpanies = new ArrayList<>();
+        List<CompanyResponseDto> closedConpanies = new ArrayList<>();
+
+        //각 업체마다 영업시간 판별
+        //Todo: 데이터가 많으면? -> 거리 조건이 추가 될 경우 주변 가게가 몇천개씩 뜨진 않음
+        for(Company company : companyPage.getContent()) {
+            boolean isOpen = isCompanyOpen(company, today, currentTime, todayDay);
+            CompanyResponseDto dto = new CompanyResponseDto(company);
+            if(isOpen) openConpanies.add(dto);
+            else closedConpanies.add(dto);
+        }
+        return new CompanyListResponseDto(
+                openConpanies,closedConpanies, companyPage.getTotalPages()
+        );
     }
 
     @Transactional
@@ -107,9 +114,6 @@ public class CompanyService {
 
         // 업체 수정
         company.update(requestDto);
-
-        // 감사 로그
-        //company.update(user.getUpdatedBy());
 
         // 엔티티에서 responseDto 로 변환 후 반환
         return CompanyDetailResponseDto.of(company);
@@ -128,6 +132,48 @@ public class CompanyService {
 
         // 업체 삭제
         company.softDelete(LocalDateTime.now(), user.getUserName());
+    }
+
+    //---유틸 함수
+
+    //영업시간 판별
+    private boolean isCompanyOpen(Company company, LocalDate today, LocalTime now, WeekDay todayDay) {
+        WeekDay yesterWeekDay= WeekDay.fromLocalDate(LocalDate.now().minusDays(1));
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        //특별 영업시간 먼저 판별
+        for (SpecialBusinessHour sbh : company.getSpecialBusinessHours()) {
+            LocalTime opened = sbh.getOpenedAt();
+            LocalTime closed = sbh.getClosedAt();
+
+            //익일 영업 여부에 따라 다르게 판별
+            if(!(sbh.getBusinessStatus().equals(BusinessStatus.OPEN) || sbh.getBusinessStatus().equals(BusinessStatus.SPECAIL_OPEN)) ) return false;
+            //오픈시간 < 닫는시간 (당일영업)
+            if(opened.isBefore(closed)){
+                if(!now.isBefore(opened) && !now.isAfter(closed) && sbh.getDate().equals(today)) return true;
+            //오픈시간 >= 닫는시간 (익일영업 or 24시간 영업)
+            }else{
+                if(now.isAfter(opened)  && sbh.getDate().equals(today)) return true;
+                if(now.isBefore(closed) && !sbh.getDate().equals(yesterday)) return true;
+            }
+        }
+
+        //일반 영업시간
+        for (BusinessHour bh : company.getBusinessHours()) {
+            LocalTime opened = bh.getOpenedAt();
+            LocalTime closed = bh.getClosedAt();
+
+            //익일 영업 여부에 따라 다르게 판별
+            //오픈시간 < 닫는시간 (당일영업)
+            if(opened.isBefore(closed)){
+                if(!now.isBefore(opened) && !now.isAfter(closed) && bh.getDay().equals(todayDay)) return true;
+                //오픈시간 >= 닫는시간 (익일영업 or 24시간 영업)
+            }else{
+                if(now.isAfter(opened)  && bh.getDay().equals(today)) return true;
+                if(now.isBefore(closed) && !bh.getDay().equals(yesterWeekDay)) return true;
+            }
+        }
+
+        return false;
     }
 
 }

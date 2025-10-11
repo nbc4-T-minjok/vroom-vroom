@@ -1,11 +1,15 @@
 package com.sparta.vroomvroom.domain.company.model.dto.response;
 
 import com.sparta.vroomvroom.domain.company.model.entity.Company;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CompanyResponseDto {
 
     private String companyName;         // 업체 이름
@@ -21,5 +25,12 @@ public class CompanyResponseDto {
                 .deliveryFee(company.getDeliveryFee())
                 .address(company.getAddress())
                 .build();
+    }
+
+    public CompanyResponseDto(Company company) {
+        this.companyName = company.getCompanyName();
+        this.companyLogo = company.getCompanyLogoUrl();
+        this.deliveryFee = company.getDeliveryFee();
+        this.address = company.getAddress();
     }
 }

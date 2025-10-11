@@ -1,14 +1,13 @@
 package com.sparta.vroomvroom.domain.company.model.dto.request;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 public class CompanyRequestDto {
+
     @NotBlank(message = "업체명은 필수입니다.")
     @Size(max = 20, message = "업체명은 20자 이내여야 합니다.")
     @Pattern(regexp = "^[가-힣a-zA-Z0-9]+$", message = "업체명은 한글, 영문, 숫자만 사용할 수 있습니다.")
@@ -51,12 +50,21 @@ public class CompanyRequestDto {
     @Pattern(regexp = "^\\d{5}$", message = "우편번호는 5자리 숫자여야 합니다.")
     private String zipCode;
 
+    @Valid
+    @NotNull(message = "위치 정보(location)는 필수입니다.")
     private LocationDto location;
 
     @Getter
     @NoArgsConstructor
     public static class LocationDto {
-        private double lat;
-        private double lng;
+        @NotNull(message = "위도(lat)는 필수입니다.")
+        @DecimalMin(value = "-90.0", message = "위도(lat)는 -90 이상이어야 합니다.")
+        @DecimalMax(value = "90.0", message = "위도(lat)는 90 이하이어야 합니다.")
+        private Double lat;
+
+        @NotNull(message = "경도(lng)는 필수입니다.")
+        @DecimalMin(value = "-180.0", message = "경도(lng)는 -180 이상이어야 합니다.")
+        @DecimalMax(value = "180.0", message = "경도(lng)는 180 이하이어야 합니다.")
+        private Double lng;
     }
 }

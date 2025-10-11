@@ -1,11 +1,13 @@
 package com.sparta.vroomvroom.domain.company.controller;
 
+import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyListResponseDto;
 import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyRequestDto;
 import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyDetailResponseDto;
 import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyResponseDto;
 import com.sparta.vroomvroom.domain.company.service.CompanyService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import com.sparta.vroomvroom.global.security.UserDetailsImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,7 @@ public class CompanyController {
     @PostMapping("/company-categories/{companyCategoryId}/companies")
     public BaseResponse createCompany(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                       @PathVariable UUID companyCategoryId,
-                                      @RequestBody CompanyRequestDto requestDto) {
+                                      @Valid @RequestBody CompanyRequestDto requestDto) {
         companyService.createCompany(userDetails.getUser().getUserId(), companyCategoryId, requestDto);
         return new BaseResponse();
     }
@@ -44,9 +46,13 @@ public class CompanyController {
 
     // 업체 카테고리별 목록 조회
     @GetMapping("/company-categories/{companyCategoryId}/companies")
-    public BaseResponse getCompaniesByCategory(@PathVariable UUID companyCategoryId) {
-        List<CompanyResponseDto> responseDtos = companyService.getCompaniesByCategory(companyCategoryId);
-        return new BaseResponse(responseDtos);
+    public BaseResponse getCompaniesByCategory(@PathVariable UUID companyCategoryId,
+                                               @RequestParam(name = "page") int page,
+                                               @RequestParam(name = "size") int size,
+                                               @RequestParam(name = "sortBy") String sortBy,
+                                               @RequestParam(name = "isAsc") boolean isAsc) {
+        CompanyListResponseDto response = companyService.getCompaniesByCategory(page,size,sortBy,isAsc,companyCategoryId);
+        return new BaseResponse(response);
     }
 
     // 업체 수정

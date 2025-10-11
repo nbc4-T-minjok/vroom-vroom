@@ -32,8 +32,7 @@ public class MenuService {
 
         if (Boolean.TRUE.equals(requestDto.getAiDescription())) {
             aiDescription = geminiService.generateMenuDescription(
-                    requestDto.getMenuName(),
-                    requestDto.getMenuPrice()
+                    requestDto.getMenuName()
             );
         }
 
@@ -97,3 +96,4 @@ public class MenuService {
     }
 
 }
+//

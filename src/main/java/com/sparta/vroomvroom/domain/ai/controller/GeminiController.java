@@ -15,10 +15,9 @@ public class GeminiController {
     private final GeminiService geminiService;
 
     @PostMapping("/menu-description")
-    public String generateDescription(@RequestParam String menuName,
-                                      @RequestParam int price) {
+    public String generateDescription(@RequestParam String menuName) {
 
-        return geminiService.generateMenuDescription(menuName, price);
+        return geminiService.generateMenuDescription(menuName);
     }
 
 }

@@ -28,7 +28,7 @@ public class GeminiService {
     @Value("${gemini.api.key}")
     private String apiKey;
 
-    public String generateMenuDescription(String menuName, int price) {
+    public String generateMenuDescription(String menuName) {
 
         // 환경 변수 확인
         if (apiKey == null || apiKey.isBlank() || apiUrl == null || apiUrl.isBlank()) {
@@ -38,8 +38,8 @@ public class GeminiService {
 
         // 프롬프트 생성
         String prompt = String.format(
-                "'%s'(가격: %d원)이라는 메뉴에 대해, 고객을 끌 수 있는 매력적인 메뉴 설명을 생성해줘. 답변을 최대한 간결하게 50자 이하로.",
-                menuName, price
+                "'%s'이라는 메뉴에 대해, 고객을 끌 수 있는 매력적인 메뉴 설명을 생성해줘. 답변을 최대한 간결하게 50자 이하로.",
+                menuName
         );
 
         // Gemini API의 요청 Body 구조에 맞게 Map 생성

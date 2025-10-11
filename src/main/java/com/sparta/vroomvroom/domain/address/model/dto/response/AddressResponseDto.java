@@ -21,8 +21,6 @@ public class AddressResponseDto {
     private boolean isDefault;
 
     private LocationDto location;  // Point 대신 DTO로 변환
-    @JsonProperty("isDeleted")
-    private boolean isDeleted;
 
     @Getter
     public static class LocationDto {
@@ -45,7 +43,6 @@ public class AddressResponseDto {
         if (a.getLocation() != null) {
             this.location = new LocationDto(a.getLocation());
         }
-        this.isDeleted = a.isDeleted();
     }
 }
 

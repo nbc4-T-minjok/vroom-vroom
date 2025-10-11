@@ -6,15 +6,17 @@ import com.sparta.vroomvroom.domain.user.model.entity.User;
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "reviews")
+@Where(clause = "is_deleted = false")
 public class Review extends BaseEntity {
     @Id
     @GeneratedValue(strategy=GenerationType.UUID)
@@ -27,7 +29,7 @@ public class Review extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private User userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comp_id", nullable = false)
@@ -39,6 +41,10 @@ public class Review extends BaseEntity {
     @Column(name = "review_contents", nullable = false, columnDefinition = "text")
     private String contents;
 
+    @OneToOne(mappedBy = "review")
+    private OwnerReview ownerReview;
 
+    @OneToMany(mappedBy = "review")
+    private List<ReviewImage> reviewImages;
 
 }

@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface CompanyCategoryRepository extends JpaRepository<CompanyCategory, UUID> {
 
-    Optional<CompanyCategory> findByCompanyCategoryName(String companyCategoryName);
+    Optional<CompanyCategory> findByCompanyCategoryNameAndIsDeletedFalse(String companyCategoryName);
 
     // isDeleted 필드가 false인 항목만 페이징 조회
     Page<CompanyCategory> findAllByIsDeletedFalse(Pageable pageable);

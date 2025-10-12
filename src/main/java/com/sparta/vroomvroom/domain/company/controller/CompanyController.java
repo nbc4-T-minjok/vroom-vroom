@@ -1,9 +1,8 @@
 package com.sparta.vroomvroom.domain.company.controller;
 
-import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyListResponseDto;
+import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyListResponseDto;
 import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyRequestDto;
 import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyDetailResponseDto;
-import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyResponseDto;
 import com.sparta.vroomvroom.domain.company.service.CompanyService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import com.sparta.vroomvroom.global.security.UserDetailsImpl;
@@ -12,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -47,9 +45,9 @@ public class CompanyController {
     // 업체 카테고리별 목록 조회
     @GetMapping("/company-categories/{companyCategoryId}/companies")
     public BaseResponse getCompaniesByCategory(@PathVariable UUID companyCategoryId,
-                                               @RequestParam(name = "page") int page,
-                                               @RequestParam(name = "size") int size,
-                                               @RequestParam(name = "sortBy") String sortBy,
+                                               @RequestParam(name = "page", defaultValue = "1") int page,
+                                               @RequestParam(name = "size", defaultValue = "10") int size,
+                                               @RequestParam(name = "sortBy", required = false) String sortBy,
                                                @RequestParam(name = "isAsc") boolean isAsc) {
         CompanyListResponseDto response = companyService.getCompaniesByCategory(page,size,sortBy,isAsc,companyCategoryId);
         return new BaseResponse(response);

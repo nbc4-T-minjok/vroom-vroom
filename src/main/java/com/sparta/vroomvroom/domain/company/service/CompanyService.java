@@ -1,6 +1,6 @@
 package com.sparta.vroomvroom.domain.company.service;
 
-import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyListResponseDto;
+import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyListResponseDto;
 import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyRequestDto;
 import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyDetailResponseDto;
 import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyResponseDto;
@@ -90,9 +90,7 @@ public class CompanyService {
             if(isOpen) openConpanies.add(dto);
             else closedConpanies.add(dto);
         }
-        return new CompanyListResponseDto(
-                openConpanies,closedConpanies, companyPage.getTotalPages()
-        );
+        return CompanyListResponseDto.of(openConpanies,closedConpanies,companyPage);
     }
 
     @Transactional

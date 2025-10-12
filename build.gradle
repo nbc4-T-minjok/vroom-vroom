@@ -64,6 +64,9 @@ dependencies {
 	//HTTP 요청용
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+	//Swagger
+	implementation("io.swagger.core.v3:swagger-annotations:2.2.38")
+
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation 'com.fasterxml.jackson.core:jackson-annotations'
 	implementation 'com.fasterxml.jackson.core:jackson-core'

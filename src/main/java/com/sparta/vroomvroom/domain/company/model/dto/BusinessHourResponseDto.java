@@ -21,7 +21,6 @@ public class BusinessHourResponseDto {
     @JsonFormat(pattern = "HH:mm[:ss]")
     private LocalTime closedAt;
 
-    private boolean isClosed;
     private boolean isDeleted;
 
     public BusinessHourResponseDto(BusinessHour businessHour) {
@@ -29,7 +28,6 @@ public class BusinessHourResponseDto {
         this.day = businessHour.getDay();
         this.openedAt = businessHour.getOpenedAt();
         this.closedAt = businessHour.getClosedAt();
-        this.isClosed = businessHour.isClosed();;
         this.isDeleted = businessHour.isDeleted();
     }
 }

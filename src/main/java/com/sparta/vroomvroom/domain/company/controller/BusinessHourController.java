@@ -7,6 +7,7 @@ import com.sparta.vroomvroom.domain.company.service.BusinessHourService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import com.sparta.vroomvroom.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ public class BusinessHourController {
     private final BusinessHourService businessHourService;
 
     // 영업시간 등록
+    @Secured({"ROLE_MANAGER","ROLE_OWNER"})
     @PostMapping("/companies/{companyId}/business_hours")
     public BaseResponse createBusinessHour(@PathVariable UUID companyId, @RequestBody BusinessHourRequestDto requestDto) {
         businessHourService.createBusinessHour(companyId, requestDto);
@@ -28,6 +30,7 @@ public class BusinessHourController {
     }
 
     // 영업시간 조회
+    @Secured({"ROLE_MANAGER","ROLE_OWNER"})
     @GetMapping("/companies/{companyId}/business_hours")
     public BaseResponse getBusinessHour(@PathVariable UUID companyId) {
         List<BusinessHourResponseDto> result =  businessHourService.getBusinessHour(companyId);
@@ -35,6 +38,7 @@ public class BusinessHourController {
     }
 
     // 영업시간 수정
+    @Secured({"ROLE_MANAGER","ROLE_OWNER"})
     @PatchMapping("/companies/{companyId}/business_hours/{businessHourId}")
     public BaseResponse updateBusinessHour(@PathVariable UUID companyId, @PathVariable UUID businessHourId,
                                             @RequestBody BusinessHourRequestDto requestDto) {
@@ -43,6 +47,7 @@ public class BusinessHourController {
     }
 
     // 영업시간 삭제
+    @Secured({"ROLE_MANAGER","ROLE_OWNER"})
     @DeleteMapping("/companies/{companyId}/business_hours/{businessHourId}")
     public BaseResponse deleteBusinessHour(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable UUID companyId, @PathVariable UUID businessHourId) {
         String userName = userDetails.getUser().getUserName();

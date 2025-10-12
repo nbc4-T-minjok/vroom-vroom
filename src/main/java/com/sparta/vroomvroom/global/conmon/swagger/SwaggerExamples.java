@@ -1,4 +1,4 @@
-package com.sparta.vroomvroom.global.conmon.constants;
+package com.sparta.vroomvroom.global.conmon.swagger;
 
 public class SwaggerExamples {
     // 배송지 등록 예시

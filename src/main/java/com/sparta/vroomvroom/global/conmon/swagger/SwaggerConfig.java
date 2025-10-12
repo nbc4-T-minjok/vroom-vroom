@@ -1,4 +1,4 @@
-package com.sparta.vroomvroom.global.config;
+package com.sparta.vroomvroom.global.conmon.swagger;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

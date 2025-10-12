@@ -1,12 +1,11 @@
 package com.sparta.vroomvroom.domain.company.controller;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.sparta.vroomvroom.domain.company.model.dto.BusinessHourRequestDto;
 import com.sparta.vroomvroom.domain.company.model.dto.BusinessHourResponseDto;
 import com.sparta.vroomvroom.domain.company.service.BusinessHourService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
-import com.sparta.vroomvroom.global.conmon.constants.SwaggerDescription;
-import com.sparta.vroomvroom.global.conmon.constants.SwaggerExamples;
+import com.sparta.vroomvroom.global.conmon.swagger.SwaggerDescription;
+import com.sparta.vroomvroom.global.conmon.swagger.SwaggerExamples;
 import com.sparta.vroomvroom.global.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

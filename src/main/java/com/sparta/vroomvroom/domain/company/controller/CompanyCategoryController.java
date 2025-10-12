@@ -8,6 +8,7 @@ import com.sparta.vroomvroom.global.conmon.constants.BaseResponseStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class CompanyCategoryController {
     private final CompanyCategoryService companyCategoryService;
 
+    @Secured("ROLE_MANAGER")
     @PostMapping("/company-categories")
     public BaseResponse createCompanyCategories(@Valid @RequestBody CompanyCategoryRequestDto requestDto) {
         companyCategoryService.createCompanyCategories(requestDto);
@@ -32,6 +34,7 @@ public class CompanyCategoryController {
         return new BaseResponse(companyCategories);
     }
 
+    @Secured("ROLE_MANAGER")
     @PatchMapping("/company-categories/{companyCategoryId}")
     public BaseResponse updateCompanyCategories(@PathVariable UUID companyCategoryId,
                                                 @Valid @RequestBody CompanyCategoryRequestDto requestDto) {
@@ -39,6 +42,7 @@ public class CompanyCategoryController {
         return new BaseResponse(responseDto);
     }
 
+    @Secured("ROLE_MANAGER")
     @DeleteMapping("/company-categories/{companyCategoryId}")
     public BaseResponse deleteCompanyCategories(@PathVariable UUID companyCategoryId) {
         companyCategoryService.deleteCompanyCategories(companyCategoryId);

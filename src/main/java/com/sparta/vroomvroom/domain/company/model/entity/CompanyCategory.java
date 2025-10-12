@@ -19,7 +19,6 @@ public class CompanyCategory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JdbcTypeCode(SqlTypes.UUID)
     @Column(name = "company_category_id")
     private UUID companyCategoryId;
 

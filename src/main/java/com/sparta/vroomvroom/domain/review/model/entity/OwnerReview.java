@@ -2,11 +2,17 @@ package com.sparta.vroomvroom.domain.review.model.entity;
 
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "owner_reviews")
+@Where(clause = "is_deleted = false")
 public class OwnerReview extends BaseEntity {
     @Id
     @GeneratedValue(strategy=GenerationType.UUID)

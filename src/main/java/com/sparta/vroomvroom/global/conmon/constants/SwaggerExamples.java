@@ -17,7 +17,7 @@ public class SwaggerExamples {
     public static final String ADDRESS_UPDATE_REQUEST = """
             {
               "addressName": "우리집1 수정",
-              "address": "경기도 어쩌고" 저쩌고,
+              "address": "경기도 어쩌고 저쩌고",
               "detailAddress": "ㅁㅁ아파트 ㅁㅁ동 ㅁㅁ호",
               "zipCode": "12340",
               "isDefault": true,

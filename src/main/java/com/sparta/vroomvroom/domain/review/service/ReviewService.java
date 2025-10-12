@@ -15,6 +15,7 @@ import com.sparta.vroomvroom.domain.review.repository.ReviewImageRepository;
 import com.sparta.vroomvroom.domain.review.repository.ReviewRepository;
 import com.sparta.vroomvroom.domain.user.model.entity.User;
 import com.sparta.vroomvroom.domain.user.repository.UserRepository;
+import com.sparta.vroomvroom.global.conmon.constants.OrderStatus;
 import com.sparta.vroomvroom.global.conmon.s3.S3Uploader;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.yaml.snakeyaml.events.Event;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -75,6 +75,13 @@ public class ReviewService {
         }
     }
 
+    // 리뷰 작성자 일치 여부 확인
+    private void checkAuthor(Long writerId, Long userId, String errorMessage){
+        if (!userId.equals(writerId)) {
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
     public void createReview(UUID orderId, Long userId, ReviewRequestDto requestDto, List<MultipartFile> images){
         // order, user, Company 엔티티 조회
         Order order = order(orderId);
@@ -84,14 +91,19 @@ public class ReviewService {
         // 리뷰 존재 확인 - orderId 기준
         exists(reviewRepository::findByOrder_OrderId, orderId, false,"이미 해당 주문에 대한 리뷰가 존재합니다.");
 
+        // 주문 상태 확인(배송완료 상태에서만 리뷰 작성 가능)
+        OrderStatus state = order.getOrderStatus();
+        if (state != OrderStatus.DELIVERY_COMPLETED) {
+            throw new IllegalArgumentException("배달 완료 상태에서만 리뷰 작성이 가능합니다.");
+        }
+
+        // 리뷰 생성
         Review review = new Review();
         review.setOrder(order);
         review.setUserId(user);
         review.setCompany(company);
         review.setRate(requestDto.getRate());
         review.setContents(requestDto.getContents());
-        // CreatedBy 없는동안 임시
-        review.setCreatedBy(userId.toString());
 
         //리뷰 저장
         reviewRepository.save(review);
@@ -100,18 +112,20 @@ public class ReviewService {
         insertImage(review, images);
     }
 
-    public void createReviewCompany(UUID compId, UUID reviewId, @Valid OwnerReviewRequestDto requestDto) {
-        //review, user 엔티티 조회
+    public void createReviewCompany(UUID compId, UUID reviewId, Long userId,@Valid OwnerReviewRequestDto requestDto) {
+        //review, compaby 엔티티 조회
         Review review = review(reviewId);
 
         // 업체 존재 여부 확인
         exists(companyRepository::findById, compId, true,"유효하지 않은 업체입니다.");
 
+        // 사장님 일치 여부 확인
+        Long ownerId = review.getCompany().getUserId();
+        checkAuthor(ownerId, userId, "자신의 리뷰만 수정 할 수 있습니다.");
+
         OwnerReview ownerReview = new OwnerReview();
         ownerReview.setReview(review);
         ownerReview.setContents(requestDto.getContents());
-        // CreatedBy 없는동안 임시
-        ownerReview.setCreatedBy("tester");
 
         // 리뷰 저장_업체
         ownerReviewRepository.save(ownerReview);
@@ -164,9 +178,8 @@ public class ReviewService {
         Review review = review(reviewId);
 
         // 권한 체크
-        if (!review.getUserId().getUserId().equals(userId)) {
-            throw new IllegalArgumentException("리뷰 수정 권한이 없습니다.");
-        }
+        Long writer = review.getUserId().getUserId();
+        checkAuthor(writer, userId, "리뷰 수정 권한이 없습니다.");
 
         // 리뷰 내용 변경
         review.setRate(requestDto.getRate());
@@ -187,23 +200,27 @@ public class ReviewService {
         OwnerReview ownerReview = ownerReview(reviewId);
 
         //권한 체크
-        if (!ownerReview.getCreatedBy().equals(userId)) {
-            throw new IllegalArgumentException("사장님 리뷰 수정 권한이 없습니다.");
-        }
+        Long writer = Long.valueOf(ownerReview.getCreatedBy());
+        checkAuthor(writer, userId, "리뷰 수정 권한이 없습니다.");
 
         //리뷰 내용 변경
         ownerReview.setContents(requestDto.getContents());
     }
 
     public void deleteReview(UUID reviewId, Long userId) {
+        Review review = review(reviewId);
+
         // 리뷰 존재 여부 확인
         exists(reviewRepository::findById, reviewId, true,"유효하지 않은 리뷰입니다.");
+
+        // 권한 체크
+        Long writer = review.getUserId().getUserId();
+        checkAuthor(writer, userId, "리뷰 삭제 권한이 없습니다.");
 
         // 1. 리뷰 이미지 삭제 처리 (자식 데이터)
         deleteReviewImage(reviewId);
 
-        // 2. 리뷰 조회 및 논리삭제
-        Review review = review(reviewId);
+        // 2. 리뷰 논리삭제
         review.softDelete(LocalDateTime.now(), String.valueOf(userId));
 
 
@@ -215,14 +232,17 @@ public class ReviewService {
     }
 
     public void deleteReviewCompany(UUID reviewId, Long userId) {
+        OwnerReview ownerReview = ownerReview(reviewId);
+
         // 리뷰 존재 여부 확인
         exists(reviewRepository::findById, reviewId, true,"유효하지 않은 리뷰입니다.");
 
-        // 사장님 리뷰만 조회 후 삭제 처리
-        OwnerReview ownerReview = ownerReview(reviewId);
-        if (ownerReview != null) {
-            ownerReview.softDelete(LocalDateTime.now(), String.valueOf(userId));
-        }
+        // 권한 체크
+        Long writer = Long.valueOf(ownerReview.getCreatedBy());
+        checkAuthor(writer, userId, "사장님 리뷰 삭제 권한이 없습니다.");
+
+        // 사장님 리뷰 논리 삭제
+        ownerReview.softDelete(LocalDateTime.now(), String.valueOf(userId));
     }
 
     // 이미지 삭제

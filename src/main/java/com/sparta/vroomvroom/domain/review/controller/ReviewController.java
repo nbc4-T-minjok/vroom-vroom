@@ -41,10 +41,12 @@ public class ReviewController {
     @PostMapping("/companies/{compId}/reviews")
     public BaseResponse createReviewCompany(
             @Valid @RequestBody OwnerReviewRequestDto requestDto,
-            @PathVariable UUID compId
+            @PathVariable UUID compId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
         UUID reviewId = requestDto.getReviewId();
-        reviewService.createReviewCompany(compId, reviewId, requestDto);
+        Long userId = userDetails.getUser().getUserId();
+        reviewService.createReviewCompany(compId, reviewId, userId, requestDto);
         return new BaseResponse();
     }
 

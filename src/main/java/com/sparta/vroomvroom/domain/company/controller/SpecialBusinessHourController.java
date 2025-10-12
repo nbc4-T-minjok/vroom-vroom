@@ -25,7 +25,7 @@ public class SpecialBusinessHourController {
     public BaseResponse createSpecialBusinessHour(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                   @PathVariable UUID companyId,
                                                   @Valid @RequestBody SpecialBusinessHourRequestDto requestDto) {
-        specialBusinessHourService.createSpecialBusinessHour(userDetails.getUser().getUserId(), companyId, requestDto);
+        specialBusinessHourService.createSpecialBusinessHour(userDetails.getUser(), companyId, requestDto);
         return new BaseResponse();
     }
 
@@ -39,14 +39,14 @@ public class SpecialBusinessHourController {
     public BaseResponse updateSpecialBusinessHour(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                    @PathVariable UUID companyId, @PathVariable UUID specialBusinessHourId,
                                                    @Valid @RequestBody SpecialBusinessHourRequestDto requestDto) {
-        SpecialBusinessHourResponseDto responseDto = specialBusinessHourService.updateSpecialBusinessHour(userDetails.getUser().getUserId(), companyId, specialBusinessHourId, requestDto);
+        SpecialBusinessHourResponseDto responseDto = specialBusinessHourService.updateSpecialBusinessHour(userDetails.getUser(), companyId, specialBusinessHourId, requestDto);
         return new BaseResponse(responseDto);
     }
 
     @DeleteMapping("/companies/{companyId}/special_business_hours/{specialBusinessHourId}")
     public BaseResponse deleteSpecialBusinessHour(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                   @PathVariable UUID companyId, @PathVariable UUID specialBusinessHourId){
-        specialBusinessHourService.deleteSpecialBusinessHour(userDetails.getUser().getUserId(), companyId, specialBusinessHourId);
+        specialBusinessHourService.deleteSpecialBusinessHour(userDetails.getUser(), companyId, specialBusinessHourId);
         return new BaseResponse<>();
     }
 }

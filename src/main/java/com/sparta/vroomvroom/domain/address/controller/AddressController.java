@@ -25,15 +25,16 @@ public class AddressController {
     private final UserRepository userRepository;
 
     // 배송지 등록
+    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER"})
     @PostMapping("addresses")
     public BaseResponse createAddress(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody AddressRequestDto reqeustDto) {
         Long userId = userDetails.getUser().getUserId();
-//        System.out.println("//// userId : " + userId);
         addressService.createAddress(userId, reqeustDto);
         return new BaseResponse();
     }
 
     // 배송지 목록 조회
+    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER"})
     @GetMapping("addresses")
     public BaseResponse getAlladdresses(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long userId = userDetails.getUser().getUserId();

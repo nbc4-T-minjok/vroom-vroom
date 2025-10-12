@@ -5,6 +5,8 @@ import com.sparta.vroomvroom.domain.company.model.entity.Company;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @Builder
 public class CompanyDetailResponseDto {
@@ -30,8 +32,8 @@ public class CompanyDetailResponseDto {
     private LocationDto location;             // 위치데이터
 
 //    // 5. 영업 시간 정보
-//    private List<BusinessHourResponseDto> businessHours;         // 영업시간
-//    private List<SpecialBusinessHourResponseDto> specialBusinessHours; // 특별 영업시간
+    private List<BusinessHourResponseDto> businessHours;         // 영업시간
+    private List<SpecialBusinessHourResponseDto> specialBusinessHours; // 특별 영업시간
 
     // Entity -> Dto 변환 메서드
     public static CompanyDetailResponseDto of(Company company) {
@@ -49,14 +51,14 @@ public class CompanyDetailResponseDto {
                 .detailAddress(company.getDetailAddress())
                 .zipCode(company.getZipCode())
                 .location(new LocationDto(company.getLocation()))
-//                .businessHours(
-//                        company.getBusinessHours().stream()
-//                                .map(BusinessHourResponseDto::of)
-//                                .toList())
-//                .specialBusinessHours(
-//                        company.getSpecialBusinessHours().stream()
-//                                .map(SpecialBusinessHourResponseDto::of)
-//                                .toList())
+                .businessHours(
+                        company.getBusinessHours().stream()
+                                .map(BusinessHourResponseDto::of)
+                                .toList())
+                .specialBusinessHours(
+                        company.getSpecialBusinessHours().stream()
+                                .map(SpecialBusinessHourResponseDto::of)
+                                .toList())
                 .build();
     }
 

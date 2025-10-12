@@ -16,11 +16,6 @@ import com.sparta.vroomvroom.global.conmon.constants.BusinessStatus;
 import com.sparta.vroomvroom.global.conmon.constants.UserRole;
 import com.sparta.vroomvroom.global.conmon.constants.WeekDay;
 import lombok.RequiredArgsConstructor;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.PrecisionModel;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -89,7 +84,6 @@ public class CompanyService {
         List<CompanyResponseDto> closedConpanies = new ArrayList<>();
 
         //각 업체마다 영업시간 판별
-        //Todo: 데이터가 많으면? -> 거리 조건이 추가 될 경우 주변 가게가 몇천개씩 뜨진 않음
         for(Company company : companyPage.getContent()) {
             boolean isOpen = isCompanyOpen(company, today, currentTime, todayDay);
             CompanyResponseDto dto = new CompanyResponseDto(company);

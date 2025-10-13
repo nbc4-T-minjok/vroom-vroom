@@ -40,4 +40,24 @@ public class SwaggerExamples {
               "closedAt": "23:00"
             }
             """;
+
+    // 특별영업시간 등록 예시
+    public static final String SPECIAL_BUSINESS_HOUR_CREATE_REQUEST = """
+            {
+            	"date" : "2025-12-29",
+            	"openedAt" : "08:00:00",
+            	"openedAt" : "22:00:00",
+            	"businessStatus" : "OPEN"
+            }
+            """;
+
+    // 특별영업시간 수정 예시
+    public static final String SPECIAL_BUSINESS_HOUR_UPDATE_REQUEST = """
+            {
+            	"date" : "2025-12-29",
+            	"openedAt" : null,
+            	"openedAt" : null,
+            	"businessStatus" : "CLOSED"
+            }
+            """;
 }

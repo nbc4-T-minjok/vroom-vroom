@@ -23,4 +23,16 @@ public class SwaggerDescription {
             "먼저 영업시간 등록 후 조회 요청을 해주세요.<br>" +
             "영업시간 조회 후 반환된 businessHourId 값과 companyId 값이 필요합니다.<br>" +
             "요청 가능 권한 : customer / manager";
+
+    // 특별영업시간 등록 설명
+    public static final String SPECIAL_BUSINESS_HOUR_CREATE_REQUEST =
+            "먼저 회원가입과 업체 등록 진행 후 요청을 해주세요.<br>" +
+                    "업체 조회 후 반환된 companyId 값이 필요합니다.<br>" +
+                    "요청 가능 권한 : owner / manager";
+
+    // 특별영업시간 수정 및 삭제 설명
+    public static final String SPECIAL_BUSINESS_HOUR_UPDATE_REQUEST =
+            "먼저 회원가입과 업체 등록 진행 후 요청을 해주세요.<br>" +
+                    "특별영업시간 조회 후 반환된 companyId 값과 specialBusinessHourId 값이 필요합니다.<br>" +
+                    "요청 가능 권한 : owner / manager";;
 }

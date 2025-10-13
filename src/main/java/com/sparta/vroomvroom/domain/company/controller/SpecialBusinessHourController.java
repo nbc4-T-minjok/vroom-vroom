@@ -4,7 +4,12 @@ import com.sparta.vroomvroom.domain.company.model.dto.request.SpecialBusinessHou
 import com.sparta.vroomvroom.domain.company.model.dto.response.SpecialBusinessHourResponseDto;
 import com.sparta.vroomvroom.domain.company.service.SpecialBusinessHourService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
+import com.sparta.vroomvroom.global.conmon.swagger.SwaggerDescription;
+import com.sparta.vroomvroom.global.conmon.swagger.SwaggerExamples;
 import com.sparta.vroomvroom.global.security.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
@@ -21,6 +26,15 @@ import java.util.UUID;
 public class SpecialBusinessHourController {
     private final SpecialBusinessHourService specialBusinessHourService;
 
+    @Operation(summary = "특별영업시간 생성 API", description = SwaggerDescription.SPECIAL_BUSINESS_HOUR_CREATE_REQUEST,
+            requestBody =  @io.swagger.v3.oas.annotations.parameters.RequestBody (
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = {
+                                    @ExampleObject(value = SwaggerExamples.SPECIAL_BUSINESS_HOUR_CREATE_REQUEST)
+                            }
+                    )
+            ))
     @PostMapping("/companies/{companyId}/special_business_hours")
     public BaseResponse createSpecialBusinessHour(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                   @PathVariable UUID companyId,
@@ -29,12 +43,22 @@ public class SpecialBusinessHourController {
         return new BaseResponse();
     }
 
-    @GetMapping("/companies/{companyId}/special_business_hours")
+    @Operation(summary = "특별영업시간 목록 조회 API", description = SwaggerDescription.SPECIAL_BUSINESS_HOUR_CREATE_REQUEST)
+            @GetMapping("/companies/{companyId}/special_business_hours")
     public BaseResponse getSpecialBusinessHours(@PathVariable UUID companyId) {
         List<SpecialBusinessHourResponseDto> responseDtos = specialBusinessHourService.getSpecialBusinessHours(companyId);
         return new BaseResponse(responseDtos);
     }
 
+    @Operation(summary = "특별영업시간 수정 API", description = SwaggerDescription.SPECIAL_BUSINESS_HOUR_UPDATE_REQUEST,
+            requestBody =  @io.swagger.v3.oas.annotations.parameters.RequestBody (
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = {
+                                    @ExampleObject(value = SwaggerExamples.SPECIAL_BUSINESS_HOUR_UPDATE_REQUEST)
+                            }
+                    )
+            ))
     @PatchMapping("/companies/{companyId}/special_business_hours/{specialBusinessHourId}")
     public BaseResponse updateSpecialBusinessHour(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                    @PathVariable UUID companyId, @PathVariable UUID specialBusinessHourId,
@@ -43,6 +67,7 @@ public class SpecialBusinessHourController {
         return new BaseResponse(responseDto);
     }
 
+    @Operation(summary = "특별영업시간 삭제 API", description = SwaggerDescription.SPECIAL_BUSINESS_HOUR_UPDATE_REQUEST)
     @DeleteMapping("/companies/{companyId}/special_business_hours/{specialBusinessHourId}")
     public BaseResponse deleteSpecialBusinessHour(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                   @PathVariable UUID companyId, @PathVariable UUID specialBusinessHourId){

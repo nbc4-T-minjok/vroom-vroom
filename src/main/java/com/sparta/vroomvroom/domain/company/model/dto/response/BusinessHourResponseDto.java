@@ -21,7 +21,6 @@ public class BusinessHourResponseDto {
     public static BusinessHourResponseDto of(BusinessHour businessHour) {
         return BusinessHourResponseDto.builder()
                 .weekDay(businessHour.getDay())
-                .closed(businessHour.isClosed())
                 .openedAt(businessHour.getOpenedAt())
                 .closedAt(businessHour.getClosedAt())
                 .build();

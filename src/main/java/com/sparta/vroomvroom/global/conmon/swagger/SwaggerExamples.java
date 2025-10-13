@@ -60,4 +60,69 @@ public class SwaggerExamples {
             	"businessStatus" : "CLOSED"
             }
             """;
+    // 업체 카테고리 등록 예시
+    public static final String COMPANY_CATEGORY_CREATE_REQUEST = """
+            {
+                "companyCategoryName" : "한식"
+            }
+            """;
+
+    public static final String COMPANY_CATEGORY_UPDATE_REQUEST = """
+            {
+                "companyCategoryName" : "한식"
+            }
+            """;
+
+    // 주문 생성 예시
+    public static final String ORDER_CREATE_REQUEST = """
+            {
+              "companyId": "880e8400-e29b-41d4-a716-446655440000",
+              "userAddressId": "990e8400-e29b-41d4-a716-446655440000",
+              "orderMenus": [
+                {
+                  "menuId": "550e8400-e29b-41d4-a716-446655440000",
+                  "menuAmount": 2,
+                  "menuPrice": 8500
+                },
+                {
+                  "menuId": "550e8400-e29b-41d4-a716-446655440001",
+                  "menuAmount": 1,
+                  "menuPrice": 18000
+                }
+              ],
+              "paymentMethod": "CARD",
+              "orderRequest": "단무지 빼주세여"
+            }
+            """;
+
+    //회원가입 예시
+    public static final String USER_SIGNUP_REQUEST = """
+            {
+              "userName": "testuser0",
+              "password": "Abc123!@#",
+              "nickName": "닉네임홍길동",
+              "type": "INAPP",
+              "name": "홍길순",
+              "birthDate": "1990-01-01",
+              "gender": "남",
+              "phoneNumber": "010-0123-1234",
+              "email": "testuser0@example.com",
+              "role": "ROLE_CUSTOMER"
+            }
+            """;
+
+    //회원 정보 수정 예시
+    public static final String USER_DETAIL_UPDATE_REQUEST = """
+            {
+              "nickName": "변경된홍길동",
+              "phoneNumber": "010-0123-1321",
+              "email": "testuser0chged@example.com"
+            }
+            """;
+
+    //비밀번호 변경 예시
+    public static final String USER_PASSWORD_CHANGE_REQUEST = """
+              "currentPassword": "Abc123!@#",
+               "newPassword": "Abc321!@#"
+            """;
 }

@@ -3,7 +3,7 @@ package com.sparta.vroomvroom.global.conmon.swagger;
 public class SwaggerDescription {
     // 배송지 등록 설명
     public static final String ADDRESS_CREATE_REQUEST =
-            "회원가입 진행 후 배송지 등록 요청을 해주세요.<br>" +
+            "회원가입과 로그인 진행 후 배송지 등록 요청을 해주세요.<br>" +
             "요청 가능 권한 : customer / manager";
 
     // 배송지 수정 설명
@@ -14,7 +14,7 @@ public class SwaggerDescription {
 
     // 영업시간 등록 설명
     public static final String BUSINESS_HOUR_CREATE_REQUEST =
-            "먼저 회원가입과 업체 등록 진행 후 영업시간 등록 요청을 해주세요.<br>" +
+            "회원가입과 로그인, 업체 등록 진행 후 영업시간 등록 요청을 해주세요.<br>" +
             "업체 조회 후 반환된 companyId 값이 필요합니다.<br>" +
             "요청 가능 권한 : owner / manager";
 
@@ -23,4 +23,10 @@ public class SwaggerDescription {
             "먼저 영업시간 등록 후 조회 요청을 해주세요.<br>" +
             "영업시간 조회 후 반환된 businessHourId 값과 companyId 값이 필요합니다.<br>" +
             "요청 가능 권한 : customer / manager";
+
+    // 주문 생성 설명
+    public static final String ORDER_CREATE_REQUEST =
+            "회원가입과 로그인 진행 후 주문 생성 요청을 해주세요.<br>" +
+            "companyId 값과 userAddressId 값이 필요합니다.<br>" +
+            "요청 가능 권한 : customer";
 }

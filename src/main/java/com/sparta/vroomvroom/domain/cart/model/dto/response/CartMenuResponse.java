@@ -25,8 +25,8 @@ public class CartMenuResponse {
         return new CartMenuResponse(
                 cartMenu.getCartMenuId(),
                 menu.getMenuId(),
-                menu.getName(),
-                menu.getPrice(),
+                menu.getMenuName(),
+                menu.getMenuPrice(),
                 cartMenu.getMenuAmount(),
                 menu.getMenuImage(),
                 company.getCompanyId(),

@@ -49,7 +49,7 @@ public class OrderDetailResponse {
                 .map(om -> new OrderMenuResponse(
                         om.getOrderMenuId(),
                         om.getMenu().getMenuId(),
-                        om.getMenu().getName(),
+                        om.getMenu().getMenuName(),
                         om.getMenuPrice(),
                         om.getMenuAmount(),
                         om.getMenu().getMenuImage()

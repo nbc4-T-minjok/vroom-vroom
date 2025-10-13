@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import org.locationtech.jts.geom.Point;
 
 import java.util.*;
 
@@ -16,6 +19,7 @@ import java.util.*;
 public class Company extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JdbcTypeCode(SqlTypes.UUID)
     @Column(name = "company_id")
     private UUID companyId;
 
@@ -56,6 +60,8 @@ public class Company extends BaseEntity {
     @Column(name = "zip_code", nullable = false, length = 10)
     private String zipCode;
 
-//    private Geometry location;
+    // 공간데이터 (PostGIS 매핑)
+    @Column(columnDefinition = "geometry(Point, 4326)", nullable = false)
+    private Point location;
 
 }

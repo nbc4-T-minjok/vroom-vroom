@@ -11,12 +11,13 @@ import java.time.LocalTime;
 @Getter
 @Builder
 public class SpecialBusinessHourResponseDto {
-    LocalDate date;
-    LocalTime openedAt;
-    LocalTime closedAt;
-    BusinessStatus businessStatus;
 
+    private LocalDate date;                 // 특별 영업날짜
+    private LocalTime openedAt;             // 오픈시간
+    private LocalTime closedAt;             // 마감시간
+    private BusinessStatus businessStatus;  // 영업상태
 
+    // Entity -> Dto 변환 메서드
     public static SpecialBusinessHourResponseDto of(SpecialBusinessHour specialBusinessHour) {
         return SpecialBusinessHourResponseDto.builder()
                 .date(specialBusinessHour.getDate())

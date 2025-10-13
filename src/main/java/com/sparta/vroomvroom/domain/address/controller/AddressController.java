@@ -5,7 +5,12 @@ import com.sparta.vroomvroom.domain.address.model.dto.response.AddressResponseDt
 import com.sparta.vroomvroom.domain.address.service.AddressService;
 import com.sparta.vroomvroom.domain.user.repository.UserRepository;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
+import com.sparta.vroomvroom.global.conmon.swagger.SwaggerDescription;
+import com.sparta.vroomvroom.global.conmon.swagger.SwaggerExamples;
 import com.sparta.vroomvroom.global.security.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
@@ -25,15 +30,26 @@ public class AddressController {
     private final UserRepository userRepository;
 
     // 배송지 등록
+    @Operation(summary = "배송지 등록 API", description = SwaggerDescription.ADDRESS_CREATE_REQUEST,
+        requestBody =  @io.swagger.v3.oas.annotations.parameters.RequestBody (
+                content = @Content (
+                        mediaType = "application/json",
+                        examples = {
+                                @ExampleObject(value = SwaggerExamples.ADDRESS_CREATE_REQUEST)
+                        }
+                )
+        ))
+    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER"})
     @PostMapping("addresses")
     public BaseResponse createAddress(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody AddressRequestDto reqeustDto) {
         Long userId = userDetails.getUser().getUserId();
-//        System.out.println("//// userId : " + userId);
         addressService.createAddress(userId, reqeustDto);
         return new BaseResponse();
     }
 
     // 배송지 목록 조회
+    @Operation(summary = "배송지 목록 조회 API")
+    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER"})
     @GetMapping("addresses")
     public BaseResponse getAlladdresses(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long userId = userDetails.getUser().getUserId();
@@ -42,6 +58,15 @@ public class AddressController {
     }
 
     // 배송지 정보 수정
+    @Operation(summary = "배송지 수정 API", description = SwaggerDescription.ADDRESS_UPDATE_REQUEST,
+            requestBody =  @io.swagger.v3.oas.annotations.parameters.RequestBody (
+                    content = @Content (
+                            mediaType = "application/json",
+                            examples = {
+                                    @ExampleObject(value = SwaggerExamples.ADDRESS_UPDATE_REQUEST)
+                            }
+                    )
+            ))
     @Secured({"ROLE_MANAGER","ROLE_CUSTOMER"})
     @PatchMapping("addresses/{userAddressId}")
     public BaseResponse patchAddress(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable UUID userAddressId, @RequestBody AddressRequestDto requestDto) {
@@ -52,6 +77,7 @@ public class AddressController {
 
 
     // 기본배송지 변경
+    @Operation(summary = "기본배송지 변경 API")
     @Secured({"ROLE_MANAGER","ROLE_CUSTOMER"})
     @PatchMapping("addresses/default/{userAddressId}")
     public BaseResponse changeDefaultAddress(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable UUID userAddressId) {
@@ -61,6 +87,7 @@ public class AddressController {
     }
 
     // 배송지 삭제
+    @Operation(summary = "배송지 삭제 API")
     @Secured({"ROLE_MANAGER","ROLE_CUSTOMER"})
     @DeleteMapping("addresses/{userAddressId}")
     public BaseResponse deleteAddress(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable UUID userAddressId) {

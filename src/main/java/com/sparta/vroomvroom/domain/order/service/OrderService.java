@@ -85,6 +85,16 @@ public class OrderService {
                 throw new IllegalArgumentException("품절된 메뉴가 포함되어 있습니다.");
             }
 
+            // 삭제된 메뉴인지 확인
+            if (menu.getDeletedBy() != null) {
+                throw new IllegalArgumentException("삭제된 메뉴는 주문할 수 없습니다.");
+            }
+
+            // 숨김처리된 메뉴인지 확인
+            if (!menu.getIsVisible()) {
+                throw new IllegalArgumentException("숨겨진 메뉴는 주문할 수 없습니다.");
+            }
+
             // 첫 번째 메뉴로 업체 확인
             if (company == null) {
                 company = companyRepository.findById(menu.getCompany().getCompanyId())
@@ -144,12 +154,15 @@ public class OrderService {
     @Transactional(readOnly = true)
     public OrderDetailResponse getOrderDetail(User user, UUID orderId) {
         // 1. 주문 조회 + 권한 확인
-        Order order = getOrderWithPermission(orderId, user);
+        Order order = getOrder(orderId);
 
-        // 2. 주문 메뉴 조회
+        // 2. 고객 본인 또는 가게 주인인지 확인
+        verifyOrderAccessPermission(order, user);
+
+        // 3. 주문 메뉴 조회
         List<OrderMenu> orderMenus = orderMenuRepository.findByOrder_OrderId(orderId);
 
-        // 3. Response 생성
+        // 4. Response 생성
         return OrderDetailResponse.from(order, orderMenus);
     }
 
@@ -191,27 +204,29 @@ public class OrderService {
         return OrderListResponse.from(orderPage, orders);
     }
 
-
     @Transactional
     public void cancelOrder(User user, UUID orderId, CancelOrderRequest request) {
-        // 1. 주문 조회 + 권한 확인
-        Order order = getOrderWithPermission(orderId, user);
+        // 1. 주문 조회
+        Order order = getOrder(orderId);
 
-        // 2. 이미 취소된 주문인지 확인
+        // 2. 고객 본인 또는 가게 주인인지 확인
+        verifyOrderAccessPermission(order, user);
+
+        // 3. 이미 취소된 주문인지 확인
         if (order.getOrderStatus() == OrderStatus.CANCELED) {
             throw new IllegalArgumentException("이미 취소된 주문입니다.");
         }
 
-        // 3. 취소 가능한 상태인지 확인
+        // 4. 취소 가능한 상태인지 확인
         if (order.getOrderStatus() != OrderStatus.PENDING &&
                 order.getOrderStatus() != OrderStatus.ACCEPTED) {
             throw new IllegalArgumentException("조리 완료 이후 주문은 취소할 수 없습니다.");
         }
 
-        // 4. 주문 취소
+        // 5. 주문 취소
         order.cancel(request.getCancelReason(), user.getUserName());
 
-        // 5. 결제 환불 처리
+        // 6. 결제 환불 처리
         Payment payment = paymentRepository.findByOrder_OrderId(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
 
@@ -237,7 +252,7 @@ public class OrderService {
         }
 
         // 5. 권한 확인 (업체 주인만)
-        // TODO: 업체 주문인지 체크 필요 현재 연관관계 X
+        verifyCompanyOwner(order.getCompany(), user);
 
         // 6. 주문 상태 변경
         order.updateStatus(newStatus, user.getUserName());
@@ -258,7 +273,7 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 업체입니다."));
 
         // 2. 권한 확인
-        // TODO: 업체 주인인지 체크 필요 (현재 User-Company 연관관계 X)
+        verifyCompanyOwner(company, user);
 
         // 3. 페이지 유효성 검증
         if (page < 1) {
@@ -318,20 +333,6 @@ public class OrderService {
     }
 
     /**
-     * 주문 조회 + 권한 확인 (고객 본인 확인)
-     */
-    private Order getOrderWithPermission(UUID orderId, User user) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
-
-        if (!order.getUser().getUserId().equals(user.getUserId())) {
-            throw new IllegalArgumentException("해당 주문에 대한 권한이 없습니다.");
-        }
-
-        return order;
-    }
-
-    /**
      * OrderStatus 문자열 검증 및 Enum 변환
      */
     private OrderStatus validateAndGetOrderStatus(String orderStatus) {
@@ -339,6 +340,27 @@ public class OrderService {
             return OrderStatus.valueOf(orderStatus);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("유효하지 않은 주문 상태입니다.");
+        }
+    }
+
+    /**
+     * 업체 소유자 권한 확인
+     */
+    private void verifyCompanyOwner(Company company, User user) {
+        if (!company.getUser().getUserId().equals(user.getUserId())) {
+            throw new IllegalArgumentException("해당 업체에 대한 권한이 없습니다.");
+        }
+    }
+
+    /**
+     * 주문 접근 권한 확인 (고객 본인 또는 업체 주인)
+     */
+    private void verifyOrderAccessPermission(Order order, User user) {
+        boolean isCustomer = order.getUser().getUserId().equals(user.getUserId());
+        boolean isOwner = order.getCompany().getUser().getUserId().equals(user.getUserId());
+
+        if (!isCustomer && !isOwner) {
+            throw new IllegalArgumentException("해당 주문에 대한 권한이 없습니다.");
         }
     }
 }

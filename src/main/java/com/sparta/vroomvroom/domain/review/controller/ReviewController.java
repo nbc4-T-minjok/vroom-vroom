@@ -6,17 +6,20 @@ import com.sparta.vroomvroom.domain.review.model.dto.response.ReviewResponseDto;
 import com.sparta.vroomvroom.domain.review.service.ReviewService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import com.sparta.vroomvroom.global.security.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
 
+@Tag(name = "reviews", description = "리뷰 관련 API")
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -24,6 +27,8 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     // 리뷰작성_주문
+    @Operation(summary = "리뷰작성_주문", description = "주문 정보를 가지고 리뷰를 작성합니다.")
+    @Secured({"ROLE_CUSTOMER"})
     @PostMapping(value = "/order/{orderId}/reviews",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse createReview(
@@ -38,6 +43,8 @@ public class ReviewController {
     }
 
     // 리뷰작성_업체
+    @Operation(summary = "리뷰작성_업체", description = "리뷰에 대한 사장님 리뷰 작성합니다.")
+    @Secured({"ROLE_OWNER"})
     @PostMapping("/companies/{compId}/reviews")
     public BaseResponse createReviewCompany(
             @Valid @RequestBody OwnerReviewRequestDto requestDto,
@@ -51,7 +58,7 @@ public class ReviewController {
     }
 
     // 리뷰 목록 조회_고객
-    // 고객 기준으로 작성한 모든 리뷰 검색
+    @Operation(summary = "리뷰 목록 조회_고객", description = "고객 기준으로 작성한 모든 리뷰 검색")
     @GetMapping("/users/{userId}/reviews")
     public  BaseResponse getReviewsList(
             @PathVariable Long userId,
@@ -64,7 +71,7 @@ public class ReviewController {
     }
 
     // 리뷰 목록 조회_업체
-    // 업체 기준으로 모든 리뷰 검색
+    @Operation(summary = "리뷰 목록 조회_업체", description = "업체 기준으로 작성한 모든 리뷰 검색")
     @GetMapping("/companies/{compId}/reviews")
     public  BaseResponse getReviewListCompany(
             @PathVariable UUID compId,
@@ -72,13 +79,13 @@ public class ReviewController {
             @RequestParam(value = "size", defaultValue = "10") int size,         // 조회할 항목수
             @RequestParam(value = "sort", defaultValue = "createdAt") String sort       // 정렬기준
     ){
-
         List<ReviewResponseDto> result = reviewService.getReviewListCompany(compId, page, size, sort);
         return new BaseResponse(result);
     }
 
     // 리뷰 상세 조회_고객
     // 리뷰 이미지는 상세 조회에서만 나옴
+    @Operation(summary = "리뷰 상세 조회_고객", description = "고객의 리뷰를 상세 조회 합니다.")
     @GetMapping("/users/{userId}/reviews/{reviewId}")
     public BaseResponse getReview(
             @PathVariable Long userId,
@@ -91,6 +98,7 @@ public class ReviewController {
 
     // 리뷰 상세 조회_업체
     // 업체기준으로 리뷰 조회 후 상세 리뷰 확인할 때 사용
+    @Operation(summary = "리뷰 상세 조회_업체", description = "사장님 리뷰를 상세 조회 합니다.")
     @GetMapping("/companies/{compId}/reviews/{reviewId}")
     public BaseResponse getReviewCompany(
             @PathVariable UUID compId,
@@ -101,6 +109,8 @@ public class ReviewController {
     }
 
     // 리뷰 수정_고객
+    @Operation(summary = "리뷰 수정_고객", description = "고객 리뷰를 수정 합니다.")
+    @Secured({"ROLE_CUSTOMER"})
     @PatchMapping("/users/{userId}/reviews/{reviewId}")
     public BaseResponse updateReview(
             @PathVariable UUID reviewId,
@@ -114,6 +124,8 @@ public class ReviewController {
     }
 
     // 리뷰 수정_업체
+    @Operation(summary = "리뷰 수정_업체", description = "사장님 리뷰를 수정 합니다.")
+    @Secured({"ROLE_OWNER"})
     @PatchMapping("/companies/{compId}/reviews/{reviewId}")
     public BaseResponse updateReviewCompany(
             @PathVariable UUID compId,
@@ -127,6 +139,8 @@ public class ReviewController {
     }
 
     // 리뷰 삭제_고객
+    @Operation(summary = "리뷰 삭제_고객", description = "고객의 리뷰를 삭제 합니다.")
+    @Secured({"ROLE_CUSTOMER"})
     @DeleteMapping("/users/{userId}/reviews/{reviewId}")
     public BaseResponse deleteReview(
             @PathVariable UUID reviewId,
@@ -138,6 +152,8 @@ public class ReviewController {
     }
 
     // 리뷰 삭제_업체
+    @Operation(summary = "리뷰 삭제_업체", description = "사장님 리뷰를 삭제 합니다.")
+    @Secured({"ROLE_OWNER"})
     @DeleteMapping("/companies/{compId}/reviews/{reviewId}")
     public BaseResponse deleteReviewCompany(
             @PathVariable UUID reviewId,

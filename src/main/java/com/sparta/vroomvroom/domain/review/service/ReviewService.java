@@ -91,6 +91,10 @@ public class ReviewService {
         // 리뷰 존재 확인 - orderId 기준
         exists(reviewRepository::findByOrder_OrderId, orderId, false,"이미 해당 주문에 대한 리뷰가 존재합니다.");
 
+        // 주문자 확인
+        Long writerId = user.getUserId();
+        checkAuthor(writerId, userId, "리뷰 작성은 주문자만 할 수 있습니다.");
+
         // 주문 상태 확인(배송완료 상태에서만 리뷰 작성 가능)
         OrderStatus state = order.getOrderStatus();
         if (state != OrderStatus.DELIVERY_COMPLETED) {
@@ -120,7 +124,7 @@ public class ReviewService {
         exists(companyRepository::findById, compId, true,"유효하지 않은 업체입니다.");
 
         // 사장님 일치 여부 확인
-        Long ownerId = review.getCompany().getUserId();
+        Long ownerId = review.getCompany().getUser().getUserId();
         checkAuthor(ownerId, userId, "자신의 리뷰만 수정 할 수 있습니다.");
 
         OwnerReview ownerReview = new OwnerReview();

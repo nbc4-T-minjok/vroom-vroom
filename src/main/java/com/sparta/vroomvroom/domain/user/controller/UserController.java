@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.domain.user.controller;
 
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserChangePasswordRequest;
+import com.sparta.vroomvroom.domain.user.model.dto.request.UserLoginRequest;
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserSignupRequest;
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserUpdatedRequest;
 import com.sparta.vroomvroom.domain.user.model.dto.response.UserDetailResponse;
@@ -8,9 +9,12 @@ import com.sparta.vroomvroom.domain.user.service.UserService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import com.sparta.vroomvroom.global.security.UserDetailsImpl;
 import com.sparta.vroomvroom.global.utils.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 

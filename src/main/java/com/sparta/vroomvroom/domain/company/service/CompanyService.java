@@ -85,7 +85,7 @@ public class CompanyService {
 
         //각 업체마다 영업시간 판별
         for(Company company : companyPage.getContent()) {
-            boolean isOpen = isCompanyOpen(company, today, currentTime, todayDay);
+            boolean isOpen = isCompanyOpen(company, today, currentTime);
             CompanyResponseDto dto = new CompanyResponseDto(company);
             if(isOpen) openConpanies.add(dto);
             else closedConpanies.add(dto);
@@ -117,7 +117,7 @@ public class CompanyService {
 
         //각 업체마다 영업시간 판별
         for(Company company : companyPage.getContent()) {
-            boolean isOpen = isCompanyOpen(company, today, currentTime, todayDay);
+            boolean isOpen = isCompanyOpen(company, today, currentTime);
             CompanyResponseDto dto = new CompanyResponseDto(company);
             if(isOpen) openConpanies.add(dto);
             else closedConpanies.add(dto);
@@ -161,43 +161,87 @@ public class CompanyService {
     //---유틸 함수
 
     //영업시간 판별
-    private boolean isCompanyOpen(Company company, LocalDate today, LocalTime now, WeekDay todayDay) {
-        WeekDay yesterWeekDay= WeekDay.fromLocalDate(LocalDate.now().minusDays(1));
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-        //특별 영업시간 먼저 판별
-        for (SpecialBusinessHour sbh : company.getSpecialBusinessHours()) {
-            LocalTime opened = sbh.getOpenedAt();
-            LocalTime closed = sbh.getClosedAt();
-
-            //익일 영업 여부에 따라 다르게 판별
-            if(!(sbh.getBusinessStatus().equals(BusinessStatus.OPEN) || sbh.getBusinessStatus().equals(BusinessStatus.SPECAIL_OPEN)) ) return false;
-            //오픈시간 < 닫는시간 (당일영업)
-            if(opened.isBefore(closed)){
-                if(!now.isBefore(opened) && !now.isAfter(closed) && sbh.getDate().equals(today)) return true;
-            //오픈시간 >= 닫는시간 (익일영업 or 24시간 영업)
-            }else{
-                if(now.isAfter(opened)  && sbh.getDate().equals(today)) return true;
-                if(now.isBefore(closed) && !sbh.getDate().equals(yesterday)) return true;
-            }
+    //오늘이 특별 영업시간에 포함되면 일반 영업은 그 날짜에서 고려하지 않아도 됨
+    //당일,익일 나눠서 고려
+    private boolean isCompanyOpen(Company company, LocalDate today, LocalTime now) {
+        //오늘 특별영업 여부 확인
+        SpecialBusinessHour todaySpecial = findSpecialBusinessHour(company, today);
+        if (todaySpecial != null) {
+            return isOpenBySpecial(todaySpecial, now);
         }
 
-        //일반 영업시간
+        //어제 특별영업이 오늘 새벽까지 이어지는지 확인
+        SpecialBusinessHour yesterSpecial = findSpecialBusinessHour(company, today.minusDays(1));
+        if (yesterSpecial != null && isContinuedSpecial(yesterSpecial, now)) {
+            return true;
+        }
+
+        //일반영업 시간 체크
+        return isOpenByRegular(company, today, now);
+    }
+
+    //넘겨받은 날짜의 특별 영업시간 조회
+    private SpecialBusinessHour findSpecialBusinessHour(Company company, LocalDate date) {
+        return company.getSpecialBusinessHours().stream()
+                .filter(sbh -> sbh.getDate().equals(date))
+                .findFirst()
+                .orElse(null);
+    }
+
+    //특별 영업시간 판단
+    private boolean isOpenBySpecial(SpecialBusinessHour sbh, LocalTime now) {
+        BusinessStatus status = sbh.getBusinessStatus();
+
+        //명시적 휴무
+        if (status == BusinessStatus.CLOSED || status == BusinessStatus.TEMPORARILY_CLOSED) {
+            return false;
+        }
+
+        LocalTime opened = sbh.getOpenedAt();
+        LocalTime closed = sbh.getClosedAt();
+
+        if (opened == null || closed == null) return false;
+
+        //당일
+        if (opened.isBefore(closed)) {
+            return !now.isBefore(opened) && !now.isAfter(closed);
+        }
+
+        //익일
+        return now.isAfter(opened) || now.isBefore(closed);
+    }
+
+    //전날부터 이어지는 특별영업 판별
+    private boolean isContinuedSpecial(SpecialBusinessHour sbh, LocalTime now) {
+        LocalTime opened = sbh.getOpenedAt();
+        LocalTime closed = sbh.getClosedAt();
+        if (opened == null || closed == null) return false;
+
+        return opened.isAfter(closed) && now.isBefore(closed);
+    }
+
+    //정기 영업시간 판별
+    private boolean isOpenByRegular(Company company, LocalDate today, LocalTime now) {
+        WeekDay todayDay = WeekDay.fromLocalDate(today);
+        WeekDay yesterDay = WeekDay.fromLocalDate(today.minusDays(1));
+
         for (BusinessHour bh : company.getBusinessHours()) {
             LocalTime opened = bh.getOpenedAt();
             LocalTime closed = bh.getClosedAt();
+            if (opened == null || closed == null) continue;
 
-            //익일 영업 여부에 따라 다르게 판별
-            //오픈시간 < 닫는시간 (당일영업)
-            if(opened.isBefore(closed)){
-                if(!now.isBefore(opened) && !now.isAfter(closed) && bh.getDay().equals(todayDay)) return true;
-                //오픈시간 >= 닫는시간 (익일영업 or 24시간 영업)
-            }else{
-                if(now.isAfter(opened)  && bh.getDay().equals(today)) return true;
-                if(now.isBefore(closed) && !bh.getDay().equals(yesterWeekDay)) return true;
+            // 당일 영업
+            if (opened.isBefore(closed)) {
+                if (bh.getDay().equals(todayDay) && !now.isBefore(opened) && !now.isAfter(closed)) {
+                    return true;
+                }
+            }
+            // 익일 영업
+            else {
+                if (bh.getDay().equals(todayDay) && now.isAfter(opened)) return true;
+                if (bh.getDay().equals(yesterDay) && now.isBefore(closed)) return true;
             }
         }
-
         return false;
     }
-
 }

@@ -23,13 +23,16 @@ public class BusinessHourService {
     private final CompanyRepository companyRepository;
 
     // 영업시간 등록
-    public void createBusinessHour(UUID companyId, BusinessHourRequestDto requestDto) {
+    public void createBusinessHour(UUID companyId, BusinessHourRequestDto requestDto, Long userId) {
+
+        // 회사 소유자 검증
+        authorizeCompanyOwner(companyId, userId);
 
         // 업체아이디 검증
         Company company = validateCompany(companyId);
 
-        // 동일 요일 중복 등록 방지
-        boolean exists = businessHourRepository.existsByCompanyAndDay(company, requestDto.getDay());
+        // 동일 요일 중복 등록 방지 (삭제되지 않은 데이터만 검사)
+        boolean exists = businessHourRepository.existsByCompanyAndDayAndIsDeletedFalse(company, requestDto.getDay());
         if (exists) {
             throw new IllegalArgumentException("이미 해당 요일의 영업시간이 등록되어 있습니다.");
         }
@@ -41,7 +44,10 @@ public class BusinessHourService {
 
     // 영업시간 조회
     @Transactional(readOnly = true)
-    public List<BusinessHourResponseDto> getBusinessHour(UUID companyId) {
+    public List<BusinessHourResponseDto> getBusinessHour(UUID companyId, Long userId) {
+        // 회사 소유자 검증
+        authorizeCompanyOwner(companyId, userId);
+
         // 업체아이디 검증
         Company company = validateCompany(companyId);
 
@@ -50,13 +56,19 @@ public class BusinessHourService {
 
         List<BusinessHourResponseDto> responseDtos = new ArrayList<>();
         for(BusinessHour b : businessHours) {
-            responseDtos.add(new BusinessHourResponseDto(b));
+            if(!b.isDeleted()) {
+                responseDtos.add(new BusinessHourResponseDto(b));
+            }
         }
 
         return responseDtos;
     }
 
-    public void updateBusinessHour(UUID companyId, UUID businessHourId, BusinessHourRequestDto requestDto) {
+    public void updateBusinessHour(UUID companyId, UUID businessHourId, BusinessHourRequestDto requestDto, Long userId) {
+
+        // 회사 소유자 검증
+        authorizeCompanyOwner(companyId, userId);
+
         // 업체아이디 검증
         Company company = validateCompany(companyId);
 
@@ -69,7 +81,10 @@ public class BusinessHourService {
         if(requestDto.getClosedAt() != null) businessHour.setClosedAt(requestDto.getClosedAt());
     }
 
-    public void deleteBusinessHour(UUID companyId, UUID businessHourId, String userName) {
+    public void deleteBusinessHour(UUID companyId, UUID businessHourId, String userName, Long userId) {
+        // 회사 소유자 검증
+        authorizeCompanyOwner(companyId, userId);
+
         // 업체아이디 검증
         Company company = validateCompany(companyId);
 
@@ -77,7 +92,9 @@ public class BusinessHourService {
         BusinessHour businessHour = validateBusinessHourOwnership(businessHourId, companyId);
 
         // 영업시간 삭제
-        businessHour.softDelete(LocalDateTime.now(), userName);
+        if (businessHour.getCompany().getCompanyId().equals(companyId)) {
+            businessHour.softDelete(LocalDateTime.now(), userName);
+        }
     }
 
     // 업체 검증 메서드
@@ -90,8 +107,8 @@ public class BusinessHourService {
     // 영업시간 소유 검증 메서드
     private BusinessHour validateBusinessHourOwnership(UUID businessHourId, UUID companyId) {
         // 영업시간아이디 검증
-        BusinessHour businessHour = businessHourRepository.findById(businessHourId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 영업시간아이디가 존지하지 않습니다."));
+        BusinessHour businessHour = businessHourRepository.findWithCompanyById(businessHourId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 영업시간아이디가 존재하지 않습니다."));
 
         // 권한 검증 (companyId 일치 확인)
         if (!businessHour.getCompany().getCompanyId().equals(companyId)) {
@@ -99,5 +116,15 @@ public class BusinessHourService {
         }
 
         return businessHour;
+    }
+
+    // 회사 소유자 검증 메서드
+    private void authorizeCompanyOwner(UUID companyId, Long userId) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 업체입니다."));
+
+        if (!company.getUser().getUserId().equals(userId)) {
+            throw new SecurityException("해당 업체에 접근할 권한이 없습니다.");
+        }
     }
 }

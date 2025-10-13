@@ -2,6 +2,7 @@ package com.sparta.vroomvroom.domain.order.controller;
 
 import com.sparta.vroomvroom.domain.order.model.dto.request.CancelOrderRequest;
 import com.sparta.vroomvroom.domain.order.model.dto.request.CreateOrderRequest;
+import com.sparta.vroomvroom.domain.order.model.dto.request.UpdateOrderStatusRequest;
 import com.sparta.vroomvroom.domain.order.model.dto.response.CompanyOrderListResponse;
 import com.sparta.vroomvroom.domain.order.model.dto.response.OrderDetailResponse;
 import com.sparta.vroomvroom.domain.order.model.dto.response.OrderListResponse;
@@ -91,4 +92,15 @@ public class OrderController {
         );
         return new BaseResponse<>(response);
     }
+
+    @PatchMapping("/orders/{orderId}/status")
+    public BaseResponse<Void> updateOrderStatus(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable UUID orderId,
+            @Valid @RequestBody UpdateOrderStatusRequest request
+    ) {
+        orderService.updateOrderStatus(userDetails.getUser(), orderId, request);
+        return new BaseResponse<>();
+    }
+
 }

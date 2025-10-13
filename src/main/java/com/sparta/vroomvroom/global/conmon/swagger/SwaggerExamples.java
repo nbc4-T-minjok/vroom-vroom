@@ -40,4 +40,40 @@ public class SwaggerExamples {
               "closedAt": "23:00"
             }
             """;
+
+    // 리뷰 작성_주문 예시
+    public static final String REVIEW_ORDER_CREATE_REQUEST = """
+            {
+                "review": {
+                        "rate" : 5,
+                        "contents : "음식이 맛있고 배달이 빨라요"
+                },
+                "images": "(binary)"
+            }
+            """;
+
+    // 리뷰 작성_업체 예시
+    public static final String REVIEW_COMPANY_CREATE_REQUEST = """
+            {
+                "reviewId" : "fcb445cd-d989-4897-a267-6df77c4b1d1",
+                "contents" : "주문해주셔서 감사합니다."
+            }
+            """;
+
+    // 리뷰 수정_고객 예시
+    public static final String REVIEW_ORDER_UPDATE_REQUEST = """
+            {
+                "review": {
+                    "contents": "수정하는 리뷰입니다."
+                },
+                "images": "(binary)"
+            }
+            """;
+
+    // 리뷰 수정_업체 예시
+    public static final String REVIEW_COMPANY_UPDATE_REQUEST = """
+            {
+                "contents" : "사장님리뷰 수정입니다. 감사합니다."
+            }
+            """;
 }

@@ -14,7 +14,6 @@ import com.sparta.vroomvroom.domain.review.repository.OwnerReviewRepository;
 import com.sparta.vroomvroom.domain.review.repository.ReviewImageRepository;
 import com.sparta.vroomvroom.domain.review.repository.ReviewRepository;
 import com.sparta.vroomvroom.domain.user.model.entity.User;
-import com.sparta.vroomvroom.domain.user.repository.UserRepository;
 import com.sparta.vroomvroom.global.conmon.constants.OrderStatus;
 import com.sparta.vroomvroom.global.conmon.s3.S3Uploader;
 import jakarta.validation.Valid;
@@ -44,7 +43,6 @@ import java.util.stream.Collectors;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
     private final OwnerReviewRepository ownerReviewRepository;
     private final S3Uploader s3Uploader;
@@ -145,9 +143,7 @@ public class ReviewService {
         Page<Review> reviewPage = reviewRepository.findByUserId_UserId(userId, pageable);
 
         // 3. Entity -> DTO 반환
-        return reviewPage.stream()
-                .map(review -> new ReviewResponseDto(review))
-                .collect(Collectors.toList());
+        return toDto(reviewPage);
     }
 
     // 리뷰 목록 조회_업체 기준
@@ -159,22 +155,7 @@ public class ReviewService {
         Page<Review> reviewPage = reviewRepository.findByCompany_CompanyId(compId, pageable);
 
         // 3. Entity -> DTO 반환
-        return reviewPage.stream()
-                .map(review -> new ReviewResponseDto(review))
-                .collect(Collectors.toList());
-    }
-
-    // 리뷰 상세 조회_고객
-    // 이미지는 리뷰 상세 조회에서만 나옴
-    public List<ReviewResponseDto> getReview(Long userId, UUID reviewId) {
-        List<Review> reviewResult = reviewRepository.findByUserId_UserIdAndId(userId,reviewId);
-        return toDto(reviewResult);
-    }
-
-    // 리뷰 상세 조회_업체
-    public List<ReviewResponseDto> getReviewCompany(UUID compId, UUID reviewId) {
-        List<Review> reviewResult = reviewRepository.findByCompany_CompanyIdAndId(compId,reviewId);
-        return toDto(reviewResult);
+        return toDto(reviewPage);
     }
 
     // 리뷰 수정_고객
@@ -299,8 +280,8 @@ public class ReviewService {
     }
 
     // 리뷰 리스트(Review 엔터티)를 ReviewResposeDto로 일괄 변환
-    public List<ReviewResponseDto> toDto(List<Review> reviews){
-        return reviews.stream()
+    public List<ReviewResponseDto> toDto(Page<Review> reviewPage){
+        return reviewPage.stream()
                 .map(review -> {
                     List<String> imageUrls = review.getReviewImages().stream()
                             .map(ReviewImage::getUrl)

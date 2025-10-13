@@ -29,4 +29,19 @@ public class SwaggerDescription {
             "회원가입과 로그인 진행 후 주문 생성 요청을 해주세요.<br>" +
             "companyId 값과 userAddressId 값이 필요합니다.<br>" +
             "요청 가능 권한 : customer";
+    public static final String USER_SIGNUP_REQUEST = """
+            userName, email, phoneNumber는 중복이 불가능 합니다.
+            비밀번호는 대소문자,특수문자,숫자 모두를 포함해서 8~15자로 설정해주세요.
+            """;
+
+    //회원 정보 수정 예시
+    public static final String USER_DETAIL_UPDATE_REQUEST = """
+            userName, email, phoneNumber는 중복이 불가능 합니다.
+            변경하고 싶은 항목만 선택적으로 변경할 수 있습니다.
+            """;
+
+    //비밀번호 변경 예시
+    public static final String USER_PASSWORD_CHANGE_REQUEST = """
+            비밀번호는 대소문자,특수문자,숫자 모두를 포함해서 8~15자로 설정해주세요.
+            """;
 }

@@ -25,6 +25,5 @@ public class SpecialBusinessHourResponseDto {
                 .closedAt(specialBusinessHour.getClosedAt())
                 .businessStatus(specialBusinessHour.getBusinessStatus())
                 .build();
-
     }
 }

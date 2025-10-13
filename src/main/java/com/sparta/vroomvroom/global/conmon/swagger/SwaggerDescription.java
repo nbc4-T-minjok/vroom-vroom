@@ -29,4 +29,9 @@ public class SwaggerDescription {
             "회원가입과 로그인 진행 후 주문 생성 요청을 해주세요.<br>" +
             "companyId 값과 userAddressId 값이 필요합니다.<br>" +
             "요청 가능 권한 : customer";
+
+    public static final String ORDER_STATUS_UPDATE_REQUEST =
+            "회원가입과 로그인 진행 후 주문 상태 변경 요청을 해주세요.<br>" +
+                    "주문 조회 후 반환된 orderId 값이 필요합니다.<br>" +
+                    "요청 가능 권한 : manager";
 }

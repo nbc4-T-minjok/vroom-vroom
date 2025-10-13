@@ -44,23 +44,14 @@ public class SwaggerExamples {
     // 주문 생성 예시
     public static final String ORDER_CREATE_REQUEST = """
             {
-              "companyId": "880e8400-e29b-41d4-a716-446655440000",
-              "userAddressId": "990e8400-e29b-41d4-a716-446655440000",
-              "orderMenus": [
-                {
-                  "menuId": "550e8400-e29b-41d4-a716-446655440000",
-                  "menuAmount": 2,
-                  "menuPrice": 8500
-                },
-                {
-                  "menuId": "550e8400-e29b-41d4-a716-446655440001",
-                  "menuAmount": 1,
-                  "menuPrice": 18000
-                }
-              ],
-              "paymentMethod": "CARD",
-              "orderRequest": "단무지 빼주세여"
+              "userAddressId": "00000000-0000-0000-0000-300000000001",
+              "orderRequest": "문 앞에 놔주세요",
+              "paymentMethod": "CARD"
             }
             """;
-
+    public static final String ORDER_STATUS_UPDATE_REQUEST = """
+            {
+              "orderStatus": "ACCEPTED"
+            }
+            """;
 }

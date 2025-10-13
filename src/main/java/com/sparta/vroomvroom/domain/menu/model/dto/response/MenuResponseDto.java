@@ -10,7 +10,6 @@ import java.util.UUID;
 public class MenuResponseDto {
 
     private UUID menuId;
-    private String companyId;
     private String menuName;
     private String menuGroup;
     private Integer menuPrice;

@@ -77,8 +77,7 @@ public class MenuController {
     )
     @Secured({"ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
     @PatchMapping("/companies/{companyId}/menus/{menuId}")
-    public BaseResponse<MenuResponseDto> updateMenu(@PathVariable UUID companyId,
-                                                    @PathVariable UUID menuId,
+    public BaseResponse<MenuResponseDto> updateMenu(@PathVariable UUID menuId,
                                                     @RequestBody MenuRequestDto requestDto) {
 
         return new BaseResponse<>(menuservice.updateMenu(menuId, requestDto));
@@ -90,9 +89,9 @@ public class MenuController {
     )
     @Secured({"ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
     @DeleteMapping("/companies/{companyId}/menus/{menuId}")
-    public BaseResponse<Void> deleteMenu(@PathVariable UUID companyId,
-                                                                    @PathVariable UUID menuId,
-                                                                    @RequestParam(defaultValue = "SYSTEM") String deletedBy) {
+    public BaseResponse<Void> deleteMenu(@PathVariable UUID menuId,
+                                         @RequestParam(defaultValue = "SYSTEM") String deletedBy) {
+
         menuservice.deleteMenu(menuId, deletedBy);
         return new BaseResponse<>("메뉴 삭제 완료");
     }

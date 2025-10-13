@@ -87,17 +87,17 @@ public class OrderService {
 
             // 첫 번째 메뉴로 업체 확인
             if (company == null) {
-                company = companyRepository.findById(menu.getCompanyId())
+                company = companyRepository.findById(menu.getCompany().getCompanyId())
                         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 업체입니다."));
             }
 
             // 모든 메뉴가 같은 업체인지 확인
-            if (!menu.getCompanyId().equals(company.getCompanyId())) {
+            if (!menu.getCompany().getCompanyId().equals(company.getCompanyId())) {
                 throw new IllegalArgumentException("다른 업체의 메뉴가 포함되어 있습니다.");
             }
 
             menus.add(menu);
-            totalPrice += menu.getPrice() * cartMenu.getMenuAmount();
+            totalPrice += menu.getMenuPrice() * cartMenu.getMenuAmount();
         }
 
         // 4. Order 생성
@@ -120,7 +120,7 @@ public class OrderService {
                     savedOrder,
                     menu,
                     cartMenu.getMenuAmount(),
-                    menu.getPrice(),
+                    menu.getMenuPrice(),
                     user.getUserName()
             );
             orderMenuRepository.save(orderMenu);

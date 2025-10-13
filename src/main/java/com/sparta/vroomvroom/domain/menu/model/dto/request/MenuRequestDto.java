@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.domain.menu.model.dto.request;
 
 import com.sparta.vroomvroom.global.conmon.constants.MenuStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@Schema
 public class MenuRequestDto {
 
     @NotBlank(message = "메뉴 이름은 필수입니다.")
@@ -26,7 +28,7 @@ public class MenuRequestDto {
     private String menuDescription;
 
     @NotBlank(message = "메뉴 상태는 필수입니다.")
-    private MenuStatus menuStatus;  // "판매중", "품절"
+    private MenuStatus menuStatus;  // "판매중", "품절", "일시품절"
 
     @NotNull(message = "노출 여부는 필수입니다.")
     private Boolean isVisible;

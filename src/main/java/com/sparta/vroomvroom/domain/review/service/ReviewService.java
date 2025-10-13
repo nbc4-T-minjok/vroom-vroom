@@ -90,8 +90,6 @@ public class ReviewService {
         review.setCompany(company);
         review.setRate(requestDto.getRate());
         review.setContents(requestDto.getContents());
-        // CreatedBy 없는동안 임시
-        review.setCreatedBy(userId.toString());
 
         //리뷰 저장
         reviewRepository.save(review);
@@ -110,8 +108,6 @@ public class ReviewService {
         OwnerReview ownerReview = new OwnerReview();
         ownerReview.setReview(review);
         ownerReview.setContents(requestDto.getContents());
-        // CreatedBy 없는동안 임시
-        ownerReview.setCreatedBy("tester");
 
         // 리뷰 저장_업체
         ownerReviewRepository.save(ownerReview);

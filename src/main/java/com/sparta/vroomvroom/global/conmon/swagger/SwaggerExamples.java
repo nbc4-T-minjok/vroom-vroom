@@ -40,4 +40,24 @@ public class SwaggerExamples {
               "closedAt": "23:00"
             }
             """;
+
+    public static final String MENU_CREATE_REQUEST = """
+        {
+          "menuName": "후라이드치킨",
+          "menuGroup": "치킨",
+          "menuPrice": 20000,
+          "menuImage": "https://example.com/images/menu.jpg",
+          "menuDescription": "메뉴설명.",
+          "menuStatus": "AVAILABLE",
+          "isVisible": true,
+          "aiDescription": true
+        }
+        """;
+
+    public static final String MENU_UPDATE_REQUEST = """
+        {
+          "menuName": "양념치킨",
+          "isVisible": true
+        }
+        """;
 }

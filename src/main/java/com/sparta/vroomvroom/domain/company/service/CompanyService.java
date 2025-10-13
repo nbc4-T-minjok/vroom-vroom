@@ -93,6 +93,38 @@ public class CompanyService {
         return CompanyListResponseDto.of(openConpanies,closedConpanies,companyPage);
     }
 
+
+    public CompanyListResponseDto searchByKeyword(String keyword, int page, int size, String sortBy, boolean isAsc) {
+        //페이징 처리 세팅
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        //기본 2차정렬 세팅
+        if(sortBy == null || sortBy.isEmpty()) sortBy = "companyName";
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+
+        //영업 여부 판별에 필요한 날짜 값 세팅
+        LocalDateTime now = LocalDateTime.now();
+        LocalDate today = now.toLocalDate();
+        LocalTime currentTime = now.toLocalTime();
+        WeekDay todayDay = WeekDay.fromLocalDate(today);
+
+        //카테고리와 일치하고 삭제되지 않은 업체 조회
+        Page<Company> companyPage =
+                companyRepository.searchByKeyword(keyword, pageable);
+
+        List<CompanyResponseDto> openConpanies = new ArrayList<>();
+        List<CompanyResponseDto> closedConpanies = new ArrayList<>();
+
+        //각 업체마다 영업시간 판별
+        for(Company company : companyPage.getContent()) {
+            boolean isOpen = isCompanyOpen(company, today, currentTime, todayDay);
+            CompanyResponseDto dto = new CompanyResponseDto(company);
+            if(isOpen) openConpanies.add(dto);
+            else closedConpanies.add(dto);
+        }
+        return CompanyListResponseDto.of(openConpanies,closedConpanies,companyPage);
+    }
+
     @Transactional
     public CompanyDetailResponseDto updateCompany(Long userId, UUID companyId, CompanyRequestDto requestDto) {
         // 유저 존재 및 권한 확인

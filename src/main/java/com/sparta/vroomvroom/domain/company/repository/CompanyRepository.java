@@ -14,7 +14,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
-public interface CompanyRepository extends JpaRepository<Company, UUID> {
+public interface CompanyRepository extends JpaRepository<Company, UUID>, CompanyRepositoryCustom {
 
     boolean existsByBizRegNo(String bizRegNo);
 

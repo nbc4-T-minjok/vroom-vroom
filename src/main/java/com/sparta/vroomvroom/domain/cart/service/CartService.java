@@ -147,13 +147,13 @@ public class CartService {
             Company company = companyRepository.findById(menu.getCompanyId())
                     .orElseThrow(() -> new IllegalArgumentException("업체를 찾을 수 없습니다."));
 
-            totalPrice += menu.getPrice() * cartMenu.getMenuAmount();
+            totalPrice += menu.getMenuPrice() * cartMenu.getMenuAmount();
 
             CartMenuResponse menuResponse = new CartMenuResponse(
                     cartMenu.getCartMenuId(),
                     menu.getMenuId(),
-                    menu.getName(),
-                    menu.getPrice(),
+                    menu.getMenuName(),
+                    menu.getMenuPrice(),
                     cartMenu.getMenuAmount(),
                     menu.getMenuImage(),
                     company.getCompanyId(),

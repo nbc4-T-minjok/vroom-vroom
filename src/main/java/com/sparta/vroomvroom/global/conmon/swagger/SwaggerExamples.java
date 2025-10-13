@@ -40,6 +40,29 @@ public class SwaggerExamples {
               "closedAt": "23:00"
             }
             """;
+
+    // 주문 생성 예시
+    public static final String ORDER_CREATE_REQUEST = """
+            {
+              "companyId": "880e8400-e29b-41d4-a716-446655440000",
+              "userAddressId": "990e8400-e29b-41d4-a716-446655440000",
+              "orderMenus": [
+                {
+                  "menuId": "550e8400-e29b-41d4-a716-446655440000",
+                  "menuAmount": 2,
+                  "menuPrice": 8500
+                },
+                {
+                  "menuId": "550e8400-e29b-41d4-a716-446655440001",
+                  "menuAmount": 1,
+                  "menuPrice": 18000
+                }
+              ],
+              "paymentMethod": "CARD",
+              "orderRequest": "단무지 빼주세여"
+            }
+            """;
+
     //회원가입 예시
     public static final String USER_SIGNUP_REQUEST = """
             {

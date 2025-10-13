@@ -49,8 +49,8 @@ public class CartService {
         // 장바구니에 이미 다른 가게의 메뉴가 있는지 확인
         List<CartMenu> existingCartMenus = cartMenuRepository.findByCart_CartId(cart.getCartId());
         if (!existingCartMenus.isEmpty()) {
-            UUID existingCompanyId = existingCartMenus.get(0).getMenu().getCompanyId();
-            if (!existingCompanyId.equals(menu.getCompanyId())) {
+            UUID existingCompanyId = existingCartMenus.get(0).getMenu().getCompany().getCompanyId();
+            if (!existingCompanyId.equals(menu.getCompany().getCompanyId())) {
                 throw new IllegalArgumentException("다른 가게의 메뉴는 함께 담을 수 없습니다. 장바구니를 비운 후 다시 시도해주세요.");
             }
         }
@@ -144,7 +144,7 @@ public class CartService {
         for (CartMenu cartMenu : cartMenus) {
             Menu menu = cartMenu.getMenu();
 
-            Company company = companyRepository.findById(menu.getCompanyId())
+            Company company = companyRepository.findById(menu.getCompany().getCompanyId())
                     .orElseThrow(() -> new IllegalArgumentException("업체를 찾을 수 없습니다."));
 
             totalPrice += menu.getMenuPrice() * cartMenu.getMenuAmount();

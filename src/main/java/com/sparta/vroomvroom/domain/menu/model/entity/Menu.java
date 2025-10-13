@@ -7,12 +7,10 @@ import com.sparta.vroomvroom.domain.order.model.entity.OrderMenu;
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import com.sparta.vroomvroom.global.conmon.constants.MenuStatus;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -61,33 +59,15 @@ public class Menu extends BaseEntity {
     @Column(name = "is_visible", nullable = false)
     private Boolean isVisible;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(name = "created_by", nullable = false, length = 20)
-    private String createdBy = "test";
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @Column(name = "updated_by", length = 20)
-    private String updatedBy;
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    @Column(name = "deleted_by", length = 20)
-    private String deletedBy;
-
 
     public void updateMenu(MenuRequestDto dto) {
-        this.menuName = dto.getMenuName();
-        this.menuGroup = dto.getMenuGroup();
-        this.menuPrice = dto.getMenuPrice();
-        this.menuImage = dto.getMenuImage();
-        this.menuDescription = dto.getMenuDescription();
-        this.menuStatus = dto.getMenuStatus();
-        this.isVisible = dto.getIsVisible();
+        if (dto.getMenuName() != null) this.menuName = dto.getMenuName();
+        if (dto.getMenuGroup() != null) this.menuGroup = dto.getMenuGroup();
+        if (dto.getMenuPrice() != null) this.menuPrice = dto.getMenuPrice();
+        if (dto.getMenuImage() != null) this.menuImage = dto.getMenuImage();
+        if (dto.getMenuDescription() != null) this.menuDescription = dto.getMenuDescription();
+        if (dto.getMenuStatus() != null) this.menuStatus = dto.getMenuStatus();
+        if (dto.getIsVisible() != null) this.isVisible = dto.getIsVisible();
     }
 
     public Menu(Company company, String menuName, String menuGroup,

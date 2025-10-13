@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.domain.company.model.entity;
 
 import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyRequestDto;
+import com.sparta.vroomvroom.domain.user.model.entity.User;
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,6 +19,10 @@ public class Company extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "company_id")
     private UUID companyId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_category_id", nullable = false)

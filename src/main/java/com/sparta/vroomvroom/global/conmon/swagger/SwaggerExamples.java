@@ -40,4 +40,34 @@ public class SwaggerExamples {
               "closedAt": "23:00"
             }
             """;
+    //회원가입 예시
+    public static final String USER_SIGNUP_REQUEST = """
+            {
+              "userName": "testuser0",
+              "password": "Abc123!@#",
+              "nickName": "닉네임홍길동",
+              "type": "INAPP",
+              "name": "홍길순",
+              "birthDate": "1990-01-01",
+              "gender": "남",
+              "phoneNumber": "010-0123-1234",
+              "email": "testuser0@example.com",
+              "role": "ROLE_CUSTOMER"
+            }
+            """;
+
+    //회원 정보 수정 예시
+    public static final String USER_DETAIL_UPDATE_REQUEST = """
+            {
+              "nickName": "변경된홍길동",
+              "phoneNumber": "010-0123-1321",
+              "email": "testuser0chged@example.com"
+            }
+            """;
+
+    //비밀번호 변경 예시
+    public static final String USER_PASSWORD_CHANGE_REQUEST = """
+              "currentPassword": "Abc123!@#",
+               "newPassword": "Abc321!@#"
+            """;
 }

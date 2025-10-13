@@ -75,6 +75,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/users/login","/api/v1/users/signup").permitAll()
                         .requestMatchers("/api/v1/users/logout").authenticated()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-resources/**",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs.yaml",
+                                "/webjars/**"
+                        ).permitAll()
                         .anyRequest().authenticated()  //permitAll() -> authenticated() 수정
                 )
 

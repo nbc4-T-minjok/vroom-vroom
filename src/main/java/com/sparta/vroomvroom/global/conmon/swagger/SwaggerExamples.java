@@ -41,6 +41,19 @@ public class SwaggerExamples {
             }
             """;
 
+    // 업체 카테고리 등록 예시
+    public static final String COMPANY_CATEGORY_CREATE_REQUEST = """
+            {
+                "companyCategoryName" : "한식"
+            }
+            """;
+
+    public static final String COMPANY_CATEGORY_UPDATE_REQUEST = """
+            {
+                "companyCategoryName" : "한식"
+            }
+            """;
+
     // 주문 생성 예시
     public static final String ORDER_CREATE_REQUEST = """
             {

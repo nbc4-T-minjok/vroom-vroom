@@ -24,6 +24,16 @@ public class SwaggerDescription {
             "영업시간 조회 후 반환된 businessHourId 값과 companyId 값이 필요합니다.<br>" +
             "요청 가능 권한 : customer / manager";
 
+    // 업체 카테고리 등록 설명
+    public static final String COMPANY_CATEGORY_CREATE_REQUEST =
+            "관리자 권한만 요청을 해주세요.<br>" +
+                    "요청 가능 권한 : manager / master";
+
+    // 업체 카테고리 수정 및 삭제 설명
+    public static final String COMPANY_CATEGORY_UPDATE_REQUEST =
+            "관리자 권한만 요청을 해주세요.<br>" +
+                    "업체 카테고리 조회 후 반환된 companyCategoryId 값이 필요합니다.<br>"  +
+                    "요청 가능 권한 : manager / master";
     // 주문 생성 설명
     public static final String ORDER_CREATE_REQUEST =
             "회원가입과 로그인 진행 후 주문 생성 요청을 해주세요.<br>" +

@@ -8,6 +8,7 @@ import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import com.sparta.vroomvroom.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ public class CompanyController {
     private final CompanyService companyService;
 
     // 업체등록
+    @Secured({"ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
     @PostMapping("/company-categories/{companyCategoryId}/companies")
     public BaseResponse createCompany(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                       @PathVariable UUID companyCategoryId,
@@ -66,6 +68,7 @@ public class CompanyController {
     }
 
     // 업체 수정
+    @Secured({"ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
     @PatchMapping("/companies/{companyId}")
     public BaseResponse updateCompany(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                       @PathVariable UUID companyId,
@@ -75,6 +78,7 @@ public class CompanyController {
     }
 
     // 업체 삭제
+    @Secured({"ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
     @DeleteMapping("/companies/{companyId}")
     public BaseResponse deleteCompany(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable UUID companyId) {
         companyService.deleteCompany(userDetails.getUser().getUserId(), companyId);

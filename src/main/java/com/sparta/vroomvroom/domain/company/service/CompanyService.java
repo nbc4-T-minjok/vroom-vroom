@@ -15,28 +15,35 @@ import com.sparta.vroomvroom.domain.user.repository.UserRepository;
 import com.sparta.vroomvroom.global.conmon.constants.BusinessStatus;
 import com.sparta.vroomvroom.global.conmon.constants.UserRole;
 import com.sparta.vroomvroom.global.conmon.constants.WeekDay;
+import com.sparta.vroomvroom.global.conmon.s3.S3Uploader;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CompanyService {
     private final CompanyRepository companyRepository;
     private final CompanyCategoryRepository companyCategoryRepository;
     private final UserRepository userRepository;
+    private final S3Uploader s3Uploader;
 
     //업체 등록
-    public void createCompany(Long userId, UUID companyCategoryId, CompanyRequestDto requestDto) {
+    @Transactional
+    public void createCompany(Long userId, UUID companyCategoryId, CompanyRequestDto requestDto, MultipartFile logoFile) {
         // 유저 존재 및 권한 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
         if (user.getRole().equals(UserRole.ROLE_CUSTOMER)) { // 예시: UserRole.OWNER
@@ -52,8 +59,11 @@ public class CompanyService {
             throw new IllegalArgumentException("이미 등록된 사업자등록번호입니다.");
         }
 
+        // s3 사진 업로드 후 url 반환
+        String companyLogoUrl = s3Uploader.upload(logoFile, "companyLogoFile");
+
         // 업체 생성 및 저장
-        Company company = new Company(category, requestDto);
+        Company company = new Company(user, category, requestDto, companyLogoUrl);
         companyRepository.save(company);
     }
 
@@ -126,18 +136,19 @@ public class CompanyService {
     }
 
     @Transactional
-    public CompanyDetailResponseDto updateCompany(Long userId, UUID companyId, CompanyRequestDto requestDto) {
+    public CompanyDetailResponseDto updateCompany(Long userId, UUID companyId, CompanyRequestDto requestDto, MultipartFile logoFile) {
         // 유저 존재 및 권한 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-        if (user.getRole().equals(UserRole.ROLE_CUSTOMER)) { // 예시: UserRole.OWNER
-            throw new IllegalArgumentException("해당 사용자는 권한이 없습니다.");
-        }
 
         // 업체 확인
         Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 업체입니다."));
 
+        // s3 사진 업데이트
+        String oldLogoUrl = company.getCompanyLogoUrl();
+        String newLogoUrl = s3Uploader.update(logoFile, oldLogoUrl, "companyLogoFile");
+
         // 업체 수정
-        company.update(requestDto);
+        company.update(requestDto, newLogoUrl);
 
         // 엔티티에서 responseDto 로 변환 후 반환
         return CompanyDetailResponseDto.of(company);

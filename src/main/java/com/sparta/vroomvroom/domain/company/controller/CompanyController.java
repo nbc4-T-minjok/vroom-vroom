@@ -8,9 +8,11 @@ import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import com.sparta.vroomvroom.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -22,11 +24,12 @@ public class CompanyController {
 
     // 업체등록
     @Secured({"ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
-    @PostMapping("/company-categories/{companyCategoryId}/companies")
+    @PostMapping(value = "/company-categories/{companyCategoryId}/companies", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse createCompany(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                       @PathVariable UUID companyCategoryId,
-                                      @Valid @RequestBody CompanyRequestDto requestDto) {
-        companyService.createCompany(userDetails.getUser().getUserId(), companyCategoryId, requestDto);
+                                      @RequestPart("companyRequestDto") @Valid CompanyRequestDto requestDto,
+                                      @RequestPart(value = "logoFile", required = false) MultipartFile logoFile) {
+        companyService.createCompany(userDetails.getUser().getUserId(), companyCategoryId, requestDto, logoFile);
         return new BaseResponse();
     }
 
@@ -72,8 +75,9 @@ public class CompanyController {
     @PatchMapping("/companies/{companyId}")
     public BaseResponse updateCompany(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                       @PathVariable UUID companyId,
-                                      @RequestBody CompanyRequestDto requestDto) {
-        CompanyDetailResponseDto responseDto = companyService.updateCompany(userDetails.getUser().getUserId(), companyId, requestDto);
+                                      @RequestPart("companyRequestDto") @Valid CompanyRequestDto requestDto,
+                                      @RequestPart(value = "logoFile", required = false) MultipartFile logoFile) {
+        CompanyDetailResponseDto responseDto = companyService.updateCompany(userDetails.getUser().getUserId(), companyId, requestDto, logoFile);
         return new BaseResponse(responseDto);
     }
 

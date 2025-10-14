@@ -172,4 +172,36 @@ public class S3Uploader{
         }
     }
 
+    public void deleteByUrl(String url) {
+        try {
+            String key = extractKeyFromUrl(url);
+
+            // 삭제 요청
+            DeleteObjectRequest delReq = DeleteObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(key)
+                    .build();
+
+            s3Client.deleteObject(delReq);
+
+            log.info("S3 파일 삭제 완료: {}", key);
+        } catch (Exception e) {
+            log.error("S3 파일 삭제 실패: {}", url, e);
+            throw new IllegalArgumentException("S3 파일 삭제 실패: " + e.getMessage(), e);
+        }
+    }
+
+    private String extractKeyFromUrl(String url) {
+        try {
+            // S3 URL 기본 구조를 이용해 key 부분만 추출
+            int index = url.indexOf(".amazonaws.com/");
+            if (index == -1) {
+                throw new IllegalArgumentException("올바른 S3 URL 형식이 아닙니다: " + url);
+            }
+            return url.substring(index + ".amazonaws.com/".length() + bucket.length() + 1);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("S3 URL에서 key 추출 실패: " + url, e);
+        }
+    }
 }
+

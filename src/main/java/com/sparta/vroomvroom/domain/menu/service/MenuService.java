@@ -7,15 +7,20 @@ import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuRequestDto;
 import com.sparta.vroomvroom.domain.menu.model.dto.response.MenuResponseDto;
 import com.sparta.vroomvroom.domain.menu.model.entity.Menu;
 import com.sparta.vroomvroom.domain.menu.repository.MenuRepository;
+import com.sparta.vroomvroom.global.conmon.s3.S3Uploader;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MenuService {
@@ -23,6 +28,7 @@ public class MenuService {
     private final MenuRepository menuRepository;
     private final CompanyRepository companyRepository;
     private final GeminiService geminiService;
+    private final S3Uploader s3Uploader;
 
     @Transactional
     public void createMenu(UUID companyId, MenuRequestDto requestDto) {
@@ -36,12 +42,19 @@ public class MenuService {
             );
         }
 
+        List<String> imageUrls = new ArrayList<>();
+        try {
+            imageUrls = uploadImages(requestDto.getImages());
+        } catch (IOException e) {
+            throw new IllegalArgumentException("이미지 업로드 실패", e);
+        }
+
         Menu menu = new Menu(
                 company,
                 requestDto.getMenuName(),
                 requestDto.getMenuGroup(),
                 requestDto.getMenuPrice(),
-                requestDto.getMenuImage(),
+                String.join(",", imageUrls),
                 aiDescription,
                 requestDto.getMenuStatus(),
                 requestDto.getIsVisible()
@@ -73,6 +86,16 @@ public class MenuService {
     public MenuResponseDto updateMenu(UUID menuId, MenuRequestDto requestDto) {
         Menu menu = findMenu(menuId);
 
+        try {
+            if (requestDto.getImages() != null && !requestDto.getImages().isEmpty()) {
+                deleteOldImages(menu.getImageList());
+                List<String> newUrls = uploadImages(requestDto.getImages());
+                menu.setImageList(newUrls);
+            }
+        } catch (IOException e) {
+            throw new IllegalArgumentException("이미지 업로드 실패", e);
+        }
+
         menu.updateMenu(requestDto);
         return new MenuResponseDto(menu);
     }
@@ -81,7 +104,17 @@ public class MenuService {
     public void deleteMenu(UUID menuId, String deletedBy) {
         Menu menu = findMenu(menuId);
 
-        menu.softDelete(LocalDateTime.now(), deletedBy != null ? deletedBy : "SYSTEM");
+        if (menu.getMenuImage() != null) {
+            try {
+                s3Uploader.delete(menu.getMenuImage());
+            } catch (Exception e) {
+
+                log.warn("S3 이미지 삭제 실패 (menuId: {}, image: {}): {}", menuId, menu.getMenuImage(), e.getMessage());
+            }
+        }
+
+        menu.softDelete(LocalDateTime.now(),
+                deletedBy != null ? deletedBy : "SYSTEM");
     }
 
     //예외처리
@@ -93,6 +126,22 @@ public class MenuService {
     private Menu findMenu(UUID menuId) {
         return menuRepository.findById(menuId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 메뉴를 찾을 수 없습니다. " + menuId));
+    }
+
+    private List<String> uploadImages(List<MultipartFile> images) throws IOException {
+        if (images == null || images.isEmpty()) return new ArrayList<>();
+        List<String> urls = new ArrayList<>();
+        for (MultipartFile img : images) {
+            urls.add(s3Uploader.upload(img, "menus"));
+        }
+        return urls;
+    }
+
+    private void deleteOldImages(List<String> imageUrls) {
+        if (imageUrls == null) return;
+        for (String url : imageUrls) {
+            s3Uploader.deleteByUrl(url);
+        }
     }
 
 }

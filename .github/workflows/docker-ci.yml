@@ -30,16 +30,26 @@ jobs:
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.EC2_HOST }}       
+          host: ${{ secrets.EC2_HOST }}
           username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}     
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            set -e
-            docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:dev-latest
-            docker rm -f vroom-vroom || true
-            docker run -d --name vroom-vroom \
+            set -euo pipefail
+            # 도커 데몬 보장
+            sudo systemctl enable --now docker
+
+            # 안전한 로그인 (경고 제거)
+            echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login \
+              -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+            # 배포
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:dev-latest
+            sudo docker rm -f vroom-vroom || true
+            sudo docker run -d --name vroom-vroom \
               -p 80:8080 \
-              --env-file ~/.env \
+              --env-file /home/ec2-user/.env \
               --restart unless-stopped \
               ${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:dev-latest
+
+            # 상태 확인
+            sudo docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Ports}}"

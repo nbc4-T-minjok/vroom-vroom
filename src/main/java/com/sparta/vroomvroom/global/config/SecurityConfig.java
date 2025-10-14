@@ -73,7 +73,7 @@ public class SecurityConfig {
                 //인증 인가 규칙
                 //Todo: v1개발 진척도에 따라 세부 조정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/users/login","/api/v1/users/signup").permitAll()
+                        .requestMatchers("/api/v1/users/login","/api/v1/users/signup", "/api/v2/email/**").permitAll()
                         .requestMatchers("/api/v1/users/logout").authenticated()
                         .requestMatchers(
                                 "/swagger-ui/**",

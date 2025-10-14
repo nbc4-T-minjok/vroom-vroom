@@ -11,6 +11,18 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  mail:
+    host: smtp.naver.com
+    port: 587
+    username: ${EMAIL} #이메일 발송에 사용할 네이버 아이디 ~~~@naver.com
+    password: ${EMAIL_APP_PASSWORD}    # 앱 비밀번호 (계정 비번 아님!) 네이버ID -> 보안설정 -> 2단계 인증 관리 여기서 발급
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    default-encoding: UTF-8
 
 server:
   port: ${SERVER_PORT:8080}

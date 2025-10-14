@@ -5,6 +5,13 @@ on:
     branches: ["dev"]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-dev
+  cancel-in-progress: true
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -22,6 +29,8 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:dev-latest
             ${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:${{ github.sha }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:buildcache,mode=max
 
   deploy:
     runs-on: ubuntu-latest
@@ -35,21 +44,49 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -euo pipefail
-            # 도커 데몬 보장
             sudo systemctl enable --now docker
 
-            # 안전한 로그인 (경고 제거)
+            # Docker Hub 로그인
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login \
               -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-            # 배포
+            # 네트워크/DB 보장
+            sudo docker network inspect vroom-net >/dev/null 2>&1 || sudo docker network create vroom-net
+
+            if ! sudo docker ps -a --format '{{.Names}}' | grep -qx vroom-db; then
+              sudo docker run -d --name vroom-db --network vroom-net \
+                -e POSTGRES_DB=vroomvroom \
+                -e POSTGRES_USER=postgres \
+                -e POSTGRES_PASSWORD=secret \
+                -v pgdata:/var/lib/postgresql/data \
+                --restart unless-stopped \
+                postgis/postgis:17-3.4
+
+              # DB 준비 대기 + PostGIS 확장
+              until sudo docker exec vroom-db pg_isready -U postgres -d vroomvroom >/dev/null 2>&1; do
+                echo "waiting for postgres..."; sleep 1
+              done
+              sudo docker exec -u postgres vroom-db psql -d vroomvroom -c "CREATE EXTENSION IF NOT EXISTS postgis;"
+            else
+              sudo docker start vroom-db || true
+            fi
+
+            # 앱 배포
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:dev-latest
             sudo docker rm -f vroom-vroom || true
-            sudo docker run -d --name vroom-vroom \
+            sudo docker run -d --name vroom-vroom --network vroom-net \
               -p 80:8080 \
               --env-file /home/ec2-user/.env \
               --restart unless-stopped \
               ${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:dev-latest
 
-            # 상태 확인
+            # 헬스 체크
+            for i in {1..30}; do
+              code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost || true)
+              if [ "$code" = "200" ] || [ "$code" = "404" ] || [ "$code" = "401" ]; then
+                echo "App ready (HTTP $code)"; break
+              fi
+              sleep 1
+            done
+
             sudo docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Ports}}"

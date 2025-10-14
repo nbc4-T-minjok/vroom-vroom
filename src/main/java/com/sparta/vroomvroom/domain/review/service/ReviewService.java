@@ -193,10 +193,8 @@ public class ReviewService {
     }
 
     public void deleteReview(UUID reviewId, Long userId) {
+        // 리뷰 존재 여부 확인 및 데이터 세팅
         Review review = review(reviewId);
-
-        // 리뷰 존재 여부 확인
-        exists(reviewRepository::findById, reviewId, true,"유효하지 않은 리뷰입니다.");
 
         // 권한 체크
         Long writer = review.getUserId().getUserId();
@@ -207,7 +205,6 @@ public class ReviewService {
 
         // 2. 리뷰 논리삭제
         review.softDelete(LocalDateTime.now(), String.valueOf(userId));
-
 
         // 3. 연관된 사장님리뷰 조회 및 논리삭제 처리
         OwnerReview ownerReview = ownerReview(reviewId);

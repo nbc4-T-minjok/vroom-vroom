@@ -1,16 +1,25 @@
-name: CI/CD - Build, Push to Docker Hub, Deploy to EC2
+name: CI - Build & Push Docker (dev)
 
 on:
   push:
-    branches: [ "dev" ]   # main에 머지되면 실행
-  workflow_dispatch:        # 수동 실행도 허용
+    branches: [ "dev" ]
+  workflow_dispatch:
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout (dev commit)
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Debug - show branch & files
+        run: |
+          echo "GITHUB_REF=$GITHUB_REF"
+          git rev-parse --abbrev-ref HEAD
+          ls -la
+          test -f Dockerfile && echo "OK: Dockerfile found" || (echo "NG: Dockerfile missing"; exit 1)
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -21,47 +30,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract short SHA
-        id: meta
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
-      - name: Build & Push image
+      - name: Build & Push
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:${{ steps.meta.outputs.sha_short }}
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:buildcache,mode=max
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build-and-push
-    steps:
-      - name: Deploy to EC2 via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            set -e
-            echo "[Deploy] Pull latest image"
-            docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:latest
-
-            echo "[Deploy] Stop previous container (if any)"
-            docker rm -f vroom-vroom || true
-
-            echo "[Deploy] Run new container"
-            docker run -d --name vroom-vroom \
-              -p 80:8080 \
-              --env-file ~/.env \
-              --restart unless-stopped \
-              ${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:latest
-
-            echo "[Deploy] Current containers"
-            docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Ports}}"
+            ${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:dev-latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:${{ github.sha }}

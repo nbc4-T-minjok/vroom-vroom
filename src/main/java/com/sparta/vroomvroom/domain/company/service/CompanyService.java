@@ -158,9 +158,6 @@ public class CompanyService {
     public void deleteCompany(Long userId, UUID companyId) {
         // 유저 존재 및 권한 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-        if (user.getRole().equals(UserRole.ROLE_CUSTOMER)) { // 예시: UserRole.OWNER
-            throw new IllegalArgumentException("해당 사용자는 권한이 없습니다.");
-        }
 
         // 업체 확인
         Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 업체입니다."));

@@ -4,7 +4,6 @@ import com.sparta.vroomvroom.domain.company.model.dto.CompanyCategoryRequestDto;
 import com.sparta.vroomvroom.domain.company.model.dto.CompanyCategoryResponseDto;
 import com.sparta.vroomvroom.domain.company.service.CompanyCategoryService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
-import com.sparta.vroomvroom.global.conmon.constants.BaseResponseStatus;
 import com.sparta.vroomvroom.global.conmon.swagger.SwaggerDescription;
 import com.sparta.vroomvroom.global.conmon.swagger.SwaggerExamples;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -34,7 +32,7 @@ public class CompanyCategoryController {
                             }
                     )
             ))
-    @Secured("ROLE_MANAGER")
+    @Secured({"ROLE_MANAGER", "ROLE_MASTER"})
     @PostMapping("/company-categories")
     public BaseResponse createCompanyCategories(@Valid @RequestBody CompanyCategoryRequestDto requestDto) {
         companyCategoryService.createCompanyCategories(requestDto);
@@ -58,7 +56,7 @@ public class CompanyCategoryController {
                             }
                     )
             ))
-    @Secured("ROLE_MANAGER")
+    @Secured({"ROLE_MANAGER", "ROLE_MASTER"})
     @PatchMapping("/company-categories/{companyCategoryId}")
     public BaseResponse updateCompanyCategories(@PathVariable UUID companyCategoryId,
                                                 @Valid @RequestBody CompanyCategoryRequestDto requestDto) {
@@ -67,7 +65,7 @@ public class CompanyCategoryController {
     }
 
     @Operation(summary = "카테고리 삭제 API", description = SwaggerDescription.COMPANY_CATEGORY_UPDATE_REQUEST)
-    @Secured("ROLE_MANAGER")
+    @Secured({"ROLE_MANAGER", "ROLE_MASTER"})
     @DeleteMapping("/company-categories/{companyCategoryId}")
     public BaseResponse deleteCompanyCategories(@PathVariable UUID companyCategoryId) {
         companyCategoryService.deleteCompanyCategories(companyCategoryId);

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,7 +65,6 @@ public class Menu extends BaseEntity {
         if (dto.getMenuName() != null) this.menuName = dto.getMenuName();
         if (dto.getMenuGroup() != null) this.menuGroup = dto.getMenuGroup();
         if (dto.getMenuPrice() != null) this.menuPrice = dto.getMenuPrice();
-        if (dto.getMenuImage() != null) this.menuImage = dto.getMenuImage();
         if (dto.getMenuDescription() != null) this.menuDescription = dto.getMenuDescription();
         if (dto.getMenuStatus() != null) this.menuStatus = dto.getMenuStatus();
         if (dto.getIsVisible() != null) this.isVisible = dto.getIsVisible();
@@ -82,4 +82,14 @@ public class Menu extends BaseEntity {
         this.menuStatus = menuStatus;
         this.isVisible = isVisible;
     }
+
+    public List<String> getImageList() {
+        if (this.menuImage == null || this.menuImage.isBlank()) return new ArrayList<>();
+        return Arrays.asList(this.menuImage.split(","));
+    }
+
+    public void setImageList(List<String> imageUrls) {
+        this.menuImage = String.join(",", imageUrls);
+    }
+
 }

@@ -7,6 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -23,7 +26,7 @@ public class MenuRequestDto {
     @Min(value = 1, message = "메뉴 가격은 0보다 커야 합니다.")
     private Integer menuPrice;
 
-    private String menuImage;
+    private List<MultipartFile> images;
 
     private String menuDescription;
 

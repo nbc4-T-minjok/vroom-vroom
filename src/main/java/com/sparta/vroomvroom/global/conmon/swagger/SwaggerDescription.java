@@ -3,7 +3,7 @@ package com.sparta.vroomvroom.global.conmon.swagger;
 public class SwaggerDescription {
     // 배송지 등록 설명
     public static final String ADDRESS_CREATE_REQUEST =
-            "회원가입 진행 후 배송지 등록 요청을 해주세요.<br>" +
+            "회원가입과 로그인 진행 후 배송지 등록 요청을 해주세요.<br>" +
             "요청 가능 권한 : customer / manager";
 
     // 배송지 수정 설명
@@ -65,6 +65,17 @@ public class SwaggerDescription {
     public static final String USER_PASSWORD_CHANGE_REQUEST = """
             비밀번호는 대소문자,특수문자,숫자 모두를 포함해서 8~15자로 설정해주세요.
             """;
+
+    // 장바구니 메뉴 추가 설명
+    public static final String CART_ADD_REQUEST =
+            "회원가입과 로그인 진행 후 장바구니에 메뉴를 추가합니다.<br>" +
+                    "요청 가능 권한 : customer";
+
+    // 장바구니 메뉴 수량 변경 설명
+    public static final String CART_UPDATE_REQUEST =
+            "장바구니에 담긴 특정 메뉴의 수량/옵션을 수정합니다.<br>" +
+                    "장바구니 조회 후 반환된 cartMenuId 값이 필요합니다.<br>" +
+                    "요청 가능 권한 : customer";
 
     // 메뉴 등록 설명
     public static final String MENU_CREATE_REQUEST =

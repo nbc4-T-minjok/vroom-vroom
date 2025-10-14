@@ -8,11 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface BusinessHourRepository extends JpaRepository<BusinessHour, UUID> {
     @Query("SELECT b FROM BusinessHour b WHERE b.company.companyId = :companyId")
     List<BusinessHour> findAllByCompanyId(@Param("companyId") UUID companyId);
 
-    boolean existsByCompanyAndDay(Company company, WeekDay day);
+    boolean existsByCompanyAndDayAndIsDeletedFalse(Company company, WeekDay day);
+
+    @Query("SELECT b FROM BusinessHour b JOIN FETCH b.company WHERE b.businessHourId = :id")
+    Optional<BusinessHour> findWithCompanyById(@Param("id") UUID id);
 }

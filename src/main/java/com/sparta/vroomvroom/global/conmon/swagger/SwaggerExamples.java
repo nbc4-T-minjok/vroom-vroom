@@ -126,6 +126,19 @@ public class SwaggerExamples {
                "newPassword": "Abc321!@#"
             """;
 
+    public static final String CART_ADD_REQUEST = """
+            {
+                "menuId": "00000000-0000-0000-0000-200000001001",
+                "menuAmount": 2
+            }
+            """;
+
+                public static final String CART_UPDATE_REQUEST = """
+            {
+              "menuAmount": 7
+            }
+            """;
+
     public static final String MENU_CREATE_REQUEST = """
         {
           "menuName": "후라이드치킨",

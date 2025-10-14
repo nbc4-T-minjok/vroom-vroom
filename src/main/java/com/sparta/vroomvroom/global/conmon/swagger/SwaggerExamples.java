@@ -125,4 +125,17 @@ public class SwaggerExamples {
               "currentPassword": "Abc123!@#",
                "newPassword": "Abc321!@#"
             """;
+
+    public static final String CART_ADD_REQUEST = """
+            {
+                "menuId": "00000000-0000-0000-0000-200000001001",
+                "menuAmount": 2
+            }
+            """;
+
+                public static final String CART_UPDATE_REQUEST = """
+            {
+              "menuAmount": 7
+            }
+            """;
 }

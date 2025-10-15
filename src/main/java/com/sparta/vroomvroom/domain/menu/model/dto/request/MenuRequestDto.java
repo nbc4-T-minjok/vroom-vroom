@@ -31,7 +31,7 @@ public class MenuRequestDto {
 
     private String menuDescription;
 
-    @NotBlank(message = "메뉴 상태는 필수입니다.")
+    @NotNull(message = "메뉴 상태는 필수입니다.")
     private MenuStatus menuStatus;  // "판매중", "품절", "일시품절"
 
     @NotNull(message = "노출 여부는 필수입니다.")

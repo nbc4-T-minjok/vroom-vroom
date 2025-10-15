@@ -33,7 +33,7 @@ public class MenuService {
     private final S3Uploader s3Uploader;
 
     @Transactional
-    public void createMenu(UUID companyId, MenuRequestDto requestDto) {
+    public void createMenu(UUID companyId, MenuRequestDto requestDto, List<MultipartFile> images) {
         Company company = findCompany(companyId);
 
         String finalDescription = requestDto.getMenuDescription();
@@ -86,13 +86,13 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuResponseDto updateMenu(UUID menuId, MenuRequestDto requestDto) {
+    public MenuResponseDto updateMenu(UUID menuId, MenuRequestDto requestDto, List<MultipartFile> images) {
         Menu menu = findMenu(menuId);
 
         try {
-            if (requestDto.getImages() != null && !requestDto.getImages().isEmpty()) {
+            if (images != null && !images.isEmpty()) {
                 deleteOldImages(menu.getImageList());
-                List<String> newUrls = uploadImages(requestDto.getImages());
+                List<String> newUrls = uploadImages(images);
                 menu.setImageList(newUrls);
             }
         } catch (IOException e) {

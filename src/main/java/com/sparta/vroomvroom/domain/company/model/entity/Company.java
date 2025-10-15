@@ -6,7 +6,6 @@ import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.locationtech.jts.geom.Coordinate;
@@ -78,10 +77,11 @@ public class Company extends BaseEntity {
     @OneToMany(mappedBy = "company")
     private List<SpecialBusinessHour> specialBusinessHours;
 
-    public Company(CompanyCategory companyCategory, CompanyRequestDto requestDto) {
+    public Company(User user, CompanyCategory companyCategory, CompanyRequestDto requestDto, String companyLogoUrl) {
+        this.user = user;
         this.companyCategory = companyCategory;
         this.companyName = requestDto.getCompanyName();
-        this.companyLogoUrl = requestDto.getCompanyLogoUrl();
+        this.companyLogoUrl = companyLogoUrl;
         this.companyDescription = requestDto.getCompanyDescription();
         this.phoneNumber = requestDto.getPhoneNumber();
         this.deliveryFee = requestDto.getDeliveryFee();
@@ -99,9 +99,9 @@ public class Company extends BaseEntity {
         this.location = location;
     }
 
-    public void update(CompanyRequestDto requestDto) {
+    public void update(CompanyRequestDto requestDto, String newLogoUrl) {
         this.companyName = requestDto.getCompanyName();
-        this.companyLogoUrl = requestDto.getCompanyLogoUrl();
+        this.companyLogoUrl = newLogoUrl;
         this.companyDescription = requestDto.getCompanyDescription();
         this.phoneNumber = requestDto.getPhoneNumber();
         this.deliveryFee = requestDto.getDeliveryFee();

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -36,6 +37,8 @@ public class MenuRequestDto {
     @NotNull(message = "노출 여부는 필수입니다.")
     private Boolean isVisible;
 
-    private Boolean aiDescription = false;
+    private Boolean useAiDescription = false;
+
+    private UUID aiLogId;
 
 }

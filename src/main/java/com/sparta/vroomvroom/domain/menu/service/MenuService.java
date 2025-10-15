@@ -1,5 +1,7 @@
 package com.sparta.vroomvroom.domain.menu.service;
 
+import com.sparta.vroomvroom.domain.ai.model.entity.AiApiLog;
+import com.sparta.vroomvroom.domain.ai.repository.GeminiRepository;
 import com.sparta.vroomvroom.domain.ai.service.GeminiService;
 import com.sparta.vroomvroom.domain.company.model.entity.Company;
 import com.sparta.vroomvroom.domain.company.repository.CompanyRepository;
@@ -27,19 +29,21 @@ public class MenuService {
 
     private final MenuRepository menuRepository;
     private final CompanyRepository companyRepository;
-    private final GeminiService geminiService;
+    private final GeminiRepository geminiRepository;
     private final S3Uploader s3Uploader;
 
     @Transactional
     public void createMenu(UUID companyId, MenuRequestDto requestDto) {
         Company company = findCompany(companyId);
 
-        String aiDescription = requestDto.getMenuDescription();
+        String finalDescription = requestDto.getMenuDescription();
 
-        if (Boolean.TRUE.equals(requestDto.getAiDescription())) {
-            aiDescription = geminiService.generateMenuDescription(
-                    requestDto.getMenuName()
-            );
+        // AI 설명 사용 여부
+        if (Boolean.TRUE.equals(requestDto.getUseAiDescription()) && requestDto.getAiLogId() != null) {
+            AiApiLog aiLog = geminiRepository.findById(requestDto.getAiLogId())
+                    .orElseThrow(() -> new IllegalArgumentException("AI 로그를 찾을 수 없습니다."));
+
+            finalDescription = aiLog.getResponse();
         }
 
         List<String> imageUrls = new ArrayList<>();
@@ -55,11 +59,10 @@ public class MenuService {
                 requestDto.getMenuGroup(),
                 requestDto.getMenuPrice(),
                 String.join(",", imageUrls),
-                aiDescription,
+                finalDescription,
                 requestDto.getMenuStatus(),
                 requestDto.getIsVisible()
         );
-
 
         menuRepository.save(menu);
     }

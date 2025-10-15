@@ -98,7 +98,7 @@ jobs:
 
             # ★ DB 슈퍼유저 비밀번호를 .env 값으로 항상 동기화
             sudo docker exec -u postgres vroom-db \
-              psql -d postgres -v pass="${APP_DB_PASS}" -c "ALTER USER postgres WITH PASSWORD :'pass';"
+              psql -d postgres -c "ALTER USER postgres WITH PASSWORD '${APP_DB_PASS}';"
 
             # 앱 컨테이너 배포
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vroom-vroom:dev-latest

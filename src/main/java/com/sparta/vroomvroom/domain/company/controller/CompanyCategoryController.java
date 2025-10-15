@@ -76,14 +76,4 @@ public class CompanyCategoryController {
         companyCategoryService.deleteCompanyCategories(userDetails.getUser(), companyCategoryId);
         return new BaseResponse();
     }
-
-
-    @Operation(summary = "(관리자) 카테고리 목록 조회 API", description = SwaggerDescription.COMPANY_CATEGORY_CREATE_REQUEST)
-    @Secured({"ROLE_MANAGER", "ROLE_MASTER"})
-    @GetMapping("/admin/company-categories")
-    public BaseResponse getAdminCompanyCategories(@RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "10") int size) {
-        Page<CompanyCategoryResponseDto> companyCategories = companyCategoryService.getAdminCompanyCategories(page, size);
-        return new BaseResponse(companyCategories);
-    }
 }

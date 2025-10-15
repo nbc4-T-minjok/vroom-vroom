@@ -34,7 +34,7 @@ public class S3Uploader{
     * -> dirName 폴더 하위에 저장 (dirName : S3에서 폴더 역할)
     * -> key(저장경로)만 반환 (예 : test/uuid_fileName)
      */
-    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
+    public String upload(MultipartFile multipartFile, String dirName) {
         String original = multipartFile.getOriginalFilename();
         if (original == null || original.isBlank()) {
             throw new IllegalArgumentException("파일명이 비어 있습니다.");

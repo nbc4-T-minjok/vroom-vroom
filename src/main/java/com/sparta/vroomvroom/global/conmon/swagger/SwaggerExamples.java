@@ -74,6 +74,7 @@ public class SwaggerExamples {
     public static final String REVIEW_COMPANY_UPDATE_REQUEST = """
             {
                 "contents" : "사장님리뷰 수정입니다. 감사합니다."
+             }""";
     // 특별영업시간 등록 예시
     public static final String SPECIAL_BUSINESS_HOUR_CREATE_REQUEST = """
             {

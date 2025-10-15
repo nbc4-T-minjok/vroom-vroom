@@ -8,7 +8,7 @@
 
 <div align="center">
 
-### 🏃🏻‍♀️ [vroom-vroom Swagger](/) 💨
+### 🏃🏻‍♀️ [vroom-vroom Swagger](http://3.36.75.246/swagger-ui/index.html) 💨
 
 </div>
 

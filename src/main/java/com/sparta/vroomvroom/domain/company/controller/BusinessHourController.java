@@ -37,8 +37,9 @@ public class BusinessHourController {
             ))
     @Secured({"ROLE_MANAGER","ROLE_OWNER"})
     @PostMapping("/companies/{companyId}/business_hours")
-    public BaseResponse createBusinessHour(@PathVariable UUID companyId, @RequestBody BusinessHourRequestDto requestDto) {
-        businessHourService.createBusinessHour(companyId, requestDto);
+    public BaseResponse createBusinessHour(@PathVariable UUID companyId, @RequestBody BusinessHourRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long userId = userDetails.getUser().getUserId();
+        businessHourService.createBusinessHour(companyId, requestDto, userId);
         return new BaseResponse<>();
     }
 
@@ -46,8 +47,9 @@ public class BusinessHourController {
     @Operation(summary = "영업시간 조회 API")
     @Secured({"ROLE_MANAGER","ROLE_OWNER"})
     @GetMapping("/companies/{companyId}/business_hours")
-    public BaseResponse getBusinessHour(@PathVariable UUID companyId) {
-        List<BusinessHourResponseDto> result =  businessHourService.getBusinessHour(companyId);
+    public BaseResponse getBusinessHour(@PathVariable UUID companyId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long userId = userDetails.getUser().getUserId();
+        List<BusinessHourResponseDto> result =  businessHourService.getBusinessHour(companyId, userId);
         return new BaseResponse(result);
     }
 
@@ -64,8 +66,9 @@ public class BusinessHourController {
     @Secured({"ROLE_MANAGER","ROLE_OWNER"})
     @PatchMapping("/companies/{companyId}/business_hours/{businessHourId}")
     public BaseResponse updateBusinessHour(@PathVariable UUID companyId, @PathVariable UUID businessHourId,
-                                            @RequestBody BusinessHourRequestDto requestDto) {
-        businessHourService.updateBusinessHour(companyId, businessHourId, requestDto);
+                                            @RequestBody BusinessHourRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long userId = userDetails.getUser().getUserId();
+        businessHourService.updateBusinessHour(companyId, businessHourId, requestDto, userId);
         return new BaseResponse();
     }
 
@@ -74,8 +77,9 @@ public class BusinessHourController {
     @Secured({"ROLE_MANAGER","ROLE_OWNER"})
     @DeleteMapping("/companies/{companyId}/business_hours/{businessHourId}")
     public BaseResponse deleteBusinessHour(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable UUID companyId, @PathVariable UUID businessHourId) {
+        Long userId = userDetails.getUser().getUserId();
         String userName = userDetails.getUser().getUserName();
-        businessHourService.deleteBusinessHour(companyId, businessHourId, userName);
+        businessHourService.deleteBusinessHour(companyId, businessHourId, userName,userId);
         return new BaseResponse();
     }
 

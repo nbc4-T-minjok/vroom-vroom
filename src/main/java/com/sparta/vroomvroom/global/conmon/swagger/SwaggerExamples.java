@@ -40,4 +40,135 @@ public class SwaggerExamples {
               "closedAt": "23:00"
             }
             """;
+
+    // 리뷰 작성_주문 예시
+    public static final String REVIEW_ORDER_CREATE_REQUEST = """
+            {
+                "review": {
+                        "rate" : 5,
+                        "contents : "음식이 맛있고 배달이 빨라요"
+                },
+                "images": "(binary)"
+            }
+            """;
+
+    // 리뷰 작성_업체 예시
+    public static final String REVIEW_COMPANY_CREATE_REQUEST = """
+            {
+                "reviewId" : "fcb445cd-d989-4897-a267-6df77c4b1d1",
+                "contents" : "주문해주셔서 감사합니다."
+            }
+            """;
+
+    // 리뷰 수정_고객 예시
+    public static final String REVIEW_ORDER_UPDATE_REQUEST = """
+            {
+                "review": {
+                    "contents": "수정하는 리뷰입니다."
+                },
+                "images": "(binary)"
+            }
+            """;
+
+    // 리뷰 수정_업체 예시
+    public static final String REVIEW_COMPANY_UPDATE_REQUEST = """
+            {
+                "contents" : "사장님리뷰 수정입니다. 감사합니다."
+    // 특별영업시간 등록 예시
+    public static final String SPECIAL_BUSINESS_HOUR_CREATE_REQUEST = """
+            {
+            	"date" : "2025-12-29",
+            	"openedAt" : "08:00:00",
+            	"openedAt" : "22:00:00",
+            	"businessStatus" : "OPEN"
+            }
+            """;
+
+    // 특별영업시간 수정 예시
+    public static final String SPECIAL_BUSINESS_HOUR_UPDATE_REQUEST = """
+            {
+            	"date" : "2025-12-29",
+            	"openedAt" : null,
+            	"openedAt" : null,
+            	"businessStatus" : "CLOSED"
+            }
+            """;
+    // 업체 카테고리 등록 예시
+    public static final String COMPANY_CATEGORY_CREATE_REQUEST = """
+            {
+                "companyCategoryName" : "한식"
+            }
+            """;
+
+    public static final String COMPANY_CATEGORY_UPDATE_REQUEST = """
+            {
+                "companyCategoryName" : "한식"
+            }
+            """;
+
+    // 주문 생성 예시
+    public static final String ORDER_CREATE_REQUEST = """
+            {
+              "companyId": "880e8400-e29b-41d4-a716-446655440000",
+              "userAddressId": "990e8400-e29b-41d4-a716-446655440000",
+              "orderMenus": [
+                {
+                  "menuId": "550e8400-e29b-41d4-a716-446655440000",
+                  "menuAmount": 2,
+                  "menuPrice": 8500
+                },
+                {
+                  "menuId": "550e8400-e29b-41d4-a716-446655440001",
+                  "menuAmount": 1,
+                  "menuPrice": 18000
+                }
+              ],
+              "paymentMethod": "CARD",
+              "orderRequest": "단무지 빼주세여"
+            }
+            """;
+
+    //회원가입 예시
+    public static final String USER_SIGNUP_REQUEST = """
+            {
+              "userName": "testuser0",
+              "password": "Abc123!@#",
+              "nickName": "닉네임홍길동",
+              "type": "INAPP",
+              "name": "홍길순",
+              "birthDate": "1990-01-01",
+              "gender": "남",
+              "phoneNumber": "010-0123-1234",
+              "email": "testuser0@example.com",
+              "role": "ROLE_CUSTOMER"
+            }
+            """;
+
+    //회원 정보 수정 예시
+    public static final String USER_DETAIL_UPDATE_REQUEST = """
+            {
+              "nickName": "변경된홍길동",
+              "phoneNumber": "010-0123-1321",
+              "email": "testuser0chged@example.com"
+            }
+            """;
+
+    //비밀번호 변경 예시
+    public static final String USER_PASSWORD_CHANGE_REQUEST = """
+              "currentPassword": "Abc123!@#",
+               "newPassword": "Abc321!@#"
+            """;
+
+    public static final String CART_ADD_REQUEST = """
+            {
+                "menuId": "00000000-0000-0000-0000-200000001001",
+                "menuAmount": 2
+            }
+            """;
+
+                public static final String CART_UPDATE_REQUEST = """
+            {
+              "menuAmount": 7
+            }
+            """;
 }

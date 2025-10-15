@@ -50,6 +50,8 @@ public class SwaggerDescription {
             "회원가입과 로그인 진행 후 주문 생성 요청을 해주세요.<br>" +
             "companyId 값과 userAddressId 값이 필요합니다.<br>" +
             "요청 가능 권한 : customer";
+
+    //회원 가입 설명
     public static final String USER_SIGNUP_REQUEST = """
             userName, email, phoneNumber는 중복이 불가능 합니다.
             비밀번호는 대소문자,특수문자,숫자 모두를 포함해서 8~15자로 설정해주세요.
@@ -76,4 +78,10 @@ public class SwaggerDescription {
             "장바구니에 담긴 특정 메뉴의 수량/옵션을 수정합니다.<br>" +
                     "장바구니 조회 후 반환된 cartMenuId 값이 필요합니다.<br>" +
                     "요청 가능 권한 : customer";
+
+    //매니저 등록 설명
+    public static final String MANAGER_REGISTER_REQUEST = """
+            userName, email, phoneNumber는 중복이 불가능 합니다.
+            비밀번호는 대소문자,특수문자,숫자 모두를 포함해서 8~15자로 설정해주세요.
+            """;
 }

@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.domain.region.emd.model.entity;
 
 import com.sparta.vroomvroom.domain.region.sido.model.entity.Sido;
+import com.sparta.vroomvroom.domain.region.sigungu.model.entity.Sigungu;
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -39,5 +40,5 @@ public class Emd extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sigungu_id", nullable = false)
-    private Sido sido;
+    private Sigungu sigungu;
 }

@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +35,7 @@ public class MenuController {
             description = SwaggerDescription.MENU_CREATE_REQUEST,
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
-                            mediaType = "application/json",
+                            mediaType = "multipart/form-data",
                             examples = {
                                     @ExampleObject(value = SwaggerExamples.MENU_CREATE_REQUEST)
                             }
@@ -42,7 +43,7 @@ public class MenuController {
             )
     )
     @Secured({"ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
-    @PostMapping(value = "/companies/{companyId}/menus", consumes = "multipart/form-data")
+    @PostMapping(value = "/companies/{companyId}/menus", consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse<Void> createMenu(
             @PathVariable UUID companyId,
             @RequestPart("menu") @Valid MenuRequestDto requestDto,
@@ -78,7 +79,7 @@ public class MenuController {
             description = SwaggerDescription.MENU_UPDATE_REQUEST,
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
-                            mediaType = "application/json",
+                            mediaType = "multipart/form-data",
                             examples = {
                                     @ExampleObject(value = SwaggerExamples.MENU_UPDATE_REQUEST)
                             }
@@ -86,7 +87,7 @@ public class MenuController {
             )
     )
     @Secured({"ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
-    @PatchMapping(value = "/companies/{companyId}/menus/{menuId}", consumes = "multipart/form-data")
+    @PatchMapping(value = "/companies/{companyId}/menus/{menuId}", consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse<MenuResponseDto> updateMenu(
             @PathVariable UUID companyId,
             @PathVariable UUID menuId,

@@ -29,22 +29,11 @@ public class MenuService {
 
     private final MenuRepository menuRepository;
     private final CompanyRepository companyRepository;
-    private final GeminiRepository geminiRepository;
     private final S3Uploader s3Uploader;
 
     @Transactional
     public void createMenu(UUID companyId, MenuRequestDto requestDto, List<MultipartFile> images) {
         Company company = findCompany(companyId);
-
-        String finalDescription = requestDto.getMenuDescription();
-
-        // AI 설명 사용 여부
-        if (Boolean.TRUE.equals(requestDto.getUseAiDescription()) && requestDto.getAiLogId() != null) {
-            AiApiLog aiLog = geminiRepository.findById(requestDto.getAiLogId())
-                    .orElseThrow(() -> new IllegalArgumentException("AI 로그를 찾을 수 없습니다."));
-
-            finalDescription = aiLog.getResponse();
-        }
 
         List<String> imageUrls = new ArrayList<>();
         try {
@@ -59,7 +48,7 @@ public class MenuService {
                 requestDto.getMenuGroup(),
                 requestDto.getMenuPrice(),
                 String.join(",", imageUrls),
-                finalDescription,
+                requestDto.getMenuDescription(),
                 requestDto.getMenuStatus(),
                 requestDto.getIsVisible()
         );

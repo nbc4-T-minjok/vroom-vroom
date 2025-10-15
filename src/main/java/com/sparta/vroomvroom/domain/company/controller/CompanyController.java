@@ -45,7 +45,7 @@ public class CompanyController {
     // 업체 카테고리별 목록 조회
     @GetMapping("/company-categories/{companyCategoryId}/companies")
     public BaseResponse<CompanyListResponseDto> getCompaniesByCategory(@PathVariable UUID companyCategoryId,
-                                               @RequestParam(name = "page", defaultValue = "1") int page,
+                                               @RequestParam(name = "page", defaultValue = "0") int page,
                                                @RequestParam(name = "size", defaultValue = "10") int size,
                                                @RequestParam(name = "sortBy", required = false) String sortBy,
                                                @RequestParam(name = "isAsc") boolean isAsc) {

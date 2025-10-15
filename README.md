@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/13190b31-c653-4858-b72b-7022defc5b5f" width="400" height="400" ></img><br/>
+  <img src="https://github.com/user-attachments/assets/13190b31-c653-4858-b72b-7022defc5b5f" width="400" height="400" ></img>
 </div>
 
 
@@ -9,7 +9,6 @@
 <div align="center">
 
 ### 🏃🏻‍♀️ [vroom-vroom Swagger](/) 💨
-### [배포 주소](/)
 
 </div>
 
@@ -66,11 +65,6 @@
 <img src="https://img.shields.io/badge/PostgreSQL-%23003545?style=flat&logo=postgreSQL&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Amazon S3-569A31?style=flat&logo=amazons3&logoColor=white">&nbsp;
 
-
-### Monotoring
-<img src="https://img.shields.io/badge/Grafana-F46800?style=flat&logo=Grafana&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/Prometheus-E6522C?style=flat&logo=Prometheus&logoColor=white">&nbsp;
-
 ### VCS
 <img src="https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white">&nbsp;
 
@@ -79,14 +73,14 @@
 <img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white">&nbsp;
 <img src="https://img.shields.io/badge/Slack-F46800?style=flat&logo=Slack&logoColor=white">&nbsp;
 
-### Docs
-<img src="https://img.shields.io/badge/Swagger-85EA2D?style=flat&logo=swagger&logoColor=white">&nbsp;
+### CI/CD
+<img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white">&nbsp;
 
 ### Infra
-<img src="https://img.shields.io/badge/ AWS -FFB746?style=flat&logo=aws&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/ EC2 -F1007E?style=flat&logo=ec2&logoColor=white">&nbsp;
-<img src="https://img.shields.io/badge/ S3 -C70D2C?style=flat&logo=s3&logoColor=white">&nbsp;
+<img src="https://img.shields.io/badge/Amazon EC2 -FFB746?style=flat&logo=ec2&logoColor=white">&nbsp;
 
+### Docs
+<img src="https://img.shields.io/badge/Swagger-85EA2D?style=flat&logo=swagger&logoColor=white">&nbsp;
 
 
 <br>
@@ -95,28 +89,20 @@
 # 🔮 프로젝트 개요
 
 - **프로젝트명:** T의 민족
+<!--
 - **프로젝트 기간:** 2025.09.26 ~ 2025.10.20
 - **프로젝트 형태:** 스프링 부트 기반의 모놀리식 어플리케이션
+-->
 - **팀원 역할:**
-  - 강태성 (팀장)
-    - 회원
-    - 보안
-    - 팀 총괄 지휘
-  - 강현호 (TL)
-      - 주문
-      - 장바구니
-      - 결제
-  - 황태경
-      - 업체
-  - 김주영
-      - 리뷰
-  - 한재현
-      - 배송지
-      - 인프라(AWS EC2, S3연동)
-      - 배포
-  - 김민식
-      - 메뉴
-      - AI
+
+| 이름 | 역할/직책 | 주요 담당 모듈 | 기타 핵심 업무 |
+| :--- | :--- | :--- | :--- |
+| **강태성** | **팀장** | 회원, 보안 (인증/인가) | 팀 총괄 지휘 |
+| **강현호** | TL (기술 리더) | 주문, 장바구니, 결제 | - |
+| **황태경** | 팀원 | 업체 (Company) | - |
+| **김주영** | 팀원 | 리뷰 (Review) | - |
+| **한재현** | 팀원 | 배송지 | 인프라 (AWS EC2, S3 연동), 배포 |
+| **김민식** | 팀원 | 메뉴 (Menu) | AI (OpenAI 연동 등) |
    
 - **목표:**
 Spring Boot와 JPA를 활용해 개발한 음식 주문 배달 플랫폼입니다. 
@@ -135,33 +121,23 @@ Spring Boot와 JPA를 활용해 개발한 음식 주문 배달 플랫폼입니�
 ---
 # 📜 프로젝트 설계
 
-<br>
-  <details>
-    <summary><b>📝 ERD</b></summary></br>
-        [ERD 바로가기](https://www.erdcloud.com/d/YddLZTCcrMGFGzTev)
-  </details>
-<br>
-  <details>
-    <summary><b>⚙️ 시스템아키텍처</b></summary></br>
-        <img src="https://github.com/user-attachments/assets/98c36166-6c89-4591-b1fe-4098d35947d4" alt="시스템아키텍처" width="75%">
-  </details>
+### 📃 [API 명세서 바로가기](https://www.notion.so/teamsparta/8-T-27a2dc3ef514803e9588e7af8d93c337)
 
-<br>
-  <details>
-    <summary><b>📃 API 명세서</b></summary></br>
-        [팀 노션 바로가기](https://www.notion.so/teamsparta/8-T-27a2dc3ef514803e9588e7af8d93c337)
-  </details>
-<br>
+<details> 
+  <summary><h2> 📝 ERD </h2></summary>
+  <img src="https://github.com/user-attachments/assets/a84bd55d-997c-441d-8fc1-f9a203700bbf"></img>
+</details>
+
+<details> 
+  <summary><h2> ⚙️ 시스템 아키텍처 </h2></summary>
+  <img src="https://github.com/user-attachments/assets/98c36166-6c89-4591-b1fe-4098d35947d4"></img>
+</details>
+
 
 ---
 
 # 📚 기술 소개
-<br>
-  <details>
-    <summary><b>📃 Wiki</b></summary></br>
-        [Wiki 노션 바로가기](https://www.notion.so/teamsparta/Wiki-2802dc3ef514807391cbf87f937b5852)
-  </details>
-<br>
-<br>
+
+### 📝 [Wiki 바로가기](/wiki)
 
 ---

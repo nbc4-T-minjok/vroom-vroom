@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,7 @@ public class OrderController {
                             }
                     )
             ))
+    @Secured({"ROLE_CUSTOMER"})
     @PostMapping("/orders")
     public BaseResponse<Void> createOrder(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -48,6 +50,7 @@ public class OrderController {
     }
 
     @Operation(summary = "고객용 주문 목록 조회 API")
+    @Secured({"ROLE_CUSTOMER", "ROLE_MANAGER", "ROLE_MASTER"})
     @GetMapping("/orders")
     public BaseResponse<OrderListResponse> getOrders(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -65,6 +68,7 @@ public class OrderController {
     }
 
     @Operation(summary = "업체용 주문 목록 조회 API")
+    @Secured({"ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
     @GetMapping("/companies/{companyId}/orders")
     public BaseResponse<CompanyOrderListResponse> getCompanyOrders(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -88,6 +92,7 @@ public class OrderController {
     }
 
     @Operation(summary = "주문 상세 조회 API")
+    @Secured({"ROLE_CUSTOMER", "ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
     @GetMapping("/orders/{orderId}")
     public BaseResponse<OrderDetailResponse> getOrderDetail(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -99,6 +104,7 @@ public class OrderController {
         );
         return new BaseResponse<>(response);
     }
+
     @Operation(summary = "주문상태 수정 API", description = SwaggerDescription.ORDER_STATUS_UPDATE_REQUEST,
             requestBody =  @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
@@ -108,7 +114,7 @@ public class OrderController {
                             }
                     )
             ))
-
+    @Secured({"ROLE_CUSTOMER", "ROLE_OWNER"})
     @PatchMapping("/orders/{orderId}/status")
     public BaseResponse<Void> updateOrderStatus(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -120,6 +126,7 @@ public class OrderController {
     }
 
     @Operation(summary = "주문 취소 API")
+    @Secured({"ROLE_CUSTOMER", "ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
     @DeleteMapping("/orders/{orderId}")
     public BaseResponse<Void> cancelOrder(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -129,8 +136,4 @@ public class OrderController {
         orderService.cancelOrder(userDetails.getUser(), orderId, request);
         return new BaseResponse<>();
     }
-
-
-
-
 }

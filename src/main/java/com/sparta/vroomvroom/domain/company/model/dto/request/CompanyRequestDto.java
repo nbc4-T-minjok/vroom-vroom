@@ -13,8 +13,6 @@ public class CompanyRequestDto {
     @Pattern(regexp = "^[가-힣a-zA-Z0-9]+$", message = "업체명은 한글, 영문, 숫자만 사용할 수 있습니다.")
     private String companyName;
 
-    private String companyLogoUrl;
-
     @NotBlank(message = "업체 설명은 필수입니다.")
     @Size(max = 500, message = "업체 설명은 최대 500자까지 가능합니다.")
     private String companyDescription;

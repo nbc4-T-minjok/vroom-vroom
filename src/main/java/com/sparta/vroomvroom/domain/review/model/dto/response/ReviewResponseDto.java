@@ -19,16 +19,6 @@ public class ReviewResponseDto {
     private String ownerReviewContents;
     private List<String> imageUrls;
 
-    public ReviewResponseDto(Review review){
-        this.id = review.getId();
-        this.orderId = review.getOrder().getOrderId();
-        this.userId = review.getUserId().getUserId();
-        this.compId = review.getCompany().getCompanyId();
-        this.rate = review.getRate();
-        this.reviewContents = review.getContents();
-        this.ownerReviewContents = review.getOwnerReview() != null ? review.getOwnerReview().getContents() : null;
-    }
-
     public ReviewResponseDto(Review review, List<String> imageUrls){
         this.id = review.getId();
         this.orderId = review.getOrder().getOrderId();

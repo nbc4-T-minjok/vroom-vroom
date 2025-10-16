@@ -8,8 +8,11 @@ import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import com.sparta.vroomvroom.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -20,11 +23,13 @@ public class CompanyController {
     private final CompanyService companyService;
 
     // 업체등록
-    @PostMapping("/company-categories/{companyCategoryId}/companies")
+    @Secured({"ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
+    @PostMapping(value = "/company-categories/{companyCategoryId}/companies", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse createCompany(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                       @PathVariable UUID companyCategoryId,
-                                      @Valid @RequestBody CompanyRequestDto requestDto) {
-        companyService.createCompany(userDetails.getUser().getUserId(), companyCategoryId, requestDto);
+                                      @RequestPart("companyRequestDto") @Valid CompanyRequestDto requestDto,
+                                      @RequestPart(value = "logoFile", required = false) MultipartFile logoFile) {
+        companyService.createCompany(userDetails.getUser().getUserId(), companyCategoryId, requestDto, logoFile);
         return new BaseResponse();
     }
 
@@ -45,7 +50,7 @@ public class CompanyController {
     // 업체 카테고리별 목록 조회
     @GetMapping("/company-categories/{companyCategoryId}/companies")
     public BaseResponse<CompanyListResponseDto> getCompaniesByCategory(@PathVariable UUID companyCategoryId,
-                                               @RequestParam(name = "page", defaultValue = "1") int page,
+                                               @RequestParam(name = "page", defaultValue = "0") int page,
                                                @RequestParam(name = "size", defaultValue = "10") int size,
                                                @RequestParam(name = "sortBy", required = false) String sortBy,
                                                @RequestParam(name = "isAsc") boolean isAsc) {
@@ -66,15 +71,18 @@ public class CompanyController {
     }
 
     // 업체 수정
+    @Secured({"ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
     @PatchMapping("/companies/{companyId}")
     public BaseResponse updateCompany(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                       @PathVariable UUID companyId,
-                                      @RequestBody CompanyRequestDto requestDto) {
-        CompanyDetailResponseDto responseDto = companyService.updateCompany(userDetails.getUser().getUserId(), companyId, requestDto);
+                                      @RequestPart("companyRequestDto") @Valid CompanyRequestDto requestDto,
+                                      @RequestPart(value = "logoFile", required = false) MultipartFile logoFile) {
+        CompanyDetailResponseDto responseDto = companyService.updateCompany(userDetails.getUser().getUserId(), companyId, requestDto, logoFile);
         return new BaseResponse(responseDto);
     }
 
     // 업체 삭제
+    @Secured({"ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
     @DeleteMapping("/companies/{companyId}")
     public BaseResponse deleteCompany(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable UUID companyId) {
         companyService.deleteCompany(userDetails.getUser().getUserId(), companyId);

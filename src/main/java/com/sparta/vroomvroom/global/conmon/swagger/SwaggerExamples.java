@@ -180,4 +180,38 @@ public class SwaggerExamples {
             	"location" : { "lat": 37.123456, "lng": 127.123456 }
             }
             """;
+    //회원가입 예시
+    public static final String MANAGER_REGISTER_REQUEST = """
+            {
+              "userName": "testmanager0",
+              "password": "Abc123!@#",
+              "nickName": "매니저0번",
+              "type": "INAPP",
+              "name": "매니저a",
+              "birthDate": "1990-01-01",
+              "gender": "남",
+              "phoneNumber": "010-1919-1818",
+              "email": "testmanager0@vroomvroom.com"
+            }
+            """;
+
+    public static final String MENU_CREATE_REQUEST = """
+        {
+          "menuName": "후라이드치킨",
+          "menuGroup": "치킨",
+          "menuPrice": 20000,
+          "menuImage": "https://example.com/images/menu.jpg",
+          "menuDescription": "메뉴설명.",
+          "menuStatus": "AVAILABLE",
+          "isVisible": true,
+          "aiDescription": true
+        }
+        """;
+
+    public static final String MENU_UPDATE_REQUEST = """
+        {
+          "menuName": "양념치킨",
+          "isVisible": true
+        }
+        """;
 }

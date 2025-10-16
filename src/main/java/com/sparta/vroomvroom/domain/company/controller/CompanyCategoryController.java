@@ -4,9 +4,9 @@ import com.sparta.vroomvroom.domain.company.model.dto.CompanyCategoryRequestDto;
 import com.sparta.vroomvroom.domain.company.model.dto.CompanyCategoryResponseDto;
 import com.sparta.vroomvroom.domain.company.service.CompanyCategoryService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
-import com.sparta.vroomvroom.global.conmon.constants.BaseResponseStatus;
 import com.sparta.vroomvroom.global.conmon.swagger.SwaggerDescription;
 import com.sparta.vroomvroom.global.conmon.swagger.SwaggerExamples;
+import com.sparta.vroomvroom.global.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -14,9 +14,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -48,6 +48,8 @@ public class CompanyCategoryController {
         return new BaseResponse(companyCategories);
     }
 
+
+
     @Operation(summary = "카테고리 수정 API", description = SwaggerDescription.COMPANY_CATEGORY_UPDATE_REQUEST,
             requestBody =  @io.swagger.v3.oas.annotations.parameters.RequestBody (
                     content = @Content(
@@ -57,7 +59,7 @@ public class CompanyCategoryController {
                             }
                     )
             ))
-    @Secured("ROLE_MANAGER")
+    @Secured({"ROLE_MANAGER", "ROLE_MASTER"})
     @PatchMapping("/company-categories/{companyCategoryId}")
     public BaseResponse updateCompanyCategories(@PathVariable UUID companyCategoryId,
                                                 @Valid @RequestBody CompanyCategoryRequestDto requestDto) {
@@ -66,10 +68,11 @@ public class CompanyCategoryController {
     }
 
     @Operation(summary = "카테고리 삭제 API", description = SwaggerDescription.COMPANY_CATEGORY_UPDATE_REQUEST)
-    @Secured("ROLE_MANAGER")
+    @Secured({"ROLE_MANAGER", "ROLE_MASTER"})
     @DeleteMapping("/company-categories/{companyCategoryId}")
-    public BaseResponse deleteCompanyCategories(@PathVariable UUID companyCategoryId) {
-        companyCategoryService.deleteCompanyCategories(companyCategoryId);
+    public BaseResponse deleteCompanyCategories(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                @PathVariable UUID companyCategoryId) {
+        companyCategoryService.deleteCompanyCategories(userDetails.getUser(), companyCategoryId);
         return new BaseResponse();
     }
 }

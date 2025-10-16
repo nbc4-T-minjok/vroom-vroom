@@ -4,6 +4,7 @@ import com.sparta.vroomvroom.domain.company.model.dto.CompanyCategoryRequestDto;
 import com.sparta.vroomvroom.domain.company.model.dto.CompanyCategoryResponseDto;
 import com.sparta.vroomvroom.domain.company.model.entity.CompanyCategory;
 import com.sparta.vroomvroom.domain.company.repository.CompanyCategoryRepository;
+import com.sparta.vroomvroom.domain.user.model.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -56,7 +57,7 @@ public class CompanyCategoryService {
     }
 
     @Transactional
-    public void deleteCompanyCategories(UUID companyCategoryId) {
+    public void deleteCompanyCategories(User user, UUID companyCategoryId) {
 
         // ID 조회 - 없으면 예외
         CompanyCategory companyCategory = companyCategoryRepository.findById(companyCategoryId)
@@ -64,7 +65,12 @@ public class CompanyCategoryService {
                     throw new IllegalArgumentException("존재하지 않은 카테고리입니다.");
                 });
 
-        // Todo : test user -> user.getUserName 변경
-        companyCategory.softDelete(LocalDateTime.now(), "test user");
+        companyCategory.softDelete(LocalDateTime.now(), user.getUserName());
+    }
+
+    public Page<CompanyCategoryResponseDto> getAdminCompanyCategories(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CompanyCategory> categoryPage = companyCategoryRepository.findAll(pageable);
+        return categoryPage.map(CompanyCategoryResponseDto::of);
     }
 }

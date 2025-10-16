@@ -1,5 +1,6 @@
 package com.sparta.vroomvroom.domain.user.service;
 
+import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeWithZoneIdSerializer;
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserChangePasswordRequest;
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserSignupRequest;
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserUpdatedRequest;
@@ -10,6 +11,7 @@ import com.sparta.vroomvroom.domain.user.model.entity.User;
 import com.sparta.vroomvroom.domain.user.repository.BlackListRepository;
 import com.sparta.vroomvroom.domain.user.repository.EmailVerificationRepository;
 import com.sparta.vroomvroom.domain.user.repository.UserRepository;
+import com.sparta.vroomvroom.global.conmon.constants.UserRole;
 import com.sparta.vroomvroom.global.conmon.constants.EmailTemplate;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -102,7 +104,9 @@ public class UserService {
     @Transactional
     public void deleteUser(String userName, String token) {
         User user = findUser(userName);
-        //Todo: 시간을 외부에서 주입하지 말고 내부에서 쓰도록 변경(시간에 따른 서비스 로직 변화가 없음)
+        if(user.getRole() == UserRole.ROLE_MASTER){
+            throw new IllegalArgumentException("MASTER는 삭제할 수 없습니다.");
+        }
         user.softDelete(LocalDateTime.now(),user.getUserName());
         //삭제 처리 되면 현재 요청에서 사용한 토큰 무효화 (블랙리스트 처리)
         blackListRepository.save(new BlackList(token));

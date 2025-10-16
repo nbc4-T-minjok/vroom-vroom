@@ -21,4 +21,8 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
     List<Review> findByCompany_CompanyIdAndId(UUID compId, UUID reviewId);
 
     Optional<Review> findByOrder_OrderId(UUID orderId);
+
+    List<Review> findAllByIsDeletedFalse();
+
+    List<Review> findAllByCompany_CompanyId(UUID companyCompanyId);
 }

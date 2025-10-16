@@ -164,6 +164,22 @@ public class SwaggerExamples {
               "menuAmount": 7
             }
             """;
+
+    public static final String COMPANY_REGISTER_REQUEST = """
+            {
+            	"companyName": "업체명",
+            	"companyDescription" : "업체설명",
+            	"phoneNumber" : "010-0000-0000",
+            	"deliveryFee" : 3000,
+            	"deliveryRadius" : 2000,
+            	"ownerName" : "사장이름",
+            	"bizRegNo" : "123-45-13243",
+            	"address" : "주소",
+            	"detailAddress" : "상세주소",
+            	"zipCode" : "00000",
+            	"location" : { "lat": 37.123456, "lng": 127.123456 }
+            }
+            """;
     //회원가입 예시
     public static final String MANAGER_REGISTER_REQUEST = """
             {

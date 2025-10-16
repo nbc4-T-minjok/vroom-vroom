@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,5 +14,5 @@ public interface CompanyCategoryRepository extends JpaRepository<CompanyCategory
     Optional<CompanyCategory> findByCompanyCategoryNameAndIsDeletedFalse(String companyCategoryName);
 
     // isDeleted 필드가 false인 항목만 페이징 조회
-    Page<CompanyCategory> findAllByIsDeletedFalse(Pageable pageable);
+    List<CompanyCategory> findAllByIsDeletedFalse();
 }

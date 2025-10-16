@@ -27,7 +27,6 @@ import java.util.UUID;
 public class AddressController {
 
     private final AddressService addressService;
-    private final UserRepository userRepository;
 
     // 배송지 등록
     @Operation(summary = "배송지 등록 API", description = SwaggerDescription.ADDRESS_CREATE_REQUEST,
@@ -39,7 +38,7 @@ public class AddressController {
                         }
                 )
         ))
-    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER"})
+    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER","ROLE_MASTER"})
     @PostMapping("addresses")
     public BaseResponse createAddress(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody AddressRequestDto reqeustDto) {
         Long userId = userDetails.getUser().getUserId();
@@ -49,7 +48,7 @@ public class AddressController {
 
     // 배송지 목록 조회
     @Operation(summary = "배송지 목록 조회 API")
-    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER"})
+    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER","ROLE_MASTER"})
     @GetMapping("addresses")
     public BaseResponse getAlladdresses(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long userId = userDetails.getUser().getUserId();
@@ -67,7 +66,7 @@ public class AddressController {
                             }
                     )
             ))
-    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER"})
+    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER","ROLE_MASTER"})
     @PatchMapping("addresses/{userAddressId}")
     public BaseResponse patchAddress(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable UUID userAddressId, @RequestBody AddressRequestDto requestDto) {
         Long userId = userDetails.getUser().getUserId();
@@ -78,7 +77,7 @@ public class AddressController {
 
     // 기본배송지 변경
     @Operation(summary = "기본배송지 변경 API")
-    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER"})
+    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER","ROLE_MASTER"})
     @PatchMapping("addresses/default/{userAddressId}")
     public BaseResponse changeDefaultAddress(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable UUID userAddressId) {
         Long userId = userDetails.getUser().getUserId();
@@ -88,7 +87,7 @@ public class AddressController {
 
     // 배송지 삭제
     @Operation(summary = "배송지 삭제 API")
-    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER"})
+    @Secured({"ROLE_MANAGER","ROLE_CUSTOMER","ROLE_MASTER"})
     @DeleteMapping("addresses/{userAddressId}")
     public BaseResponse deleteAddress(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable UUID userAddressId) {
         Long userId = userDetails.getUser().getUserId();

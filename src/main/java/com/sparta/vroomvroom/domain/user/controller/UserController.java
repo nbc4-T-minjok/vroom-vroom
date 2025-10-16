@@ -32,7 +32,15 @@ public class UserController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/v1/users/login")
-    @Operation(summary = "로그인 (Swagger용)", description = "실제 인증은 SecurityFilter에서 처리")
+    @Operation(summary = "로그인 API", description = SwaggerDescription.USER_LOGIN_REQUEST,
+            requestBody =  @io.swagger.v3.oas.annotations.parameters.RequestBody (
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = {
+                                    @ExampleObject(value = SwaggerExamples.USER_LOGIN_REQUEST)
+                            }
+                    )
+            ))
     public ResponseEntity<Void> swaggerLogin(
             @RequestBody UserLoginRequest loginRequest
     ) {

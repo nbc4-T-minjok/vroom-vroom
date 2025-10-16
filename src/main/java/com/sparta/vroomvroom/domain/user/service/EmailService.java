@@ -21,7 +21,7 @@ public class EmailService {
     private final EmailVerificationRepository emailVerificationRepository;
     private final JavaMailSender mailSender;
 
-    private static final String VERIFY_URL = "http://3.36.75.246/api/v2/email/verify?email=%s&code=%s";
+    private static final String VERIFY_URL = "http://localhost:8080/api/v2/email/verify?email=%s&code=%s";
     private static final int EXPIRATION_MINUTES = 10;
 
     @Value("${spring.mail.username}")

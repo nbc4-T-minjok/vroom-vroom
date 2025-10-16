@@ -4,6 +4,7 @@ import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -29,15 +30,23 @@ public class GlobalExceptionHandler {
         return new BaseResponse(errorMessage);
     }
 
-    //권한 없음 예외
     @ExceptionHandler(EntityNotFoundException.class)
     public BaseResponse handleAllExceptions(EntityNotFoundException ex) {
+        log.error("요청이 실패했습니다. : {}", ex.getMessage(), ex);
         return new BaseResponse("요청이 실패했습니다. " + ex.getMessage());
     }
 
     //권한 없음 예외
     @ExceptionHandler(AccessDeniedException.class)
     public BaseResponse handleAllExceptions(AccessDeniedException ex) {
+        log.error("요청이 실패했습니다. : {}", ex.getMessage(), ex);
+        return new BaseResponse("요청이 실패했습니다. 권한이 없습니다.");
+    }
+
+    //권한 없음 예외
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public BaseResponse handleAllExceptions(AuthorizationDeniedException ex) {
+        log.error("요청이 실패했습니다. : {}", ex.getMessage(), ex);
         return new BaseResponse("요청이 실패했습니다. 권한이 없습니다.");
     }
 

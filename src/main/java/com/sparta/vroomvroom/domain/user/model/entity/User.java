@@ -1,5 +1,6 @@
 package com.sparta.vroomvroom.domain.user.model.entity;
 
+import com.sparta.vroomvroom.domain.manager.model.dto.request.ManagerRegisterRequest;
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserSignupRequest;
 import com.sparta.vroomvroom.domain.user.model.dto.request.UserUpdatedRequest;
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
@@ -57,6 +58,9 @@ public class User extends BaseEntity {
 
 
     public User(UserSignupRequest req, String encodedPassword) {
+        if(req.getRole() == UserRole.ROLE_MANAGER || req.getRole() != UserRole.ROLE_MASTER){
+            throw new IllegalArgumentException("설정할 수 없는 권한입니다. CUSTOMER, OWNER 둘 중 한 가지 권한으로만 가입할 수 있습니다..");
+        }
         this.userName = req.getUserName();
         this.password = encodedPassword;
         this.type = req.getType();
@@ -67,5 +71,19 @@ public class User extends BaseEntity {
         this.phoneNumber = req.getPhoneNumber();
         this.email = req.getEmail();
         this.role = req.getRole();
+
+    }
+
+    public User(ManagerRegisterRequest req, String encodedPassword) {
+        this.userName = req.getUserName();
+        this.password = encodedPassword;
+        this.type = req.getType();
+        this.nickName = req.getNickName();
+        this.name = req.getName();
+        this.birthDate = req.getBirthDate();
+        this.gender = req.getGender();
+        this.phoneNumber = req.getPhoneNumber();
+        this.email = req.getEmail();
+        this.role = UserRole.ROLE_MANAGER;
     }
 }

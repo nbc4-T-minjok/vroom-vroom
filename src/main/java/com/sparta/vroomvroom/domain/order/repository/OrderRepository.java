@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public interface OrderRepository extends JpaRepository<Order, UUID> {
@@ -49,4 +50,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             LocalDateTime endDate,
             Pageable pageable
     );
+
+    List<Order> findAllByIsDeletedFalse();
 }

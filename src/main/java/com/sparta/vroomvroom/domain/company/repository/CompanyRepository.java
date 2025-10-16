@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface CompanyRepository extends JpaRepository<Company, UUID>, CompanyRepositoryCustom {
@@ -21,4 +22,6 @@ public interface CompanyRepository extends JpaRepository<Company, UUID>, Company
     List<Company> findAllByIsDeletedFalse();
 
     Page<Company> findAllByIsDeletedFalseAndCompanyCategory_CompanyCategoryId(UUID companyCategoryId, Pageable pageable);
+
+    Optional<Company> findByUser_UserId(Long userId);
 }

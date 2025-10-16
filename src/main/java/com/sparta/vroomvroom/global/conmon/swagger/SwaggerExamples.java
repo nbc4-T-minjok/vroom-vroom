@@ -164,6 +164,20 @@ public class SwaggerExamples {
               "menuAmount": 7
             }
             """;
+    //회원가입 예시
+    public static final String MANAGER_REGISTER_REQUEST = """
+            {
+              "userName": "testmanager0",
+              "password": "Abc123!@#",
+              "nickName": "매니저0번",
+              "type": "INAPP",
+              "name": "매니저a",
+              "birthDate": "1990-01-01",
+              "gender": "남",
+              "phoneNumber": "010-1919-1818",
+              "email": "testmanager0@vroomvroom.com"
+            }
+            """;
 
     public static final String MENU_CREATE_REQUEST = """
         {

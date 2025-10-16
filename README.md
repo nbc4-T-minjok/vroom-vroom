@@ -123,7 +123,6 @@
 
 ### [API 명세서 바로가기](https://www.notion.so/teamsparta/8-T-27a2dc3ef514803e9588e7af8d93c337)
 </details>
-<!-- ### 📃 [API 명세서 바로가기](https://www.notion.so/teamsparta/8-T-27a2dc3ef514803e9588e7af8d93c337) -->
 
 <details> 
   <summary><h2> 📝 ERD </h2></summary>
@@ -138,7 +137,254 @@
 <details> 
   <summary><h2> 📑 폴더 구조  </h2></summary>
 
-### [👉 폴더 구조 바로가기](/)
+```
+    vroomvroom/
+├── domain/
+│   ├── address/
+│   │   ├── controller/
+│   │   │   └── AddressController.java
+│   │   ├── model/
+│   │   │   ├── dto/
+│   │   │   │   ├── request/
+│   │   │   │   │   └── AddressRequestDto.java
+│   │   │   │   ├── response/
+│   │   │   │       └── AddressResponseDto.java
+│   │   │   ├── entity/
+│   │   │       └── Address.java
+│   │   ├── repository/
+│   │   │   └── AddressRepository.java
+│   │   ├── service/
+│   │       └── AddressService.java
+│   ├── ai/
+│   │   ├── controller/
+│   │   │   └── GeminiController.java
+│   │   ├── model/
+│   │   │   ├── entity/
+│   │   │       └── AiApiLog.java
+│   │   ├── repository/
+│   │   │   └── GeminiRepository.java
+│   │   ├── service/
+│   │       └── GeminiService.java
+│   ├── cart/
+│   │   ├── controller/
+│   │   │   └── CartController.java
+│   │   ├── model/
+│   │   │   ├── dto/
+│   │   │   │   ├── request/
+│   │   │   │   │   ├── AddCartMenuRequest.java
+│   │   │   │   │   └── UpdateCartMenuRequest.java
+│   │   │   │   ├── response/
+│   │   │   │       ├── CartMenuResponse.java
+│   │   │   │       └── CartResponse.java
+│   │   │   ├── entity/
+│   │   │       ├── Cart.java
+│   │   │       └── CartMenu.java
+│   │   ├── repository/
+│   │   │   ├── CartMenuRepository.java
+│   │   │   └── CartRepository.java
+│   │   ├── service/
+│   │       └── CartService.java
+│   ├── company/
+│   │   ├── controller/
+│   │   │   ├── BusinessHourController.java
+│   │   │   ├── CompanyCategoryController.java
+│   │   │   ├── CompanyController.java
+│   │   │   └── SpecialBusinessHourController.java
+│   │   ├── model/
+│   │   │   ├── dto/
+│   │   │   │   ├── request/
+│   │   │   │   │   ├── CompanyRequestDto.java
+│   │   │   │   │   └── SpecialBusinessHourRequestDto.java
+│   │   │   │   ├── response/
+│   │   │   │   │   ├── BusinessHourResponseDto.java
+│   │   │   │   │   ├── CompanyDetailResponseDto.java
+│   │   │   │   │   ├── CompanyListResponseDto.java
+│   │   │   │   │   ├── CompanyResponseDto.java
+│   │   │   │   │   └── SpecialBusinessHourResponseDto.java
+│   │   │   │   ├── BusinessHourRequestDto.java
+│   │   │   │   ├── BusinessHourResponseDto.java
+│   │   │   │   ├── CompanyCategoryRequestDto.java
+│   │   │   │   └── CompanyCategoryResponseDto.java
+│   │   │   ├── entity/
+│   │   │       ├── BusinessHour.java
+│   │   │       ├── Company.java
+│   │   │       ├── CompanyCategory.java
+│   │   │       └── SpecialBusinessHour.java
+│   │   ├── repository/
+│   │   │   ├── BusinessHourRepository.java
+│   │   │   ├── CompanyCategoryRepository.java
+│   │   │   ├── CompanyRepository.java
+│   │   │   ├── CompanyRepositoryCustom.java
+│   │   │   ├── CompanyRepositoryImpl.java
+│   │   │   └── SpecialBusinessHourRepository.java
+│   │   ├── service/
+│   │       ├── BusinessHourService.java
+│   │       ├── CompanyCategoryService.java
+│   │       ├── CompanyService.java
+│   │       └── SpecialBusinessHourService.java
+│   ├── menu/
+│   │   ├── controller/
+│   │   │   └── MenuController.java
+│   │   ├── model/
+│   │   │   ├── dto/
+│   │   │   │   ├── request/
+│   │   │   │   │   └── MenuRequestDto.java
+│   │   │   │   ├── response/
+│   │   │   │       └── MenuResponseDto.java
+│   │   │   ├── entity/
+│   │   │       └── Menu.java
+│   │   ├── repository/
+│   │   │   └── MenuRepository.java
+│   │   ├── service/
+│   │       └── MenuService.java
+│   ├── order/
+│   │   ├── controller/
+│   │   │   └── OrderController.java
+│   │   ├── model/
+│   │   │   ├── dto/
+│   │   │   │   ├── request/
+│   │   │   │   │   ├── CancelOrderRequest.java
+│   │   │   │   │   ├── CreateOrderRequest.java
+│   │   │   │   │   └── UpdateOrderStatusRequest.java
+│   │   │   │   ├── response/
+│   │   │   │       ├── CompanyOrderListResponse.java
+│   │   │   │       ├── OrderDetailResponse.java
+│   │   │   │       └── OrderListResponse.java
+│   │   │   ├── entity/
+│   │   │       ├── Order.java
+│   │   │       └── OrderMenu.java
+│   │   ├── repository/
+│   │   │   ├── OrderMenuRepository.java
+│   │   │   └── OrderRepository.java
+│   │   ├── service/
+│   │       └── OrderService.java
+│   ├── payments/
+│   │   ├── controller/
+│   │   │   └── PaymentController.java
+│   │   ├── model/
+│   │   │   ├── dto/
+│   │   │   │   ├── response/
+│   │   │   │       └── PaymentResponse.java
+│   │   │   ├── entity/
+│   │   │       └── Payment.java
+│   │   ├── repository/
+│   │   │   └── PaymentRepository.java
+│   │   ├── service/
+│   │       └── PaymentService.java
+│   ├── region/
+│   │   ├── emd/
+│   │   │   ├── model/
+│   │   │   │   ├── entity/
+│   │   │   │       └── Emd.java
+│   │   │   ├── repository/
+│   │   │   │   └── EmdRepository.java
+│   │   │   ├── service/
+│   │   │       └── EmdService.java
+│   │   ├── sido/
+│   │   │   ├── model/
+│   │   │   │   ├── entity/
+│   │   │   │       └── Sido.java
+│   │   │   ├── repository/
+│   │   │   │   └── SidoRepository.java
+│   │   │   ├── service/
+│   │   │       └── SidoService.java
+│   │   ├── sigungu/
+│   │       ├── model/
+│   │       │   ├── entity/
+│   │       │       └── Sigungu.java
+│   │       ├── repository/
+│   │       │   └── SigunguRepository.java
+│   │       ├── service/
+│   │           └── SigunguService.java
+│   ├── review/
+│   │   ├── controller/
+│   │   │   └── ReviewController.java
+│   │   ├── model/
+│   │   │   ├── dto/
+│   │   │   │   ├── request/
+│   │   │   │   │   ├── OwnerReviewRequestDto.java
+│   │   │   │   │   └── ReviewRequestDto.java
+│   │   │   │   ├── response/
+│   │   │   │       └── ReviewResponseDto.java
+│   │   │   ├── entity/
+│   │   │       ├── OwnerReview.java
+│   │   │       ├── Review.java
+│   │   │       └── ReviewImage.java
+│   │   ├── repository/
+│   │   │   ├── OwnerReviewRepository.java
+│   │   │   ├── ReviewImageRepository.java
+│   │   │   └── ReviewRepository.java
+│   │   ├── service/
+│   │       └── ReviewService.java
+│   ├── user/
+│       ├── controller/
+│       │   └── UserController.java
+│       ├── model/
+│       │   ├── dto/
+│       │   │   ├── request/
+│       │   │   │   ├── UserChangePasswordRequest.java
+│       │   │   │   ├── UserLoginRequest.java
+│       │   │   │   ├── UserSignupRequest.java
+│       │   │   │   └── UserUpdatedRequest.java
+│       │   │   ├── response/
+│       │   │       └── UserDetailResponse.java
+│       │   ├── entity/
+│       │       ├── BlackList.java
+│       │       ├── EmailVerification.java
+│       │       └── User.java
+│       ├── repository/
+│       │   ├── BlackListRepository.java
+│       │   ├── EmailVerificationRepository.java
+│       │   └── UserRepository.java
+│       ├── service/
+│           ├── EmailService.java
+│           └── UserService.java
+├── global/
+│   ├── config/
+│   │   ├── QuerydslConfig.java
+│   │   ├── SecurityConfig.java
+│   │   └── WebClientConfig.java
+│   ├── conmon/
+│   │   ├── constants/
+│   │   │   ├── BaseResponseStatus.java
+│   │   │   ├── BusinessStatus.java
+│   │   │   ├── EmailTemplate.java
+│   │   │   ├── MenuStatus.java
+│   │   │   ├── OrderStatus.java
+│   │   │   ├── PaymentMethod.java
+│   │   │   ├── PaymentStatus.java
+│   │   │   ├── UserRole.java
+│   │   │   ├── UserType.java
+│   │   │   └── WeekDay.java
+│   │   ├── s3/
+│   │   │   ├── S3Config.java
+│   │   │   └── S3Uploader.java
+│   │   ├── swagger/
+│   │   │   ├── SwaggerConfig.java
+│   │   │   ├── SwaggerDescription.java
+│   │   │   └── SwaggerExamples.java
+│   │   ├── BaseEntity.java
+│   │   └── BaseResponse.java
+│   ├── exception/
+│   │   └── GlobalExceptionHandler.java
+│   ├── security/
+│   │   ├── filter/
+│   │   │   ├── JwtFilter.java
+│   │   │   └── LoginFilter.java
+│   │   ├── handler/
+│   │   │   ├── CustomAccessDeniedHandler.java
+│   │   │   ├── CustomAuthEntryPoint.java
+│   │   │   ├── JwtLogoutHandler.java
+│   │   │   └── JwtLogoutSuccessHandler.java
+│   │   ├── AuditorAwareImpl.java
+│   │   ├── UserDetailsImpl.java
+│   │   └── UserDetailsServiceImpl.java
+│   ├── utils/
+│       ├── JwtUtil.java
+│       └── ResponseUtil.java
+└── VroomVroomApplication.java
+  
+```
 </details>
 
 ---
@@ -204,42 +450,61 @@ gemini:
 
 ```
 
----
-
+<br>
 
 ## 🗄️ 데이터베이스 준비 & 스키마 적용
 
-1. PostgreSQL 실행 & DB 생성 (macOS 환경)
+1. 프로젝트용 PostgreSQL 설치 및 기본 세팅
+```
+  1. PostgreSQL 설치 (17버전 사용했음)
+  2. 버전에 호환되는 PostGIS 설치
+  3. PostgreSQL의 슈퍼유저로 DB 연결 (기본 이름 postgres)
+  4. 스프링에서 로그인할 사용자(이름,비밀번호) 생성 → 이 계정이 슈퍼유저 권한을 갖도록 만들거나 기존 슈퍼유저에 비밀번호 설정해서 사용
+  5. 데이터베이스 생성 (vroomvroom)
+  6. 사용할 데이터베이스에 슈퍼유저로 연결해서 Create EXTENSION postgis; 입력
+  7. 설치되는거 확인
+```
+
+2. PostgreSQL 실행 & DB 생성 (macOS 환경)
 
 ```bash
+# PostgreSQL 17버전 설치 (homebrew)
+brew install postgresql@17
+
 # PostgreSQL 실행
 brew services start postgresql
 
-# DB 접속
-psql -U YourUsername
+# 쉘에서 DB 로그인
+psql -d postgres 
 
--- DB 생성 (처음 한 번만 실행)
+# 슈퍼유저 역할 만들기
+CREATE ROLE postgres WITH LOGIN SUPERUSER PASSWORD 'qwer1234';
+
+# DB 생성
 CREATE DATABASE vroomvroom;
-\q
+
+# PostGIS 설치
+brew install postgis
+
+# 연결하기
+# 클라이언트 프로그램 (디비버)에서 커넥션 생성
+
+# 생성한 데이터베이스에 PostGIS 추가(슈퍼유저로 로그인해서 쿼리 실행)
+CREATE EXTENSION postgis;
 ````
+<br>
 
-2. 스키마 파일 배치 및 적용
+3. DBeaver 실행 & 데이터 삽입
 
-* 아래 제공된 DDL 전체를 파일로 저장합니다.
-    * 경로: `src/main/resources/db/hanip.sql`
-    * 제공된 스키마를 그대로 사용하면 됩니다.
+* 아래 제공된 링크에 테스트 데이터를 sql문으로 제공합니다.
+  [👉 테스트 데이터](https://www.notion.so/teamsparta/28b2dc3ef514806e9c6fd28127b69d16)
+* DBeaver에 연결된 상태에서 sql문 실행
 
+<br>
 
-```bash
-스키마 적용 명령어
-psql -U YourUsername -d hanip -f src/main/resources/db/schema.sql
-```
-
-3. 빌드 & 실행
+## ⚙️  빌드 & 실행
 
 ```bash
 ./gradlew clean build
-java -jar build/libs/justonebite-0.0.1-SNAPSHOT.jar
+java -jar build/libs/vroomvroom-0.0.1-SNAPSHOT.jar
 ```
-
----

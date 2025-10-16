@@ -17,6 +17,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -34,7 +35,7 @@ public class CompanyCategoryController {
                             }
                     )
             ))
-    @Secured({"ROLE_MANAGER", "ROLE_MASTER"})
+    @Secured({"ROLE_MANAGER","ROLE_MASTER"})
     @PostMapping("/company-categories")
     public BaseResponse createCompanyCategories(@Valid @RequestBody CompanyCategoryRequestDto requestDto) {
         companyCategoryService.createCompanyCategories(requestDto);
@@ -43,9 +44,8 @@ public class CompanyCategoryController {
 
     @Operation(summary = "카테고리 목록 조회 API")
     @GetMapping("/company-categories")
-    public BaseResponse getCompanyCategories(@RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "10") int size) {
-        Page<CompanyCategoryResponseDto> companyCategories = companyCategoryService.getCompanyCategories(page, size);
+    public BaseResponse getCompanyCategories() {
+        List<CompanyCategoryResponseDto> companyCategories = companyCategoryService.getCompanyCategories();
         return new BaseResponse(companyCategories);
     }
 

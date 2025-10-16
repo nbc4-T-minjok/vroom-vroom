@@ -1,5 +1,7 @@
 package com.sparta.vroomvroom.domain.company.service;
 
+import com.sparta.vroomvroom.domain.address.model.entity.Address;
+import com.sparta.vroomvroom.domain.address.repository.AddressRepository;
 import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyListResponseDto;
 import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyRequestDto;
 import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyDetailResponseDto;
@@ -10,6 +12,8 @@ import com.sparta.vroomvroom.domain.company.model.entity.CompanyCategory;
 import com.sparta.vroomvroom.domain.company.model.entity.SpecialBusinessHour;
 import com.sparta.vroomvroom.domain.company.repository.CompanyCategoryRepository;
 import com.sparta.vroomvroom.domain.company.repository.CompanyRepository;
+import com.sparta.vroomvroom.domain.region.emd.model.entity.Emd;
+import com.sparta.vroomvroom.domain.region.emd.repository.EmdRepository;
 import com.sparta.vroomvroom.domain.user.model.entity.User;
 import com.sparta.vroomvroom.domain.user.repository.UserRepository;
 import com.sparta.vroomvroom.global.conmon.constants.BusinessStatus;
@@ -40,6 +44,8 @@ public class CompanyService {
     private final CompanyCategoryRepository companyCategoryRepository;
     private final UserRepository userRepository;
     private final S3Uploader s3Uploader;
+    private final AddressRepository addressRepository;
+    private final EmdRepository emdRepository;
 
     //업체 등록
     @Transactional
@@ -62,8 +68,10 @@ public class CompanyService {
         // s3 사진 업로드 후 url 반환
         String companyLogoUrl = s3Uploader.upload(logoFile, "companyLogoFile");
 
+        //해당 업체의 위치를 포함하는 읍면동 등록
+        Emd emd = emdRepository.findByLatLng(requestDto.getLocation().getLat(),requestDto.getLocation().getLng());
         // 업체 생성 및 저장
-        Company company = new Company(user, category, requestDto, companyLogoUrl);
+        Company company = new Company(user, category, requestDto, companyLogoUrl,emd);
         companyRepository.save(company);
     }
 
@@ -73,8 +81,9 @@ public class CompanyService {
     }
 
     //카테고리별 업체 목록 조회 (영업 중인 업체와 영업 중이 아닌 업체 별도 조회)
-    public CompanyListResponseDto getCompaniesByCategory(int page, int size, String sortBy, boolean isAsc, UUID companyCategoryId) {
+    public CompanyListResponseDto getCompaniesByCategory(Long userId, int page, int size, String sortBy, boolean isAsc, UUID companyCategoryId) {
 
+        if (sortBy == null || sortBy.isEmpty()) sortBy = "orderCount";
         //페이징 처리 세팅
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
@@ -85,10 +94,15 @@ public class CompanyService {
         LocalTime currentTime = now.toLocalTime();
         WeekDay todayDay = WeekDay.fromLocalDate(today);
 
+        //로그인한 사용자의 기본 배송지 조회
+        Address address = addressRepository.findByUser_UserIdAndIsDefaultTrue(userId).orElseThrow(
+                () -> new IllegalArgumentException("현재 선택된 배송지가 없거나, 유효하지 않습니다.")
+        );
+
         //카테고리와 일치하고 삭제되지 않은 업체 조회
         Page<Company> companyPage =
-                companyRepository.findAllByIsDeletedFalseAndCompanyCategory_CompanyCategoryId(
-                        companyCategoryId, pageable);
+                companyRepository.searchByCategoryAndLocation(
+                        companyCategoryId,address.getLocation(),pageable);
 
         List<CompanyResponseDto> openConpanies = new ArrayList<>();
         List<CompanyResponseDto> closedConpanies = new ArrayList<>();
@@ -104,7 +118,9 @@ public class CompanyService {
     }
 
 
-    public CompanyListResponseDto searchByKeyword(String keyword, int page, int size, String sortBy, boolean isAsc) {
+    public CompanyListResponseDto searchByKeyword(Long userId,String keyword, int page, int size, String sortBy, boolean isAsc) {
+
+        if (sortBy == null || sortBy.isEmpty()) sortBy = "orderCount";
         //페이징 처리 세팅
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
 
@@ -118,9 +134,13 @@ public class CompanyService {
         LocalTime currentTime = now.toLocalTime();
         WeekDay todayDay = WeekDay.fromLocalDate(today);
 
+        //현재 로그인한 사용자의 기본 배송지 조회
+        Address address = addressRepository.findByUser_UserIdAndIsDefaultTrue(userId).orElseThrow(
+                () -> new IllegalArgumentException("현재 선택된 배송지가 없거나, 유효하지 않습니다.")
+        );
         //카테고리와 일치하고 삭제되지 않은 업체 조회
         Page<Company> companyPage =
-                companyRepository.searchByKeyword(keyword, pageable);
+                companyRepository.searchByKeywordAndLocation(keyword,address.getLocation(),pageable);
 
         List<CompanyResponseDto> openConpanies = new ArrayList<>();
         List<CompanyResponseDto> closedConpanies = new ArrayList<>();

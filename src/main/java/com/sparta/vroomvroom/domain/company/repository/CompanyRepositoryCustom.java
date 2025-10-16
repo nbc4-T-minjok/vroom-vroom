@@ -1,10 +1,13 @@
 package com.sparta.vroomvroom.domain.company.repository;
 
 import com.sparta.vroomvroom.domain.company.model.entity.Company;
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface CompanyRepositoryCustom {
+import java.util.UUID;
 
-    Page<Company> searchByKeyword(String keyword, Pageable pageable);
+public interface CompanyRepositoryCustom {
+    Page<Company> searchByKeywordAndLocation(String keyword, Point location, Pageable pageable);
+    Page<Company> searchByCategoryAndLocation(UUID categoryId, Point location, Pageable pageable);
 }

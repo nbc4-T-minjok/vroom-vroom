@@ -15,6 +15,7 @@ import java.util.UUID;
 @Table(name = "company_categories")
 @Getter
 @NoArgsConstructor
+@Setter
 public class CompanyCategory extends BaseEntity {
 
     @Id

@@ -165,22 +165,53 @@ public class SwaggerExamples {
             }
             """;
 
-    public static final String COMPANY_CREATE_REQUEST = """
+    public static final String COMPANY_REGISTER_REQUEST = """
             {
-              "companyName": "BHC치킨",
-              "companyDescription": "바삭바삭한 후라이드 치킨 전문점입니다.",
-              "phoneNumber": "010-1230-4567",
-              "deliveryFee": 3000,
-              "deliveryRadius": 1000,
-              "ownerName": "김사장",
-              "bizRegNo": "123-45-67890",
-              "address": "서울시 강남구 테헤란로",
-              "detailAddress": "123번지 45호",
-              "zipCode": "06123",
-              "location": {
-                "lat": 37.5017,
-                "lng": 127.0396
-              }
+            	"companyName": "업체명",
+            	"companyDescription" : "업체설명",
+            	"phoneNumber" : "010-0000-0000",
+            	"deliveryFee" : 3000,
+            	"deliveryRadius" : 2000,
+            	"ownerName" : "사장이름",
+            	"bizRegNo" : "123-45-13243",
+            	"address" : "주소",
+            	"detailAddress" : "상세주소",
+            	"zipCode" : "00000",
+            	"location" : { "lat": 37.123456, "lng": 127.123456 }
             }
             """;
+    //회원가입 예시
+    public static final String MANAGER_REGISTER_REQUEST = """
+            {
+              "userName": "testmanager0",
+              "password": "Abc123!@#",
+              "nickName": "매니저0번",
+              "type": "INAPP",
+              "name": "매니저a",
+              "birthDate": "1990-01-01",
+              "gender": "남",
+              "phoneNumber": "010-1919-1818",
+              "email": "testmanager0@vroomvroom.com"
+            }
+            """;
+
+    public static final String MENU_CREATE_REQUEST = """
+        {
+          "menuName": "후라이드치킨",
+          "menuGroup": "치킨",
+          "menuPrice": 20000,
+          "menuImage": "https://example.com/images/menu.jpg",
+          "menuDescription": "메뉴설명.",
+          "menuStatus": "AVAILABLE",
+          "isVisible": true,
+          "aiDescription": true
+        }
+        """;
+
+    public static final String MENU_UPDATE_REQUEST = """
+        {
+          "menuName": "양념치킨",
+          "isVisible": true
+        }
+        """;
 }

@@ -24,7 +24,7 @@ public class Emd extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcTypeCode(SqlTypes.UUID)
     @Column(name = "emd_id")
-    private UUID id;
+    private UUID emdId;
 
     @Column(name = "code", nullable = false, length = 20)
     private String code;

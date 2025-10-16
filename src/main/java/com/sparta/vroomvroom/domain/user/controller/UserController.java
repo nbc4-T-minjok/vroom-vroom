@@ -140,7 +140,10 @@ public class UserController {
 
     @PostMapping("/v2/email/request")
     @Operation(summary = "이메일 인증 요청 API", description = "회원 가입에 사용할 이메일로 인증 메일 발송을 요청합니다.")
-    public BaseResponse requestVerification(@RequestParam String email) {
+    public BaseResponse requestVerification(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam String email) {
+        if(userDetails != null) throw new IllegalArgumentException("로그인한 상태에서는 이메일 인증을 진행할 수 없습니다.");
         emailService.sendVerificationMail(email);
         return new BaseResponse();
     }

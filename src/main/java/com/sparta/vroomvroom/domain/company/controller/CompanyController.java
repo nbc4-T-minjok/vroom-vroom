@@ -50,23 +50,27 @@ public class CompanyController {
     // 업체 카테고리별 목록 조회
     @GetMapping("/company-categories/{companyCategoryId}/companies")
     public BaseResponse<CompanyListResponseDto> getCompaniesByCategory(@PathVariable UUID companyCategoryId,
+                                               @AuthenticationPrincipal UserDetailsImpl userDetails,
                                                @RequestParam(name = "page", defaultValue = "0") int page,
                                                @RequestParam(name = "size", defaultValue = "10") int size,
                                                @RequestParam(name = "sortBy", required = false) String sortBy,
-                                               @RequestParam(name = "isAsc") boolean isAsc) {
-        CompanyListResponseDto response = companyService.getCompaniesByCategory(page,size,sortBy,isAsc,companyCategoryId);
+                                               @RequestParam(name = "isAsc") Boolean isAsc) {
+        Long userId = userDetails.getUser().getUserId();
+        CompanyListResponseDto response = companyService.getCompaniesByCategory(userId,page,size,sortBy,isAsc,companyCategoryId);
         return new BaseResponse(response);
     }
 
     @GetMapping("/companies/search")
     public BaseResponse<CompanyListResponseDto> searchByKeyword(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam(name = "keyword") String keyword,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size,
             @RequestParam(name = "sortBy", required = false) String sortBy,
             @RequestParam(name = "isAsc") Boolean isAsc) {
         if(keyword.length() < 2 || keyword.length() > 20) throw new IllegalArgumentException("검색어는 2글자 이상 20글자 이하여야 합니다.");
-        CompanyListResponseDto response = companyService.searchByKeyword(keyword,page,size,sortBy,isAsc);
+        Long userId = userDetails.getUser().getUserId();
+        CompanyListResponseDto response = companyService.searchByKeyword(userId,keyword,page,size,sortBy,isAsc);
         return new BaseResponse(response);
     }
 

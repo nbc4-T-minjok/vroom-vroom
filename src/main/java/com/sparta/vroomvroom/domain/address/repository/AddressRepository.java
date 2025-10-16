@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface AddressRepository extends JpaRepository<Address, UUID> {
@@ -24,4 +25,5 @@ public interface AddressRepository extends JpaRepository<Address, UUID> {
     @Query("SELECT a FROM Address a WHERE a.user.userId = :userId")
     List<Address> findAllByUserId(@Param("userId") Long userId);
 
+    Optional<Address> findByUser_UserIdAndIsDefaultTrue(Long userId);
 }

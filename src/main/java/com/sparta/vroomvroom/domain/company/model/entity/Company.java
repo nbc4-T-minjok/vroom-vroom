@@ -1,11 +1,13 @@
 package com.sparta.vroomvroom.domain.company.model.entity;
 
 import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyRequestDto;
+import com.sparta.vroomvroom.domain.region.emd.model.entity.Emd;
 import com.sparta.vroomvroom.domain.user.model.entity.User;
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.locationtech.jts.geom.Coordinate;
@@ -18,6 +20,7 @@ import java.util.*;
 @Entity
 @Table(name = "companies")
 @Getter
+@Setter
 @NoArgsConstructor
 public class Company extends BaseEntity {
     @Id
@@ -34,7 +37,7 @@ public class Company extends BaseEntity {
     @JoinColumn(name = "company_category_id", nullable = false)
     private CompanyCategory companyCategory;
 
-    @Column(name = "company_name", nullable = false, length = 20)
+    @Column(name = "company_name", nullable = false, length = 50)
     private String companyName;
 
     @Column(name = "company_logo_url", nullable = false)
@@ -72,12 +75,18 @@ public class Company extends BaseEntity {
     private Point location;
 
     @OneToMany(mappedBy = "company")
-    private List<BusinessHour> businessHours;
+    private List<BusinessHour> businessHours = new ArrayList<>();
 
     @OneToMany(mappedBy = "company")
-    private List<SpecialBusinessHour> specialBusinessHours;
+    private List<SpecialBusinessHour> specialBusinessHours = new ArrayList<>();
 
-    public Company(User user, CompanyCategory companyCategory, CompanyRequestDto requestDto, String companyLogoUrl) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emd_id",nullable = false)
+    private Emd emd;
+
+
+
+    public Company(User user, CompanyCategory companyCategory, CompanyRequestDto requestDto, String companyLogoUrl, Emd emd) {
         this.user = user;
         this.companyCategory = companyCategory;
         this.companyName = requestDto.getCompanyName();
@@ -91,6 +100,7 @@ public class Company extends BaseEntity {
         this.address = requestDto.getAddress();
         this.detailAddress = requestDto.getDetailAddress();
         this.zipCode = requestDto.getZipCode();
+        this.emd = emd;
 
         GeometryFactory geomFactory = new GeometryFactory(new PrecisionModel(), 4326);
         Coordinate coord = new Coordinate(requestDto.getLocation().getLng(), requestDto.getLocation().getLng()); // 경도, 위도 순서로 변경 필수

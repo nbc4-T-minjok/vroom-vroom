@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -33,10 +34,10 @@ public class CompanyCategoryService {
         companyCategoryRepository.save(companyCategory);
     }
 
-    public Page<CompanyCategoryResponseDto> getCompanyCategories(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<CompanyCategory> categoryPage = companyCategoryRepository.findAllByIsDeletedFalse(pageable);
-        return categoryPage.map(CompanyCategoryResponseDto::of);
+    public List<CompanyCategoryResponseDto> getCompanyCategories() {
+
+        return companyCategoryRepository.findAllByIsDeletedFalse().stream()
+                .map(CompanyCategoryResponseDto::of).toList();
     }
 
     @Transactional

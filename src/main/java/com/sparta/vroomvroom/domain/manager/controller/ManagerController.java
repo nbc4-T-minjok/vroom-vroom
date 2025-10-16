@@ -77,7 +77,7 @@ public class ManagerController {
     }
 
     @Operation(summary = "관리자용 주문 취소처리 API")
-    @GetMapping("/v1/manager/orders/{orderId}")
+    @DeleteMapping("/v1/manager/orders/{orderId}")
     @Secured({"ROLE_MANAGER","ROLE_MASTER"})
     public BaseResponse cancleOrder(@PathVariable UUID orderId) {
         managerService.cancleOrder(orderId);
@@ -85,7 +85,7 @@ public class ManagerController {
     }
 
     @Operation(summary = "관리자용 회원 삭제 API")
-    @GetMapping("/v1/manager/users/{userId}")
+    @DeleteMapping("/v1/manager/users/{userId}")
     @Secured({"ROLE_MANAGER","ROLE_MASTER"})
     public BaseResponse deleteUser(@PathVariable Long userId) {
         managerService.deleteUser(userId);
@@ -93,7 +93,7 @@ public class ManagerController {
     }
 
     @Operation(summary = "관리자용 업체 삭제 API")
-    @GetMapping("/v1/manager/companies/{companyId}")
+    @DeleteMapping("/v1/manager/companies/{companyId}")
     @Secured({"ROLE_MANAGER","ROLE_MASTER"})
     public BaseResponse deleteCompany(@PathVariable UUID companyId) {
         managerService.deleteCompany(companyId);
@@ -101,7 +101,7 @@ public class ManagerController {
     }
 
     @Operation(summary = "관리자용 리뷰 삭제 API")
-    @GetMapping("/v1/manager/reviews/{reviewId}")
+    @DeleteMapping("/v1/manager/reviews/{reviewId}")
     @Secured({"ROLE_MANAGER","ROLE_MASTER"})
     public BaseResponse deleteReview(@PathVariable UUID reviewId) {
         managerService.deleteReview(reviewId);

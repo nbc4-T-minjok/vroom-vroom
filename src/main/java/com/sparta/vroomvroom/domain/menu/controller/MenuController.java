@@ -50,7 +50,7 @@ public class MenuController {
     @PostMapping(value = "/companies/{companyId}/menus", consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse<Void> createMenu(
             @PathVariable UUID companyId,
-            @RequestPart("menu") @Valid MenuRequestDto requestDto,
+            @RequestPart("requestDto") @Valid MenuRequestDto requestDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) {
         menuService.createMenu(companyId, requestDto, images);
@@ -95,7 +95,7 @@ public class MenuController {
     public BaseResponse<MenuResponseDto> updateMenu(
             @PathVariable UUID companyId,
             @PathVariable UUID menuId,
-            @RequestPart("menu") @Valid MenuUpdateRequestDto requestDto,
+            @RequestPart("requestDto") @Valid MenuUpdateRequestDto requestDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) {
         return new BaseResponse<>(menuService.updateMenu(menuId, requestDto, images));

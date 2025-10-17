@@ -2,6 +2,7 @@ package com.sparta.vroomvroom.domain.company.service;
 
 import com.sparta.vroomvroom.domain.address.model.entity.Address;
 import com.sparta.vroomvroom.domain.address.repository.AddressRepository;
+import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyUpdateRequestDto;
 import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyListResponseDto;
 import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyRequestDto;
 import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyDetailResponseDto;
@@ -156,7 +157,7 @@ public class CompanyService {
     }
 
     @Transactional
-    public CompanyDetailResponseDto updateCompany(Long userId, UUID companyId, CompanyRequestDto requestDto, MultipartFile logoFile) {
+    public CompanyDetailResponseDto updateCompany(Long userId, UUID companyId, CompanyUpdateRequestDto requestDto, MultipartFile logoFile) {
         // 유저 존재 및 권한 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 

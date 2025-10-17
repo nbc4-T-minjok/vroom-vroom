@@ -4,7 +4,8 @@ public class SwaggerDescription {
     // 배송지 등록 설명
     public static final String ADDRESS_CREATE_REQUEST =
             "회원가입과 로그인 진행 후 배송지 등록 요청을 해주세요.<br>" +
-            "요청 가능 권한 : customer / manager";
+            "요청 가능 권한 : customer / manager"+
+            "실제 존재하는 주소와 위경도 값을 넣어주세요";
 
     // 배송지 수정 설명
     public static final String ADDRESS_UPDATE_REQUEST =
@@ -43,8 +44,8 @@ public class SwaggerDescription {
     // 업체 카테고리 수정 및 삭제 설명
     public static final String COMPANY_CATEGORY_UPDATE_REQUEST =
             "관리자 권한만 요청을 해주세요.<br>" +
-                    "업체 카테고리 조회 후 반환된 companyCategoryId 값이 필요합니다.<br>"  +
-                    "요청 가능 권한 : manager / master";
+            "업체 카테고리 조회 후 반환된 companyCategoryId 값이 필요합니다.<br>"  +
+            "요청 가능 권한 : manager / master";
     // 주문 생성 설명
     public static final String ORDER_CREATE_REQUEST =
             "회원가입과 로그인 진행 후 주문 생성 요청을 해주세요.<br>" +
@@ -59,6 +60,7 @@ public class SwaggerDescription {
     public static final String USER_SIGNUP_REQUEST = """
             userName, email, phoneNumber는 중복이 불가능 합니다.
             비밀번호는 대소문자,특수문자,숫자 모두를 포함해서 8~15자로 설정해주세요.
+            실제 존재하는 주소와 위경도 값을 넣어주세요
             """;
 
     //회원 정보 수정 예시
@@ -87,7 +89,8 @@ public class SwaggerDescription {
     public static final String COMPANY_CREATE_REQUEST =
             "회원가입과 로그인 진행 후 카테고리를 등록하고 요청을 해주세요.<br>" +
                     "업체 조회 후 반환된 companyId 값과 이미지가 필요합니다.<br>" +
-                    "요청 가능 권한 : owner/manager/master";
+                    "요청 가능 권한 : owner/manager/master" +
+                    "실제 존재하는 주소와 위경도 값을 넣어주세요";
 
     // 업체 상세 조회 설명
     public static final String COMPANY_DETAIL_REQUEST =
@@ -97,11 +100,16 @@ public class SwaggerDescription {
     // 업체 카테고리별 조회 설명
     public static final String COMPANY_CATEGORY_SEARCH_REQUEST =
             "회원가입과 로그인 진행 후 요청을 해주세요.<br>" +
+                    "배송지를 등록하지 않으면 조회가 성공하지 않습니다. 배송지 등록 후 조회해주세요" +
+                    "createdAt, avgRating, orderCount로 정렬이 가능합니다."+
                     "카테고리 조회 후 반환된 categoryId 값이 필요합니다.";
+
 
     // 업체 검색 조회 설명
     public static final String COMPANY_KEYWORD_SEARCH_REQUEST =
             "회원가입과 로그인 진행 후 요청을 해주세요.<br>" +
+                    "배송지를 등록하지 않으면 조회가 성공하지 않습니다. 배송지 등록 후 조회해주세요" +
+                    "createdAt, avgRating, orderCount로 정렬이 가능합니다."+
                     "키워드/페이지/내림차순 등 설정할 수 있습니다.";
 
     // 업체 삭제 설명

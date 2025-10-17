@@ -44,7 +44,7 @@ public class ReviewController {
     @PostMapping(value = "/order/{orderId}/reviews",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse createReview(
-            @RequestPart("review") @Valid ReviewRequestDto requestDto,      // JSON DTO
+            @RequestPart("requestDto") @Valid ReviewRequestDto requestDto,      // JSON DTO
             @RequestPart(value = "images", required = false) List<MultipartFile> images,    // 이미지 파일
             @PathVariable UUID orderId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -122,7 +122,7 @@ public class ReviewController {
     public BaseResponse updateReview(
             @PathVariable UUID reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart("review") @Valid ReviewRequestDto requestDto,                      // JSON DTO
+            @RequestPart("requestDto") @Valid ReviewRequestDto requestDto,                      // JSON DTO
             @RequestPart(value = "images", required = false) List<MultipartFile> images     // 이미지 파일
     ){
         Long userId = userDetails.getUser().getUserId();

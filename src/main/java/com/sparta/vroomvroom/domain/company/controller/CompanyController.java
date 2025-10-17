@@ -1,5 +1,6 @@
 package com.sparta.vroomvroom.domain.company.controller;
 
+import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyUpdateRequestDto;
 import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyListResponseDto;
 import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyRequestDto;
 import com.sparta.vroomvroom.domain.company.model.dto.response.CompanyDetailResponseDto;
@@ -101,7 +102,7 @@ public class CompanyController {
                     content = @Content(
                             mediaType = "multipart/form",
                             examples = {
-                                    @ExampleObject(value = SwaggerExamples.COMPANY_CREATE_REQUEST)
+                                    @ExampleObject(value = SwaggerExamples.COMPANY_UPDATE_REQUEST)
                             }
                     )
             ))
@@ -109,7 +110,7 @@ public class CompanyController {
     @PatchMapping("/companies/{companyId}")
     public BaseResponse updateCompany(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                       @PathVariable UUID companyId,
-                                      @RequestPart("companyRequestDto") @Valid CompanyRequestDto requestDto,
+                                      @RequestPart("requestDto") @Valid CompanyUpdateRequestDto requestDto,
                                       @RequestPart(value = "logoFile", required = false) MultipartFile logoFile) {
         CompanyDetailResponseDto responseDto = companyService.updateCompany(userDetails.getUser().getUserId(), companyId, requestDto, logoFile);
         return new BaseResponse(responseDto);

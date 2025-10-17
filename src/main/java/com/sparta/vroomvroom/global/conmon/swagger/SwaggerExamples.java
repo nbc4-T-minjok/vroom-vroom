@@ -254,4 +254,16 @@ public class SwaggerExamples {
         }
         """;
 
+    public static final String COMPANY_UPDATE_REQUEST = """
+            {
+        "companyName": "BHC치킨",
+            "companyDescription": "바삭바삭한 후라이드 치킨 전문점입니다.",
+            "phoneNumber": "010-1230-4567",
+            "deliveryFee": 3000,
+            "deliveryRadius": 1000,
+            "ownerName": "김사장",
+            "bizRegNo": "123-45-67890",
+        }
+            """;
+
 }

@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.domain.company.model.entity;
 
 import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyRequestDto;
+import com.sparta.vroomvroom.domain.company.model.dto.request.CompanyUpdateRequestDto;
 import com.sparta.vroomvroom.domain.region.emd.model.entity.Emd;
 import com.sparta.vroomvroom.domain.user.model.entity.User;
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
@@ -109,17 +110,14 @@ public class Company extends BaseEntity {
         this.location = location;
     }
 
-    public void update(CompanyRequestDto requestDto, String newLogoUrl) {
-        this.companyName = requestDto.getCompanyName();
-        this.companyLogoUrl = newLogoUrl;
-        this.companyDescription = requestDto.getCompanyDescription();
-        this.phoneNumber = requestDto.getPhoneNumber();
-        this.deliveryFee = requestDto.getDeliveryFee();
-        this.deliveryRadius = requestDto.getDeliveryRadius();
-        this.ownerName = requestDto.getOwnerName();
-        this.bizRegNo = requestDto.getBizRegNo();
-        this.address = requestDto.getAddress();
-        this.detailAddress = requestDto.getDetailAddress();
-        this.zipCode = requestDto.getZipCode();
+    public void update(CompanyUpdateRequestDto requestDto, String newLogoUrl) {
+        if(requestDto.getCompanyName() != null) this.companyName = requestDto.getCompanyName();
+        if(newLogoUrl != null) this.companyLogoUrl = newLogoUrl;
+        if(requestDto.getCompanyDescription() != null) this.companyDescription = requestDto.getCompanyDescription();
+        if(requestDto.getPhoneNumber() != null) this.phoneNumber = requestDto.getPhoneNumber();
+        if(requestDto.getDeliveryFee() != null) this.deliveryFee = requestDto.getDeliveryFee();
+        if(requestDto.getDeliveryRadius() != null) this.deliveryRadius = requestDto.getDeliveryRadius();
+        if(requestDto.getOwnerName() != null) this.ownerName = requestDto.getOwnerName();
+        if(requestDto.getBizRegNo() != null) this.bizRegNo = requestDto.getBizRegNo();
     }
 }

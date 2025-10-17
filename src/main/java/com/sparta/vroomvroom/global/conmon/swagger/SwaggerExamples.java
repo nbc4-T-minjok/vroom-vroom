@@ -214,4 +214,18 @@ public class SwaggerExamples {
           "isVisible": true
         }
         """;
+
+
+    public static final String GEMINI_MENU_DESCRIPTION_REQUEST = """
+        {
+          "menuName": "양념치킨"
+        }
+        """;
+
+    public static final String GEMINI_MENU_DESCRIPTION_RESPONSE = """
+        {
+          "menuName": "양념치킨",
+          "aiDescription": "달콤짭짤한 특제 양념 소스를 입힌 바삭한 치킨으로, 겉은 바삭하고 속은 촉촉한 식감이 특징입니다."
+        }
+        """;
 }

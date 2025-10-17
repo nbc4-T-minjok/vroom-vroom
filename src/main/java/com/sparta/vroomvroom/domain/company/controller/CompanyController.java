@@ -81,7 +81,7 @@ public class CompanyController {
     }
 
     // 업체 키워드 조회
-    @Operation(summary = "업체 카테고리별 조회 API", description = SwaggerDescription.COMPANY_KEYWORD_SEARCH_REQUEST)
+    @Operation(summary = "업체 키워드 검색 API", description = SwaggerDescription.COMPANY_KEYWORD_SEARCH_REQUEST)
     @GetMapping("/companies/search")
     public BaseResponse<CompanyListResponseDto> searchByKeyword(
             @AuthenticationPrincipal UserDetailsImpl userDetails,

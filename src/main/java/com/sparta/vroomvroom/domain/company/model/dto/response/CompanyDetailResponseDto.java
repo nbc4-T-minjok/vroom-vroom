@@ -29,7 +29,6 @@ public class CompanyDetailResponseDto {
     private String address;             // 주소
     private String detailAddress;       // 상세 주소
     private String zipCode;             // 우편번호
-    private LocationDto location;             // 위치데이터
 
 //    // 5. 영업 시간 정보
     private List<BusinessHourResponseDto> businessHours;         // 영업시간
@@ -50,7 +49,6 @@ public class CompanyDetailResponseDto {
                 .address(company.getAddress())
                 .detailAddress(company.getDetailAddress())
                 .zipCode(company.getZipCode())
-                .location(new LocationDto(company.getLocation()))
                 .businessHours(
                         company.getBusinessHours().stream()
                                 .map(BusinessHourResponseDto::of)

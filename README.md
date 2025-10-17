@@ -138,252 +138,34 @@
   <summary><h2> 📑 폴더 구조  </h2></summary>
 
 ```
-    vroomvroom/
-├── domain/
-│   ├── address/
-│   │   ├── controller/
-│   │   │   └── AddressController.java
-│   │   ├── model/
-│   │   │   ├── dto/
-│   │   │   │   ├── request/
-│   │   │   │   │   └── AddressRequestDto.java
-│   │   │   │   ├── response/
-│   │   │   │       └── AddressResponseDto.java
-│   │   │   ├── entity/
-│   │   │       └── Address.java
-│   │   ├── repository/
-│   │   │   └── AddressRepository.java
-│   │   ├── service/
-│   │       └── AddressService.java
-│   ├── ai/
-│   │   ├── controller/
-│   │   │   └── GeminiController.java
-│   │   ├── model/
-│   │   │   ├── entity/
-│   │   │       └── AiApiLog.java
-│   │   ├── repository/
-│   │   │   └── GeminiRepository.java
-│   │   ├── service/
-│   │       └── GeminiService.java
-│   ├── cart/
-│   │   ├── controller/
-│   │   │   └── CartController.java
-│   │   ├── model/
-│   │   │   ├── dto/
-│   │   │   │   ├── request/
-│   │   │   │   │   ├── AddCartMenuRequest.java
-│   │   │   │   │   └── UpdateCartMenuRequest.java
-│   │   │   │   ├── response/
-│   │   │   │       ├── CartMenuResponse.java
-│   │   │   │       └── CartResponse.java
-│   │   │   ├── entity/
-│   │   │       ├── Cart.java
-│   │   │       └── CartMenu.java
-│   │   ├── repository/
-│   │   │   ├── CartMenuRepository.java
-│   │   │   └── CartRepository.java
-│   │   ├── service/
-│   │       └── CartService.java
-│   ├── company/
-│   │   ├── controller/
-│   │   │   ├── BusinessHourController.java
-│   │   │   ├── CompanyCategoryController.java
-│   │   │   ├── CompanyController.java
-│   │   │   └── SpecialBusinessHourController.java
-│   │   ├── model/
-│   │   │   ├── dto/
-│   │   │   │   ├── request/
-│   │   │   │   │   ├── CompanyRequestDto.java
-│   │   │   │   │   └── SpecialBusinessHourRequestDto.java
-│   │   │   │   ├── response/
-│   │   │   │   │   ├── BusinessHourResponseDto.java
-│   │   │   │   │   ├── CompanyDetailResponseDto.java
-│   │   │   │   │   ├── CompanyListResponseDto.java
-│   │   │   │   │   ├── CompanyResponseDto.java
-│   │   │   │   │   └── SpecialBusinessHourResponseDto.java
-│   │   │   │   ├── BusinessHourRequestDto.java
-│   │   │   │   ├── BusinessHourResponseDto.java
-│   │   │   │   ├── CompanyCategoryRequestDto.java
-│   │   │   │   └── CompanyCategoryResponseDto.java
-│   │   │   ├── entity/
-│   │   │       ├── BusinessHour.java
-│   │   │       ├── Company.java
-│   │   │       ├── CompanyCategory.java
-│   │   │       └── SpecialBusinessHour.java
-│   │   ├── repository/
-│   │   │   ├── BusinessHourRepository.java
-│   │   │   ├── CompanyCategoryRepository.java
-│   │   │   ├── CompanyRepository.java
-│   │   │   ├── CompanyRepositoryCustom.java
-│   │   │   ├── CompanyRepositoryImpl.java
-│   │   │   └── SpecialBusinessHourRepository.java
-│   │   ├── service/
-│   │       ├── BusinessHourService.java
-│   │       ├── CompanyCategoryService.java
-│   │       ├── CompanyService.java
-│   │       └── SpecialBusinessHourService.java
-│   ├── menu/
-│   │   ├── controller/
-│   │   │   └── MenuController.java
-│   │   ├── model/
-│   │   │   ├── dto/
-│   │   │   │   ├── request/
-│   │   │   │   │   └── MenuRequestDto.java
-│   │   │   │   ├── response/
-│   │   │   │       └── MenuResponseDto.java
-│   │   │   ├── entity/
-│   │   │       └── Menu.java
-│   │   ├── repository/
-│   │   │   └── MenuRepository.java
-│   │   ├── service/
-│   │       └── MenuService.java
-│   ├── order/
-│   │   ├── controller/
-│   │   │   └── OrderController.java
-│   │   ├── model/
-│   │   │   ├── dto/
-│   │   │   │   ├── request/
-│   │   │   │   │   ├── CancelOrderRequest.java
-│   │   │   │   │   ├── CreateOrderRequest.java
-│   │   │   │   │   └── UpdateOrderStatusRequest.java
-│   │   │   │   ├── response/
-│   │   │   │       ├── CompanyOrderListResponse.java
-│   │   │   │       ├── OrderDetailResponse.java
-│   │   │   │       └── OrderListResponse.java
-│   │   │   ├── entity/
-│   │   │       ├── Order.java
-│   │   │       └── OrderMenu.java
-│   │   ├── repository/
-│   │   │   ├── OrderMenuRepository.java
-│   │   │   └── OrderRepository.java
-│   │   ├── service/
-│   │       └── OrderService.java
-│   ├── payments/
-│   │   ├── controller/
-│   │   │   └── PaymentController.java
-│   │   ├── model/
-│   │   │   ├── dto/
-│   │   │   │   ├── response/
-│   │   │   │       └── PaymentResponse.java
-│   │   │   ├── entity/
-│   │   │       └── Payment.java
-│   │   ├── repository/
-│   │   │   └── PaymentRepository.java
-│   │   ├── service/
-│   │       └── PaymentService.java
-│   ├── region/
-│   │   ├── emd/
-│   │   │   ├── model/
-│   │   │   │   ├── entity/
-│   │   │   │       └── Emd.java
-│   │   │   ├── repository/
-│   │   │   │   └── EmdRepository.java
-│   │   │   ├── service/
-│   │   │       └── EmdService.java
-│   │   ├── sido/
-│   │   │   ├── model/
-│   │   │   │   ├── entity/
-│   │   │   │       └── Sido.java
-│   │   │   ├── repository/
-│   │   │   │   └── SidoRepository.java
-│   │   │   ├── service/
-│   │   │       └── SidoService.java
-│   │   ├── sigungu/
-│   │       ├── model/
-│   │       │   ├── entity/
-│   │       │       └── Sigungu.java
-│   │       ├── repository/
-│   │       │   └── SigunguRepository.java
-│   │       ├── service/
-│   │           └── SigunguService.java
-│   ├── review/
-│   │   ├── controller/
-│   │   │   └── ReviewController.java
-│   │   ├── model/
-│   │   │   ├── dto/
-│   │   │   │   ├── request/
-│   │   │   │   │   ├── OwnerReviewRequestDto.java
-│   │   │   │   │   └── ReviewRequestDto.java
-│   │   │   │   ├── response/
-│   │   │   │       └── ReviewResponseDto.java
-│   │   │   ├── entity/
-│   │   │       ├── OwnerReview.java
-│   │   │       ├── Review.java
-│   │   │       └── ReviewImage.java
-│   │   ├── repository/
-│   │   │   ├── OwnerReviewRepository.java
-│   │   │   ├── ReviewImageRepository.java
-│   │   │   └── ReviewRepository.java
-│   │   ├── service/
-│   │       └── ReviewService.java
-│   ├── user/
-│       ├── controller/
-│       │   └── UserController.java
-│       ├── model/
-│       │   ├── dto/
-│       │   │   ├── request/
-│       │   │   │   ├── UserChangePasswordRequest.java
-│       │   │   │   ├── UserLoginRequest.java
-│       │   │   │   ├── UserSignupRequest.java
-│       │   │   │   └── UserUpdatedRequest.java
-│       │   │   ├── response/
-│       │   │       └── UserDetailResponse.java
-│       │   ├── entity/
-│       │       ├── BlackList.java
-│       │       ├── EmailVerification.java
-│       │       └── User.java
-│       ├── repository/
-│       │   ├── BlackListRepository.java
-│       │   ├── EmailVerificationRepository.java
-│       │   └── UserRepository.java
-│       ├── service/
-│           ├── EmailService.java
-│           └── UserService.java
-├── global/
-│   ├── config/
-│   │   ├── QuerydslConfig.java
-│   │   ├── SecurityConfig.java
-│   │   └── WebClientConfig.java
-│   ├── conmon/
-│   │   ├── constants/
-│   │   │   ├── BaseResponseStatus.java
-│   │   │   ├── BusinessStatus.java
-│   │   │   ├── EmailTemplate.java
-│   │   │   ├── MenuStatus.java
-│   │   │   ├── OrderStatus.java
-│   │   │   ├── PaymentMethod.java
-│   │   │   ├── PaymentStatus.java
-│   │   │   ├── UserRole.java
-│   │   │   ├── UserType.java
-│   │   │   └── WeekDay.java
-│   │   ├── s3/
-│   │   │   ├── S3Config.java
-│   │   │   └── S3Uploader.java
-│   │   ├── swagger/
-│   │   │   ├── SwaggerConfig.java
-│   │   │   ├── SwaggerDescription.java
-│   │   │   └── SwaggerExamples.java
-│   │   ├── BaseEntity.java
-│   │   └── BaseResponse.java
-│   ├── exception/
-│   │   └── GlobalExceptionHandler.java
-│   ├── security/
-│   │   ├── filter/
-│   │   │   ├── JwtFilter.java
-│   │   │   └── LoginFilter.java
-│   │   ├── handler/
-│   │   │   ├── CustomAccessDeniedHandler.java
-│   │   │   ├── CustomAuthEntryPoint.java
-│   │   │   ├── JwtLogoutHandler.java
-│   │   │   └── JwtLogoutSuccessHandler.java
-│   │   ├── AuditorAwareImpl.java
-│   │   ├── UserDetailsImpl.java
-│   │   └── UserDetailsServiceImpl.java
-│   ├── utils/
-│       ├── JwtUtil.java
-│       └── ResponseUtil.java
-└── VroomVroomApplication.java
-  
+vroomvroom/
+├── domain/                              # 주요 도메인 계층
+│   ├── address/                         # 주소 관리
+│   ├── ai/                              # AI API 로그 및 서비스 (Gemini 연동)
+│   ├── cart/                            # 장바구니
+│   ├── company/                         # 업체 및 영업시간
+│   ├── menu/                            # 메뉴 관리
+│   ├── order/                           # 주문
+│   ├── payments/                        # 결제
+│   ├── region/                          # 행정구역 (시도/시군구/읍면동)
+│   ├── review/                          # 리뷰 및 사장님 답글
+│   └── user/                            # 회원 및 인증 관련
+│
+│   └── 각 도메인 구성:
+│        ├── controller/   → 요청 수신 및 API 처리
+│        ├── service/      → 비즈니스 로직
+│        ├── repository/   → JPA 인터페이스
+│        └── model/        → entity, dto(request/response)
+│
+├── global/                              # 전역 설정 및 공통 모듈
+│   ├── config/                          # Security, Querydsl, WebClient 설정
+│   ├── conmon/                          # 공통 유틸 (S3, Swagger, 상수 등)
+│   ├── exception/                       # 예외 처리 핸들러
+│   ├── security/                        # JWT, 인증/인가 필터 및 핸들러
+│   └── utils/                           # JWT 유틸, 응답 헬퍼
+│
+└── VroomVroomApplication.java           # 애플리케이션 진입점
+
 ```
 </details>
 

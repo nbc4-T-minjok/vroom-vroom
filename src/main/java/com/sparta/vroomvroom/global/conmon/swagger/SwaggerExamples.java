@@ -214,6 +214,12 @@ public class SwaggerExamples {
           "isVisible": true
         }
         """;
+    public static final String USER_LOGIN_REQUEST = """
+        {
+          "userName": "customer001",
+          "password": "Abc123!@#"
+        }
+        """;;
 
 
     public static final String GEMINI_MENU_DESCRIPTION_REQUEST = """

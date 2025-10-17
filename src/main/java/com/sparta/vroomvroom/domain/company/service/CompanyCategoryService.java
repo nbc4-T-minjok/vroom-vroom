@@ -67,10 +67,4 @@ public class CompanyCategoryService {
 
         companyCategory.softDelete(LocalDateTime.now(), user.getUserName());
     }
-
-    public Page<CompanyCategoryResponseDto> getAdminCompanyCategories(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<CompanyCategory> categoryPage = companyCategoryRepository.findAll(pageable);
-        return categoryPage.map(CompanyCategoryResponseDto::of);
-    }
 }

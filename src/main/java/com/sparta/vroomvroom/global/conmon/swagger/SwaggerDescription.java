@@ -83,11 +83,38 @@ public class SwaggerDescription {
                     "장바구니 조회 후 반환된 cartMenuId 값이 필요합니다.<br>" +
                     "요청 가능 권한 : customer";
 
+    // 업체 등록 설명
+    public static final String COMPANY_CREATE_REQUEST =
+            "회원가입과 로그인 진행 후 카테고리를 등록하고 요청을 해주세요.<br>" +
+                    "업체 조회 후 반환된 companyId 값과 이미지가 필요합니다.<br>" +
+                    "요청 가능 권한 : owner/manager/master";
+
+    // 업체 상세 조회 설명
+    public static final String COMPANY_DETAIL_REQUEST =
+            "회원가입과 로그인 진행 후 요청을 해주세요.<br>" +
+                    "업체 조회 후 반환된 companyId 값이 필요합니다.";
+
+    // 업체 카테고리별 조회 설명
+    public static final String COMPANY_CATEGORY_SEARCH_REQUEST =
+            "회원가입과 로그인 진행 후 요청을 해주세요.<br>" +
+                    "카테고리 조회 후 반환된 categoryId 값이 필요합니다.";
+
+    // 업체 검색 조회 설명
+    public static final String COMPANY_KEYWORD_SEARCH_REQUEST =
+            "회원가입과 로그인 진행 후 요청을 해주세요.<br>" +
+                    "키워드/페이지/내림차순 등 설정할 수 있습니다.";
+
+    // 업체 삭제 설명
+    public static final String COMPANY_DELETE_REQUEST =
+            "회원가입과 로그인 진행 후 요청을 해주세요.<br>" +
+                    "업체 조회 후 companyId 값이 필요합니다.";
+
     //매니저 등록 설명
     public static final String MANAGER_REGISTER_REQUEST = """
             userName, email, phoneNumber는 중복이 불가능 합니다.
             비밀번호는 대소문자,특수문자,숫자 모두를 포함해서 8~15자로 설정해주세요.
             """;
+      
     // 메뉴 등록 설명
     public static final String MENU_CREATE_REQUEST =
             """
@@ -106,4 +133,16 @@ public class SwaggerDescription {
             - menuStatus: 메뉴 상태 (AVAILABLE, SOLD_OUT, TEMPORARILY_SOLD_OUT)
             """;
 
+    public static final String USER_LOGIN_REQUEST = """
+            인증은 쿠키를 사용하며 실제 인증은 SecurityFilter에서 이루어집니다.<br>
+            테스트에 사용할 사전 등록 계정은 아래와 같습니다.<br>
+            사전 등록된 테스트 계정의 비밀번호는 모두 Abc123!@# 입니다.<br>
+            <br>
+            일반 고객: customer001<br>
+            업체 사장: owner001<br>
+            매니저: manager01<br>
+            마스터: master01<br>
+            
+            비밀번호: 전부 Abc123!@#
+            """;;
 }

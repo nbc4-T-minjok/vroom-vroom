@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.domain.menu.controller;
 
 import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuRequestDto;
+import com.sparta.vroomvroom.domain.menu.model.dto.response.MenuListResponseDto;
 import com.sparta.vroomvroom.domain.menu.model.dto.response.MenuResponseDto;
 import com.sparta.vroomvroom.domain.menu.service.MenuService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
@@ -68,9 +69,9 @@ public class MenuController {
     )
     @Secured({"ROLE_CUSTOMER", "ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
     @GetMapping("/companies/{companyId}/menus")
-    public BaseResponse<List<MenuResponseDto>> getMenus(@PathVariable UUID companyId,
-                                                        @RequestParam(defaultValue = "false") boolean includeHidden) {
-
+    public BaseResponse<MenuListResponseDto> getMenus(
+            @PathVariable UUID companyId,
+            @RequestParam(defaultValue = "false") boolean includeHidden) {
         return new BaseResponse<>(menuService.getMenus(companyId, includeHidden));
     }
 

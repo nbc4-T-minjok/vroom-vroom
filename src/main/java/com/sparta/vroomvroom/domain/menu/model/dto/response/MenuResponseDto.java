@@ -10,6 +10,7 @@ import java.util.UUID;
 @Getter
 public class MenuResponseDto {
 
+    private UUID companyId;
     private UUID menuId;
     private String menuName;
     private String menuGroup;
@@ -20,6 +21,7 @@ public class MenuResponseDto {
     private Boolean isVisible;
 
     public MenuResponseDto(Menu menu) {
+        this.companyId = menu.getCompany().getCompanyId();
         this.menuId = menu.getMenuId();
         this.menuName = menu.getMenuName();
         this.menuGroup = menu.getMenuGroup();

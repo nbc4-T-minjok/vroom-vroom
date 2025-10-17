@@ -6,6 +6,7 @@ import com.sparta.vroomvroom.domain.ai.service.GeminiService;
 import com.sparta.vroomvroom.domain.company.model.entity.Company;
 import com.sparta.vroomvroom.domain.company.repository.CompanyRepository;
 import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuRequestDto;
+import com.sparta.vroomvroom.domain.menu.model.dto.response.MenuListResponseDto;
 import com.sparta.vroomvroom.domain.menu.model.dto.response.MenuResponseDto;
 import com.sparta.vroomvroom.domain.menu.model.entity.Menu;
 import com.sparta.vroomvroom.domain.menu.repository.MenuRepository;
@@ -64,14 +65,16 @@ public class MenuService {
     }
 
     @Transactional(readOnly = true)
-    public List<MenuResponseDto> getMenus(UUID companyId, boolean includeHidden) {
-        List<Menu> menu = includeHidden
+    public MenuListResponseDto getMenus(UUID companyId, boolean includeHidden) {
+        List<Menu> menus = includeHidden
                 ? menuRepository.findAllByCompany_CompanyIdAndIsDeletedFalse(companyId)
                 : menuRepository.findAllByCompany_CompanyIdAndIsDeletedFalseAndIsVisibleTrue(companyId);
 
-        return menu.stream()
+        List<MenuResponseDto> items = menus.stream()
                 .map(MenuResponseDto::new)
-                .collect(Collectors.toList());
+                .toList();
+
+        return new MenuListResponseDto(companyId, items);
     }
 
     @Transactional

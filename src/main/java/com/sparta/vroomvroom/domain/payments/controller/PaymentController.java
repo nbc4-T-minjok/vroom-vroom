@@ -4,6 +4,7 @@ import com.sparta.vroomvroom.domain.payments.model.dto.response.PaymentResponse;
 import com.sparta.vroomvroom.domain.payments.service.PaymentService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import com.sparta.vroomvroom.global.security.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class PaymentController {
     private final PaymentService paymentService;
 
+    @Operation(summary = "결제 상세 조회 API")
     @GetMapping("/orders/{orderId}/payments")
     public BaseResponse<PaymentResponse> getPayment(
             @AuthenticationPrincipal UserDetailsImpl userDetails,

@@ -97,7 +97,7 @@ public class MenuService {
     }
 
     @Transactional
-    public void deleteMenu(UUID menuId, String deletedBy) {
+    public void deleteMenu(UUID menuId, String userName) {
         Menu menu = findMenu(menuId);
 
         if (menu.getMenuImage() != null) {
@@ -110,7 +110,7 @@ public class MenuService {
         }
 
         menu.softDelete(LocalDateTime.now(),
-                deletedBy != null ? deletedBy : "SYSTEM");
+                userName);
     }
 
     //예외처리

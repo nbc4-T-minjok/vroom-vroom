@@ -32,7 +32,15 @@ public class UserController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/v1/users/login")
-    @Operation(summary = "로그인 (Swagger용)", description = "실제 인증은 SecurityFilter에서 처리")
+    @Operation(summary = "로그인 API", description = SwaggerDescription.USER_LOGIN_REQUEST,
+            requestBody =  @io.swagger.v3.oas.annotations.parameters.RequestBody (
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = {
+                                    @ExampleObject(value = SwaggerExamples.USER_LOGIN_REQUEST)
+                            }
+                    )
+            ))
     public ResponseEntity<Void> swaggerLogin(
             @RequestBody UserLoginRequest loginRequest
     ) {
@@ -132,7 +140,10 @@ public class UserController {
 
     @PostMapping("/v2/email/request")
     @Operation(summary = "이메일 인증 요청 API", description = "회원 가입에 사용할 이메일로 인증 메일 발송을 요청합니다.")
-    public BaseResponse requestVerification(@RequestParam String email) {
+    public BaseResponse requestVerification(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam String email) {
+        if(userDetails != null) throw new IllegalArgumentException("로그인한 상태에서는 이메일 인증을 진행할 수 없습니다.");
         emailService.sendVerificationMail(email);
         return new BaseResponse();
     }

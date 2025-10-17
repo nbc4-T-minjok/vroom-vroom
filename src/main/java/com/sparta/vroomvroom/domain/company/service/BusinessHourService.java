@@ -45,8 +45,6 @@ public class BusinessHourService {
     // 영업시간 조회
     @Transactional(readOnly = true)
     public List<BusinessHourResponseDto> getBusinessHour(UUID companyId, Long userId) {
-        // 회사 소유자 검증
-        authorizeCompanyOwner(companyId, userId);
 
         // 업체아이디 검증
         Company company = validateCompany(companyId);

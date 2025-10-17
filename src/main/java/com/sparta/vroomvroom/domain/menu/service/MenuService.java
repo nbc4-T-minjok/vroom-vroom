@@ -6,6 +6,8 @@ import com.sparta.vroomvroom.domain.ai.service.GeminiService;
 import com.sparta.vroomvroom.domain.company.model.entity.Company;
 import com.sparta.vroomvroom.domain.company.repository.CompanyRepository;
 import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuRequestDto;
+import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuUpdateRequestDto;
+import com.sparta.vroomvroom.domain.menu.model.dto.response.MenuListResponseDto;
 import com.sparta.vroomvroom.domain.menu.model.dto.response.MenuResponseDto;
 import com.sparta.vroomvroom.domain.menu.model.entity.Menu;
 import com.sparta.vroomvroom.domain.menu.repository.MenuRepository;
@@ -64,18 +66,20 @@ public class MenuService {
     }
 
     @Transactional(readOnly = true)
-    public List<MenuResponseDto> getMenus(UUID companyId, boolean includeHidden) {
-        List<Menu> menu = includeHidden
+    public MenuListResponseDto getMenus(UUID companyId, boolean includeHidden) {
+        List<Menu> menus = includeHidden
                 ? menuRepository.findAllByCompany_CompanyIdAndIsDeletedFalse(companyId)
                 : menuRepository.findAllByCompany_CompanyIdAndIsDeletedFalseAndIsVisibleTrue(companyId);
 
-        return menu.stream()
+        List<MenuResponseDto> items = menus.stream()
                 .map(MenuResponseDto::new)
-                .collect(Collectors.toList());
+                .toList();
+
+        return new MenuListResponseDto(companyId, items);
     }
 
     @Transactional
-    public MenuResponseDto updateMenu(UUID menuId, MenuRequestDto requestDto, List<MultipartFile> images) {
+    public MenuResponseDto updateMenu(UUID menuId, MenuUpdateRequestDto requestDto, List<MultipartFile> images) {
         Menu menu = findMenu(menuId);
 
         try {
@@ -93,7 +97,7 @@ public class MenuService {
     }
 
     @Transactional
-    public void deleteMenu(UUID menuId, String deletedBy) {
+    public void deleteMenu(UUID menuId, String userName) {
         Menu menu = findMenu(menuId);
 
         if (menu.getMenuImage() != null) {
@@ -106,7 +110,7 @@ public class MenuService {
         }
 
         menu.softDelete(LocalDateTime.now(),
-                deletedBy != null ? deletedBy : "SYSTEM");
+                userName);
     }
 
     //예외처리

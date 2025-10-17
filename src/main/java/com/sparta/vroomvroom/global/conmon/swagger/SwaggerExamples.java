@@ -220,4 +220,38 @@ public class SwaggerExamples {
           "password": "Abc123!@#"
         }
         """;;
+
+
+    public static final String GEMINI_MENU_DESCRIPTION_REQUEST = """
+        {
+          "menuName": "양념치킨"
+        }
+        """;
+
+    public static final String GEMINI_MENU_DESCRIPTION_RESPONSE = """
+        {
+          "menuName": "양념치킨",
+          "aiDescription": "달콤짭짤한 특제 양념 소스를 입힌 바삭한 치킨으로, 겉은 바삭하고 속은 촉촉한 식감이 특징입니다."
+        }
+        """;
+
+    public static final String COMPANY_CREATE_REQUEST = """
+        {
+        "companyName": "BHC치킨",
+            "companyDescription": "바삭바삭한 후라이드 치킨 전문점입니다.",
+            "phoneNumber": "010-1230-4567",
+            "deliveryFee": 3000,
+            "deliveryRadius": 1000,
+            "ownerName": "김사장",
+            "bizRegNo": "123-45-67890",
+            "address": "서울시 강남구 테헤란로",
+            "detailAddress": "123번지 45호",
+            "zipCode": "06123",
+            "location": {
+                "lat": 37.5017,
+                "lng": 127.0396
+            }
+        }
+        """;
+
 }

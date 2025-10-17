@@ -45,7 +45,7 @@ public class BusinessHourController {
 
     // 영업시간 조회
     @Operation(summary = "영업시간 조회 API")
-    @Secured({"ROLE_MANAGER","ROLE_OWNER"})
+    @Secured({"ROLE_CUSTOMER","ROLE_MANAGER","ROLE_OWNER"})
     @GetMapping("/companies/{companyId}/business_hours")
     public BaseResponse getBusinessHour(@PathVariable UUID companyId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long userId = userDetails.getUser().getUserId();

@@ -2,7 +2,7 @@ package com.sparta.vroomvroom.domain.menu.model.entity;
 
 import com.sparta.vroomvroom.domain.cart.model.entity.CartMenu;
 import com.sparta.vroomvroom.domain.company.model.entity.Company;
-import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuRequestDto;
+import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuUpdateRequestDto;
 import com.sparta.vroomvroom.domain.order.model.entity.OrderMenu;
 import com.sparta.vroomvroom.global.conmon.BaseEntity;
 import com.sparta.vroomvroom.global.conmon.constants.MenuStatus;
@@ -61,7 +61,7 @@ public class Menu extends BaseEntity {
     private Boolean isVisible;
 
 
-    public void updateMenu(MenuRequestDto dto) {
+    public void updateMenu(MenuUpdateRequestDto dto) {
         if (dto.getMenuName() != null) this.menuName = dto.getMenuName();
         if (dto.getMenuGroup() != null) this.menuGroup = dto.getMenuGroup();
         if (dto.getMenuPrice() != null) this.menuPrice = dto.getMenuPrice();
@@ -69,6 +69,7 @@ public class Menu extends BaseEntity {
         if (dto.getMenuStatus() != null) this.menuStatus = dto.getMenuStatus();
         if (dto.getIsVisible() != null) this.isVisible = dto.getIsVisible();
     }
+
 
     public Menu(Company company, String menuName, String menuGroup,
                 Integer menuPrice, String menuImage, String menuDescription,

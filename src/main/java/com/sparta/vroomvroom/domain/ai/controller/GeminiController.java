@@ -3,7 +3,12 @@ package com.sparta.vroomvroom.domain.ai.controller;
 import com.sparta.vroomvroom.domain.ai.model.entity.AiApiLog;
 import com.sparta.vroomvroom.domain.ai.repository.GeminiRepository;
 import com.sparta.vroomvroom.domain.ai.service.GeminiService;
+import com.sparta.vroomvroom.global.conmon.swagger.SwaggerExamples;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +24,35 @@ public class GeminiController {
 
     private final GeminiService geminiService;
 
-    @Operation(summary = "AI 메뉴 설명 생성 API", description = "메뉴 이름을 입력하면 Gemini가 메뉴 설명을 생성합니다.")
+    @Operation(
+            summary = "AI 메뉴 설명 생성 API",
+            description =  "메뉴 이름을 입력하면 Gemini가 메뉴 설명을 생성합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = {
+                                    @ExampleObject(
+                                            name = "요청 예시",
+                                            value = SwaggerExamples.GEMINI_MENU_DESCRIPTION_REQUEST
+                                    )
+                            }
+                    )
+            )
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "생성 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "응답 예시",
+                                    value = SwaggerExamples.GEMINI_MENU_DESCRIPTION_RESPONSE
+                            )
+                    )
+            )
+    })
     @PostMapping("/menu-description")
     public ResponseEntity<Map<String, String>> generatePreview(@RequestBody Map<String, String> request) {
         String menuName = request.get("menuName");

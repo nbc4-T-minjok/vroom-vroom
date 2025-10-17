@@ -1,11 +1,14 @@
 package com.sparta.vroomvroom.domain.menu.controller;
 
 import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuRequestDto;
+import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuUpdateRequestDto;
+import com.sparta.vroomvroom.domain.menu.model.dto.response.MenuListResponseDto;
 import com.sparta.vroomvroom.domain.menu.model.dto.response.MenuResponseDto;
 import com.sparta.vroomvroom.domain.menu.service.MenuService;
 import com.sparta.vroomvroom.global.conmon.BaseResponse;
 import com.sparta.vroomvroom.global.conmon.swagger.SwaggerDescription;
 import com.sparta.vroomvroom.global.conmon.swagger.SwaggerExamples;
+import com.sparta.vroomvroom.global.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -15,6 +18,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,9 +72,9 @@ public class MenuController {
     )
     @Secured({"ROLE_CUSTOMER", "ROLE_OWNER", "ROLE_MANAGER", "ROLE_MASTER"})
     @GetMapping("/companies/{companyId}/menus")
-    public BaseResponse<List<MenuResponseDto>> getMenus(@PathVariable UUID companyId,
-                                                        @RequestParam(defaultValue = "false") boolean includeHidden) {
-
+    public BaseResponse<MenuListResponseDto> getMenus(
+            @PathVariable UUID companyId,
+            @RequestParam(defaultValue = "false") boolean includeHidden) {
         return new BaseResponse<>(menuService.getMenus(companyId, includeHidden));
     }
 
@@ -91,7 +95,7 @@ public class MenuController {
     public BaseResponse<MenuResponseDto> updateMenu(
             @PathVariable UUID companyId,
             @PathVariable UUID menuId,
-            @RequestPart("menu") @Valid MenuRequestDto requestDto,
+            @RequestPart("menu") @Valid MenuUpdateRequestDto requestDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) {
         return new BaseResponse<>(menuService.updateMenu(menuId, requestDto, images));
@@ -103,9 +107,9 @@ public class MenuController {
     public BaseResponse<Void> deleteMenu(
             @PathVariable UUID companyId,
             @PathVariable UUID menuId,
-            @RequestParam(defaultValue = "SYSTEM") String deletedBy
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        menuService.deleteMenu(menuId, deletedBy);
+        menuService.deleteMenu(menuId, userDetails.getUsername());
         return new BaseResponse<>("메뉴 삭제 완료");
     }
 

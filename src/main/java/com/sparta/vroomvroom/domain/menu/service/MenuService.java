@@ -6,6 +6,7 @@ import com.sparta.vroomvroom.domain.ai.service.GeminiService;
 import com.sparta.vroomvroom.domain.company.model.entity.Company;
 import com.sparta.vroomvroom.domain.company.repository.CompanyRepository;
 import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuRequestDto;
+import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuUpdateRequestDto;
 import com.sparta.vroomvroom.domain.menu.model.dto.response.MenuListResponseDto;
 import com.sparta.vroomvroom.domain.menu.model.dto.response.MenuResponseDto;
 import com.sparta.vroomvroom.domain.menu.model.entity.Menu;
@@ -78,7 +79,7 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuResponseDto updateMenu(UUID menuId, MenuRequestDto requestDto, List<MultipartFile> images) {
+    public MenuResponseDto updateMenu(UUID menuId, MenuUpdateRequestDto requestDto, List<MultipartFile> images) {
         Menu menu = findMenu(menuId);
 
         try {

@@ -1,6 +1,7 @@
 package com.sparta.vroomvroom.domain.menu.controller;
 
 import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuRequestDto;
+import com.sparta.vroomvroom.domain.menu.model.dto.request.MenuUpdateRequestDto;
 import com.sparta.vroomvroom.domain.menu.model.dto.response.MenuListResponseDto;
 import com.sparta.vroomvroom.domain.menu.model.dto.response.MenuResponseDto;
 import com.sparta.vroomvroom.domain.menu.service.MenuService;
@@ -92,7 +93,7 @@ public class MenuController {
     public BaseResponse<MenuResponseDto> updateMenu(
             @PathVariable UUID companyId,
             @PathVariable UUID menuId,
-            @RequestPart("menu") @Valid MenuRequestDto requestDto,
+            @RequestPart("menu") @Valid MenuUpdateRequestDto requestDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) {
         return new BaseResponse<>(menuService.updateMenu(menuId, requestDto, images));

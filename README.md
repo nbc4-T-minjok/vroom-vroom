@@ -8,9 +8,13 @@
 <br>
 
 <div align="center">
+<details> 
+  <summary><h2> 🏃🏻‍♀️ vroom-vroom Swagger 💨 </h2></summary>
 
-### 🏃🏻‍♀️ [vroom-vroom Swagger](http://3.36.75.246/swagger-ui/index.html) 💨
-
+```
+프로젝트 다운로드 후 로컬에서 실행 -> (http://localhost:8080/swagger-ui/index.html)
+```
+</details>
 </div>
 
 <br>
